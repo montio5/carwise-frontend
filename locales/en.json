@@ -1,0 +1,19 @@
+{
+    "registration": {
+      "title": "Registration",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password",
+      "registerButton": "Register",
+      "languageSelection": "Language Selection"
+    },
+    "login": {
+      "title": "Login",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password",
+      "loginButton": "Login",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "registerButton": "Register"
+    }
+  }
+  

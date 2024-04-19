@@ -1,19 +1,16 @@
-// RegistrationScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native'; 
 
-const RegistrationScreen = ({ navigation }) => {
+const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const navigation = useNavigation(); // Get navigation object
 
   const handleRegister = () => {
     // Your registration logic here
-  };
-
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
   };
 
   return (
@@ -33,10 +30,13 @@ const RegistrationScreen = ({ navigation }) => {
         style={styles.input}
       />
       <Button title={t('registration.registerButton')} onPress={handleRegister} />
+      {/* No reference to changeLanguage function */}
       <View style={styles.languageContainer}>
         <Text style={styles.languageText}>{t('registration.languageSelection')}</Text>
-        <Button title="English" onPress={() => changeLanguage('en')} />
-        <Button title="فارسی" onPress={() => changeLanguage('fa')} />
+        {/* Replace Button with Pressable */}
+        <Pressable onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.languageButton}>{t('registration.loginLink')}</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -66,6 +66,10 @@ const styles = StyleSheet.create({
   },
   languageText: {
     marginRight: 10,
+  },
+  languageButton: {
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
 
