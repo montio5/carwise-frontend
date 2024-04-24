@@ -6,13 +6,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/token/fa`, { 
+      const response = await fetch(`${apiUrl}api/token/`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,6 +22,8 @@ const LoginScreen = ({ navigation }) => {
           password: password,
         }),
       });
+      console.log(email, password);
+      console.log(response.ok);
 
       if (response.ok) {
         const data = await response.json();
@@ -29,10 +31,9 @@ const LoginScreen = ({ navigation }) => {
         const accessToken = data.access;
         console.log('Received access token:', accessToken); // Log the received access token to ensure it's not undefined
         if (accessToken) {
-          navigation.navigate("Home");
           await AsyncStorage.setItem('token', accessToken);
-          // Navigate to the next screen or do something else
-          // For example, navigation.navigate('Home');
+          navigation.navigate('Home');
+          setIsLoggedIn(true);
         } else {
           Alert.alert('Login failed', 'Access token not received from server');
         }
