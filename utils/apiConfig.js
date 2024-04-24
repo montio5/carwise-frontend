@@ -1,5 +1,5 @@
-const isLocal = true; // Change this to switch between local and destination URL
+const isLocal = false; // Change this to switch between local and destination URL
 
-const apiUrl = isLocal ? 'http://localhost:8000/' : 'https://example.com/api';
+const apiUrl = isLocal ? 'http://localhost:8000/' : 'https://carwise.pythonanywhere.com';
 
 export default apiUrl;

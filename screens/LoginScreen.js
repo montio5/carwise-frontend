@@ -1,60 +1,80 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Pressable,Alert } from 'react-native';
 import apiUrl from '../utils/apiConfig'; // Import the apiUrl from apiConfig.js
-import { useTranslation } from 'react-i18next'; // Import useTranslation hook
+import { strings } from '../utils/strings';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { t } = useTranslation(); // Initialize useTranslation hook
 
-  const handleLogin = () => {
-    // Call your login API using the apiUrl
-    fetch(`${apiUrl}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Handle login response
-        console.log(data); // For example, you can log the response or set user state
-      })
-      .catch(error => {
-        console.error('Error:', error);
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/api/token/fa`, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
       });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Token data:', data); // Log the received data to inspect its structure
+        const accessToken = data.access;
+        console.log('Received access token:', accessToken); // Log the received access token to ensure it's not undefined
+        if (accessToken) {
+          navigation.navigate("Home");
+          await AsyncStorage.setItem('token', accessToken);
+          // Navigate to the next screen or do something else
+          // For example, navigation.navigate('Home');
+        } else {
+          Alert.alert('Login failed', 'Access token not received from server');
+        }
+      } else {
+        // Handle authentication failure
+        Alert.alert('Login failed', 'Please check your credentials');
+      }
+    } catch (error) {
+      // Handle other errors like network issues
+      console.error('Error during login:', error);
+      Alert.alert('Error', 'An error occurred during login. Please try again later.');
+    }
   };
 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>{t('login.title')}</Text>
-        <TextInput
-          placeholder={t('login.emailPlaceholder')}
-          value={email}
-          onChangeText={setEmail}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder={t('login.passwordPlaceholder')}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-        />
-        <Button title={t('login.loginButton')} onPress={handleLogin} />
-        {/* Pressable to navigate to RegistrationScreen */}
-        <Pressable onPress={() => navigation.navigate('Registration')}>
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>{t('login.noAccount')}</Text>
-            {/* "Sign up here" link */}
-            <Text style={[styles.signupText, styles.signupLink]}>{t('login.signupLink')}</Text>
-          </View>
-        </Pressable>
-      </View>
-    );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{strings.login.title}</Text>
+      <TextInput
+        placeholder={strings.login.emailPlaceholder}
+        value={email}
+        onChangeText={setEmail}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder={strings.login.passwordPlaceholder}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+      />
+      <Button title={strings.login.loginButton} onPress={handleLogin} />
+      <Pressable onPress={() => navigation.navigate('Registration')}>
+        <View style={styles.signupContainer}>
+          <Text style={styles.signupText}>{strings.login.noAccount}</Text>
+          <Text style={[styles.signupText, styles.signupLink]}>{strings.login.signupLink}</Text>
+        </View>
+      </Pressable>
+    </View>
+  );
 };
+
 
 const styles = StyleSheet.create({
   container: {

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native'; 
+import { strings } from '../utils/strings';
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { t } = useTranslation();
   const navigation = useNavigation(); // Get navigation object
 
   const handleRegister = () => {
@@ -15,29 +14,24 @@ const RegistrationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('registration.title')}</Text>
+      <Text style={styles.title}>{strings.registration.title}</Text>
       <TextInput
-        placeholder={t('registration.emailPlaceholder')}
+        placeholder={strings.registration.emailPlaceholder}
         value={email}
         onChangeText={setEmail}
         style={styles.input}
       />
       <TextInput
-        placeholder={t('registration.passwordPlaceholder')}
+        placeholder={strings.registration.passwordPlaceholder}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
       />
-      <Button title={t('registration.registerButton')} onPress={handleRegister} />
-      {/* No reference to changeLanguage function */}
-      <View style={styles.languageContainer}>
-        <Text style={styles.languageText}>{t('registration.languageSelection')}</Text>
-        {/* Replace Button with Pressable */}
-        <Pressable onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.languageButton}>{t('registration.loginLink')}</Text>
-        </Pressable>
-      </View>
+      <Button title={strings.registration.registerButton} onPress={handleRegister} />
+      <Pressable onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.signupText}>{strings.registration.loginLink}</Text>
+      </Pressable>
     </View>
   );
 };
