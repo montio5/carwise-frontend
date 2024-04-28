@@ -10,9 +10,16 @@ export const strings = {
     registration: {
       title: "Registration",
       emailPlaceholder: "Email",
+      firstNamePlaceholder: "First Name", 
+      lastNamePlaceholder: "Last Name", 
+
       passwordPlaceholder: "Password",
+      rePasswordPlaceholder: "re-Password",
+
       registerButton: "Register",
-      loginLink: "Already have an account? Login here",
+      haveAccount: "Already have an account?",
+      loginLink: "Login here",
+
     },
   };
   
