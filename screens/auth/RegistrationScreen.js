@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Pressable,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
-import { strings } from '../utils/strings';
+import { strings } from '../../utils/strings';
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');

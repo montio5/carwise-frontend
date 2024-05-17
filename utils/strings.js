@@ -1,4 +1,5 @@
 export const strings = {
+  ContentType: 'application/json',
     login: {
       title: "Login",
       emailPlaceholder: "Email",

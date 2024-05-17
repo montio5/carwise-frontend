@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Pressable,Alert } from 'react-native';
-import apiUrl from '../utils/apiConfig'; // Import the apiUrl from apiConfig.js
-import { strings } from '../utils/strings';
+import apiUrl from '../../utils/apiConfig'; 
+import { strings } from '../../utils/strings';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
       const response = await fetch(`${apiUrl}api/token/`, { 
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': strings.ContentType,
         },
         body: JSON.stringify({
           username: email,
