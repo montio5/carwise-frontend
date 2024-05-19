@@ -50,18 +50,43 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   };
 
   const handleSave = () => {
+    const cleanedCarData = cleanCarData(carData);
+
     if (car !== null) {
-      updateUserCar(car.unique_key, carData)
+      updateUserCar(car.unique_key, cleanedCarData)
         .then((response) => {
           console.log("Update response:", response);
           navigation.navigate('CarScreen', { car: car });
         })
         .catch((error) => console.error('Error updating car:', error));
     } else {
-      createUserCar(carData)
-        .then(() => navigation.goBack())
+      createUserCar(cleanedCarData)
+        .then(() =>
+            {         
+              navigation.navigate('Home')      })
         .catch((error) => console.error('Error creating car:', error));
     }
+  };
+
+  const cleanCarData = (data) => {
+    const cleanedData = { ...data };
+  
+    // Iterate over mileage_info and remove empty values
+    cleanedData.mileage_info = Object.keys(cleanedData.mileage_info)
+      .filter(key => cleanedData.mileage_info[key] !== '')
+      .reduce((obj, key) => {
+        obj[key] = cleanedData.mileage_info[key];
+        return obj;
+      }, {});
+  
+    // Iterate over carData and remove empty values
+    Object.keys(cleanedData).forEach(key => {
+      if (cleanedData[key] === '' || (typeof cleanedData[key] === 'object' && Object.keys(cleanedData[key]).length === 0)) {
+        delete cleanedData[key];
+      }
+    });
+  
+    return cleanedData;
   };
 
   return (

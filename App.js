@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Assuming you have Ionicons installed
-
+import {deleteUserCar} from  './api/UserCar'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -50,13 +50,28 @@ const CarStackScreens = () => (
         ),
       })}
     />
-<CarStack.Screen
-  name="CarScreen"
-  component={CarScreen}
-  options={({ route }) => ({
-    title: route.params?.car?.name || 'Car',
-  })}
-/>
+      <CarStack.Screen
+        name="CarScreen"
+        component={CarScreen}
+        options={({ route, navigation }) => ({
+          title: route.params?.car?.name || 'Car',
+          headerRight: () => (
+            <Icon.Button
+              name="trash"
+              size={24}
+              color="red"
+              backgroundColor="transparent"
+              onPress={() => {
+                deleteUserCar(route.params.car.unique_key).then(() => {
+                  navigation.navigate('Home', { refresh: true });
+                }).catch((error) => {
+                  console.error('Error deleting car:', error);
+                });
+              }}
+            />
+          ),
+        })}
+      />
 <CarStack.Screen
   name="AddEditCarInfoFirstScreen"
   component={AddEditCarInfoFirstScreen}

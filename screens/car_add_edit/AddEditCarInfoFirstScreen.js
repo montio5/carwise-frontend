@@ -2,11 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
-import { getUserCar, updateUserCar, createUserCar } from '../../api/UserCar';
+import { Picker } from '@react-native-picker/picker';
+import { getUserCar, getCarModels, createUserCar } from '../../api/UserCar';
 
 const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const car = route.params.car || null; // Ensure car is null if not passed
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [carCompanies, setCarCompanies] = useState([]);
+  const [carModels, setCarModels] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [selectedModel, setSelectedModel] = useState(null);
+
   const [carData, setCarData] = useState({
     name: '',
     car_model: '',
@@ -41,19 +47,25 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
           console.error('Error fetching car:', error);
         }
       }
+      try {
+        const carModelsData = await getCarModels();
+        setCarCompanies(carModelsData);
+      } catch (error) {
+        console.error('Error fetching car models:', error);
+      }
     };
 
     fetchData();
   }, [car]);
 
   useEffect(() => {
-    const { name, car_model_display, mileage_info } = carData;
-    if (name && car_model_display && mileage_info.mileage) {
+    const { name, mileage_info } = carData;
+    if (selectedCompany && selectedModel && name && mileage_info.mileage) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [carData]);
+  }, [carData, selectedCompany, selectedModel]);
 
   const handleInputChange = (field, value, isMileageInfo = false) => {
     if (isMileageInfo) {
@@ -72,6 +84,16 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleCompanyChange = (companyId) => {
+    setSelectedCompany(companyId);
+    const selectedCompany = carCompanies.find(company => company.id === companyId);
+    setCarModels(selectedCompany ? selectedCompany.car_models : []);
+  };
+
+  const handleModelChange = (modelId) => {
+    setSelectedModel(modelId);
+    handleInputChange('car_model', modelId);
+  };
   const handleNext = () => {
     navigation.navigate('AddEditCarInfoSecondScreen', { carData, car });
   };
@@ -84,12 +106,27 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         onChangeText={(text) => handleInputChange('name', text)}
         style={styles.input}
       />
-      <TextInput
-        placeholder="Car Model"
-        value={(carData.car_model_display) ? carData.car_model_display.toString() : ""}
-        onChangeText={(text) => handleInputChange('car_model', text)}
+<Picker
+        selectedValue={selectedCompany}
+        onValueChange={(itemValue) => handleCompanyChange(itemValue)}
         style={styles.input}
-      />
+      >
+        <Picker.Item label="Select Car Company" value={null} />
+        {carCompanies.map((company) => (
+          <Picker.Item key={company.id} label={company.name} value={company.id} />
+        ))}
+      </Picker>
+      <Picker
+        selectedValue={selectedModel}
+        onValueChange={(itemValue) => handleModelChange(itemValue)}
+        style={styles.input}
+      >
+        <Picker.Item label="Select Car Model" value={null} />
+        {carModels.map((model) => (
+          <Picker.Item key={model.id} label={model.name} value={model.id} />
+        ))}
+      </Picker>
+      
       <TextInput
         placeholder="Mileage"
         value={(carData.mileage_info.mileage) ? carData.mileage_info.mileage.toString() : ""}

@@ -30,7 +30,6 @@ const CarDetailScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.textInput} placeholder="Enter custom text" />
       <View >
 
       </View>
@@ -62,6 +61,7 @@ const CarDetailScreen = () => {
           </View>
         </TouchableOpacity>
       </View>
+      {/* <TextInput style={styles.textInput} placeholder="Enter custom text" /> */}
     </View>
   );
 };
