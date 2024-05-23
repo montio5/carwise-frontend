@@ -11,6 +11,7 @@ import RegistrationScreen from './screens/auth/RegistrationScreen';
 import SettingScreen from './screens/tabs/SettingScreen';
 import NotificationScreen from './screens/tabs/NotificationScreen';
 import CarsListScreen from './screens/tabs/CarsListScreen';
+import CustomFiledListScreen from './screens/custom_field/CustomFiledListScreen'
 import CarScreen from './screens/CarScreen';
 import CustomFieldScreen from './screens/CustomFieldScreen';
 import AddEditCarInfoFirstScreen from './screens/car_add_edit/AddEditCarInfoFirstScreen';
@@ -46,6 +47,22 @@ const CarStackScreens = () => (
             color="#000"
             backgroundColor="transparent"
             onPress={() => navigation.navigate('AddEditCarInfoFirstScreen', { car: null })}
+          />
+        ),
+      })}
+    />
+       <CarStack.Screen
+      name="CustomFieldList"
+      component={CustomFiledListScreen}
+      options={({ navigation }) => ({
+        title: 'CustomFieldList',
+        headerRight: () => (
+          <Icon.Button
+            name="add"
+            size={24}
+            color="#000"
+            backgroundColor="transparent"
+            onPress={() => navigation.navigate('CustomField', { car: null })}
           />
         ),
       })}
@@ -100,8 +117,10 @@ const CarStackScreens = () => (
         title: route.params.car.name || 'Car',
       })}
     />
-    <CarStack.Screen name="CustomField" component={CustomFieldScreen} />
-
+<CarStack.Screen
+  name="CustomField"
+  component={CustomFieldScreen}
+/>
   </CarStack.Navigator>
 );
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getUserCar, getCarModels, createUserCar } from '../../api/UserCar';
+import { getUserCar, getCarModels} from '../../api/UserCar';
 
 const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const car = route.params.car || null; // Ensure car is null if not passed

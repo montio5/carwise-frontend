@@ -1,10 +1,8 @@
 // SecondScreen.js
 
 import React, { useState , useCallback } from 'react';
-import { View, TextInput, Button, StyleSheet,ScrollView ,Pressable,Text,TouchableOpacity,BackHandler,Alert } from 'react-native';
-import { getUserCar, updateUserCar, createUserCar } from '../../api/UserCar';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { handleDateChange } from '../../general/generalFunctions';
+import { View, TextInput, StyleSheet,ScrollView ,Pressable,Text,BackHandler } from 'react-native';
+import { updateUserCar, createUserCar } from '../../api/UserCar';
 import { useFocusEffect } from '@react-navigation/native';
 
 const Separator = ({ text }) => (

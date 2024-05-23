@@ -10,7 +10,7 @@ const CarDetailScreen = () => {
 
   
   const goToCustomFieldScreen = () => {
-    navigation.navigate('CustomField', { car: car });
+    navigation.navigate('CustomFieldList', { car: car });
   };
 
   const goToCarSetupScreen = () => {

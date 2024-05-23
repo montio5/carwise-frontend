@@ -2,24 +2,47 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {createCustomField}  from '../api/UserCar';
 
-const CustomFieldScreen = () => {
+const CustomFieldScreen = ({ navigation, route }) => {
+  const car = route.params.car || null; // Ensure car is null if not passed
   const [name, setName] = useState('');
   const [mileagePerChange, setMileagePerChange] = useState('');
   const [monthPerChangeYear, setMonthPerChangeYear] = useState('');
   const [monthPerChangeMonth, setMonthPerChangeMonth] = useState('');
   const [lastMileageChanged, setLastMileageChanged] = useState('');  
-  const [lastDateChanged, setLastDateChanged] = useState(new Date());
+  const [lastDateChanged, setLastDateChanged] = useState(null); // Initialize with null
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDateChange = (event, selectedDate) => {
-    setLastDateChanged(selectedDate);
+    setLastDateChanged(selectedDate || lastDateChanged); // Set selected date or current date if null
     setShowDatePicker(false); // Close the date picker after selecting a date
   };
 
+  const clearDate = () => {
+    setLastDateChanged(null); // Set the date to null
+  };
+
   const handleSave = () => {
-    // Here you can implement your logic to save the form data
-    console.log('Form data saved!');
+    const cleanedCarData = {
+      name,
+      mileage_per_change: parseFloat(mileagePerChange),
+      last_mileage_changed: parseFloat(lastMileageChanged),
+      last_date_changed: lastDateChanged ? lastDateChanged.toISOString().split('T')[0] : null, // Format date only if not null
+    };
+    const monthPerChangeYearValue = monthPerChangeYear ? parseInt(monthPerChangeYear, 10) : 0;
+    const monthPerChangeMonthValue = monthPerChangeMonth ? parseInt(monthPerChangeMonth, 10) : 0;
+    const finalValue = parseInt(monthPerChangeMonthValue, 10) + parseInt(monthPerChangeYearValue, 10) * 12;
+    if (finalValue !== 0) {
+      cleanedCarData.month_per_changes = finalValue;
+    }
+
+    createCustomField(car.unique_key, cleanedCarData)
+      .then((response) => {
+        console.log("CREATE response:", response);
+        navigation.navigate('CarScreen', { car: car });
+      })
+      .catch((error) => console.error('Error updating car:', error));
   };
 
   return (
@@ -72,11 +95,14 @@ const CustomFieldScreen = () => {
         <Text style={styles.label}>Last date changed:</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
           <Icon name="calendar" size={20} color="black" style={{ marginRight: 10 }} />
-          <Text>{lastDateChanged.toDateString()}</Text>
+          <Text>{lastDateChanged ? lastDateChanged.toDateString() : 'Select Date'}</Text>
+          {lastDateChanged && (
+            <Icon name="close-circle" size={20} color="gray" onPress={clearDate} style={{ marginLeft: 10 }} />
+          )}
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
-            value={lastDateChanged}
+            value={lastDateChanged || new Date()} // Pass null or current date
             mode="date"
             display="default"
             onChange={handleDateChange}
