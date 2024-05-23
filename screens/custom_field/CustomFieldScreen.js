@@ -1,26 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {createCustomField}  from '../api/UserCar';
+import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
+import { useNavigation,useRoute } from '@react-navigation/native';
 
-const CustomFieldScreen = ({ navigation, route }) => {
-  const car = route.params.car || null; // Ensure car is null if not passed
+const CustomFieldScreen = ({ route ,navigation}) => {
+  const car = route.params.car || null;
+  const customField = route.params.customField || null; // Ensure customField is null if not passed
+  
+  // console.log("---------------------",customField.id);
+  console.log("---------------------",route);
+  console.log("---------------------",navigation);
+
   const [name, setName] = useState('');
   const [mileagePerChange, setMileagePerChange] = useState('');
   const [monthPerChangeYear, setMonthPerChangeYear] = useState('');
   const [monthPerChangeMonth, setMonthPerChangeMonth] = useState('');
-  const [lastMileageChanged, setLastMileageChanged] = useState('');  
-  const [lastDateChanged, setLastDateChanged] = useState(null); // Initialize with null
+  const [lastMileageChanged, setLastMileageChanged] = useState('');
+  const [lastDateChanged, setLastDateChanged] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  useEffect(() => {
+    if (customField) {
+      getCustomField(car.unique_key, customField.id)
+        .then((data) => {
+          setName(data.name || '');
+          setMileagePerChange(data.mileage_per_change ? data.mileage_per_change.toString() : '');
+          setMonthPerChangeYear(data.month_per_changes ? Math.floor(data.month_per_changes / 12).toString() : '');
+          setMonthPerChangeMonth(data.month_per_changes ? (data.month_per_changes % 12).toString() : '');
+          setLastMileageChanged(data.last_mileage_changed ? data.last_mileage_changed.toString() : '');
+          setLastDateChanged(data.last_date_changed ? new Date(data.last_date_changed) : null);
+        })
+        .catch((error) => console.error('Error fetching custom field:', error));
+    }
+  }, [customField, car.unique_key]);
+
   const handleDateChange = (event, selectedDate) => {
-    setLastDateChanged(selectedDate || lastDateChanged); // Set selected date or current date if null
-    setShowDatePicker(false); // Close the date picker after selecting a date
+    setLastDateChanged(selectedDate || lastDateChanged);
+    setShowDatePicker(false);
   };
 
   const clearDate = () => {
-    setLastDateChanged(null); // Set the date to null
+    setLastDateChanged(null);
   };
 
   const handleSave = () => {
@@ -28,21 +50,26 @@ const CustomFieldScreen = ({ navigation, route }) => {
       name,
       mileage_per_change: parseFloat(mileagePerChange),
       last_mileage_changed: parseFloat(lastMileageChanged),
-      last_date_changed: lastDateChanged ? lastDateChanged.toISOString().split('T')[0] : null, // Format date only if not null
+      last_date_changed: lastDateChanged ? lastDateChanged.toISOString().split('T')[0] : null,
     };
+
     const monthPerChangeYearValue = monthPerChangeYear ? parseInt(monthPerChangeYear, 10) : 0;
     const monthPerChangeMonthValue = monthPerChangeMonth ? parseInt(monthPerChangeMonth, 10) : 0;
-    const finalValue = parseInt(monthPerChangeMonthValue, 10) + parseInt(monthPerChangeYearValue, 10) * 12;
+    const finalValue = monthPerChangeMonthValue + monthPerChangeYearValue * 12;
     if (finalValue !== 0) {
       cleanedCarData.month_per_changes = finalValue;
     }
 
-    createCustomField(car.unique_key, cleanedCarData)
+    const apiCall = customField
+      ? updateCustomField(car.unique_key, customField.id, cleanedCarData)
+      : createCustomField(car.unique_key, cleanedCarData);
+
+    apiCall
       .then((response) => {
-        console.log("CREATE response:", response);
+        console.log(customField ? "UPDATE response:" : "CREATE response:", response);
         navigation.navigate('CarScreen', { car: car });
       })
-      .catch((error) => console.error('Error updating car:', error));
+      .catch((error) => console.error(customField ? 'Error updating custom field:' : 'Error creating custom field:', error));
   };
 
   return (
@@ -59,8 +86,8 @@ const CustomFieldScreen = ({ navigation, route }) => {
         <Text style={styles.label}>Mileage per change:</Text>
         <TextInput
           style={styles.input}
-          value={mileagePerChange.toString()}
-          onChangeText={(text) => setMileagePerChange(parseInt(text, 10))}
+          value={mileagePerChange}
+          onChangeText={(text) => setMileagePerChange(text)}
           placeholder="Enter mileage per change"
           keyboardType="numeric"
         />
@@ -69,15 +96,15 @@ const CustomFieldScreen = ({ navigation, route }) => {
         <View style={styles.monthPerChangeContainer}>
           <TextInput
             style={[styles.input, styles.monthInput]}
-            value={monthPerChangeYear.toString()}
-            onChangeText={(text) => setMonthPerChangeYear(parseInt(text, 10))}
+            value={monthPerChangeYear}
+            onChangeText={(text) => setMonthPerChangeYear(text)}
             placeholder="Year"
             keyboardType="numeric"
           />
           <TextInput
             style={[styles.input, styles.monthInput]}
-            value={monthPerChangeMonth.toString()}
-            onChangeText={(text) => setMonthPerChangeMonth(parseInt(text, 10))}
+            value={monthPerChangeMonth}
+            onChangeText={(text) => setMonthPerChangeMonth(text)}
             placeholder="Month"
             keyboardType="numeric"
           />
@@ -86,8 +113,8 @@ const CustomFieldScreen = ({ navigation, route }) => {
         <Text style={styles.label}>Last mileage changed:</Text>
         <TextInput
           style={styles.input}
-          value={lastMileageChanged.toString()}
-          onChangeText={(text) => setLastMileageChanged(parseInt(text, 10))}
+          value={lastMileageChanged}
+          onChangeText={(text) => setLastMileageChanged(text)}
           placeholder="Enter last mileage changed"
           keyboardType="numeric"
         />
@@ -102,14 +129,14 @@ const CustomFieldScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
-            value={lastDateChanged || new Date()} // Pass null or current date
+            value={lastDateChanged || new Date()}
             mode="date"
             display="default"
             onChange={handleDateChange}
           />
         )}
       </ScrollView>
-      
+
       <View style={styles.bottomContainer}>
         <Button title="Save" onPress={handleSave} />
       </View>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Assuming you have Ionicons installed
-import {deleteUserCar} from  './api/UserCar'
+import {deleteUserCar,deleteCustomFieldCar} from  './api/UserCar'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,7 +13,7 @@ import NotificationScreen from './screens/tabs/NotificationScreen';
 import CarsListScreen from './screens/tabs/CarsListScreen';
 import CustomFiledListScreen from './screens/custom_field/CustomFiledListScreen'
 import CarScreen from './screens/CarScreen';
-import CustomFieldScreen from './screens/CustomFieldScreen';
+import CustomFieldScreen from './screens/custom_field/CustomFieldScreen';
 import AddEditCarInfoFirstScreen from './screens/car_add_edit/AddEditCarInfoFirstScreen';
 import AddEditCarInfoSecondScreen from './screens/car_add_edit/AddEditCarInfoSecondScreen';
 import CarSetupScreen from './screens/CarSetupScreen';
@@ -54,7 +54,7 @@ const CarStackScreens = () => (
        <CarStack.Screen
       name="CustomFieldList"
       component={CustomFiledListScreen}
-      options={({ navigation }) => ({
+      options={({ navigation,route }) => ({
         title: 'CustomFieldList',
         headerRight: () => (
           <Icon.Button
@@ -62,11 +62,33 @@ const CarStackScreens = () => (
             size={24}
             color="#000"
             backgroundColor="transparent"
-            onPress={() => navigation.navigate('CustomField', { car: null })}
+            onPress={() => navigation.navigate('CustomField', { car: route.params.car})}
           />
         ),
       })}
     />
+    <CarStack.Screen
+  name="CustomField"
+  component={CustomFieldScreen}
+  options={({ route,navigation }) => ({
+    title: route.params.customField?.name || 'Car',
+    headerRight: () => (
+      <Icon.Button
+        name="trash"
+        size={24}
+        color="red"
+        backgroundColor="transparent"
+        onPress={() => {
+          deleteCustomFieldCar(route.params.car.unique_key,route.params.customField.id).then(() => {
+            navigation.navigate('CarScreen', { refresh: true , car: route.params.car});
+          }).catch((error) => {
+            console.error('Error deleting customField:', error);
+          });
+        }}
+      />
+    ),
+  })}
+/>
       <CarStack.Screen
         name="CarScreen"
         component={CarScreen}
@@ -117,10 +139,7 @@ const CarStackScreens = () => (
         title: route.params.car.name || 'Car',
       })}
     />
-<CarStack.Screen
-  name="CustomField"
-  component={CustomFieldScreen}
-/>
+
   </CarStack.Navigator>
 );
 

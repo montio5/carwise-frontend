@@ -39,7 +39,7 @@ const CustomFiledListScreen = ({ route }) => {
   }, []);
 
   const handlePress = (item) => {
-    navigation.navigate('CustomField', { car:car,customFiled: item });
+    navigation.navigate('CustomField', { car:car, customField : item });
   };
 
   const renderItem = ({ item }) => (

@@ -148,7 +148,6 @@ export const deleteUserCar = async (uniqueKey) => {
   }
 };
 
-
 // ______________ Get Notifications ____________
 
 export const getNotifications = async () => {
@@ -164,6 +163,99 @@ export const getNotifications = async () => {
     return data;
   } catch (error) {
     console.error('Error fetching user car:', error);
+    throw error;
+  }
+};
+
+// ______________ Get Custom Field List ____________
+
+export const getCustomFieldList = async (carUniqueKey) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}`, {
+      headers: {
+        Accept: strings.ContentType,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user car:', error);
+    throw error;
+  }
+};
+
+// ______________ Delete User Car ____________
+
+export const deleteCustomFieldCar = async (carUniqueKey, id) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${id}/`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      // Handle non-2xx HTTP responses
+      throw new Error(`Error deleting custom field: ${response.status} ${response.statusText}`);
+    }
+
+    // Deletion was successful
+    return true;
+  } catch (error) {
+    console.error('Error deleting custom field:', error);
+    throw error;
+  }
+};
+// ______________ Get Custom Field ____________
+
+export const getCustomField = async (carUniqueKey,id) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${id}`, {
+      headers: {
+        Accept: strings.ContentType,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user car:', error);
+    throw error;
+  }
+};
+// ______________ Update Custom Field ____________
+
+export const updateCustomField = async (uniqueKey, customFieldKey, customFieldData) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/${customFieldKey}/`, {
+      method: 'PUT', // Use 'PATCH' if you only want to update certain fields
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': strings.ContentType,
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(customFieldData),
+    });
+    const responseText = await response.text();
+    console.log('Raw response:', responseText);
+
+    if (!response.ok) {
+      console.error('Error response from server:', responseText);
+      throw new Error(`Error updating custom field: ${response.status} ${response.statusText}`);
+    }
+
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('Error updating custom field:', error);
     throw error;
   }
 };
@@ -199,44 +291,4 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
     throw error;
   }
 
-};
-// ______________ Get Custom Field List ____________
-
-export const getCustomFieldList = async (carUniqueKey) => {
-  try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching user car:', error);
-    throw error;
-  }
-};
-
-// ______________ Delete User Car ____________
-
-export const deleteCustomFieldCar = async (carUniqueKey,customFieldUniqueKey) => {
-  try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${customFieldUniqueKey}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    if (response.status !== 204) { // 204 No Content is a typical response for successful delete
-      throw new Error('Network response was not ok');
-    }
-    return true; // Deletion was successful
-  } catch (error) {
-    console.error('Error deleting car:', error);
-    throw error;
-  }
 };

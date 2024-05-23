@@ -30,6 +30,7 @@ const NotificationScreen = () => {
         <Text style={styles.message}>{item.message}</Text>
         <Text style={[styles.status, { color: getStatusColor(item.status) }]}>{item.status}</Text>
       </View>
+      {getAdditionalIcon(item.field_name)}
     </View>
   );
 
@@ -57,6 +58,18 @@ const NotificationScreen = () => {
       default:
         return 'help-circle';
     }
+  };
+
+  const getAdditionalIcon = (fieldName) => {
+    if (!fieldName) return null; // Check if fieldName is undefined or null
+    const lowerCaseFieldName = fieldName.toLowerCase();
+    if (lowerCaseFieldName.includes('filter')) {
+      return <Ionicons name="filter" size={30} color="black" style={styles.additionalIcon} />;
+    }
+    else if (lowerCaseFieldName.includes('oil')) {
+      return <Ionicons name="water-outline" size={30} color="black" style={styles.additionalIcon} />;
+    }  
+    return null;
   };
 
   if (loading) {
@@ -115,6 +128,9 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  additionalIcon: {
+    marginLeft: 16,
   },
 });
 
