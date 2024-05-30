@@ -4,14 +4,8 @@ import React, { useState , useCallback } from 'react';
 import { View, TextInput, StyleSheet,ScrollView ,Pressable,Text,BackHandler } from 'react-native';
 import { updateUserCar, createUserCar } from '../../api/UserCar';
 import { useFocusEffect } from '@react-navigation/native';
+import Separator from '../../general/component'
 
-const Separator = ({ text }) => (
-  <View style={styles.separator}>
-    <View style={styles.line} />
-    <Text style={styles.text}>{text}</Text>
-    <View style={styles.line} />
-  </View>
-);
 
 const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const car = route.params.car;
@@ -69,7 +63,7 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const cleanCarData = (data) => {
     const cleanedData = { ...data };
   
-    // Iterate over mileage_info and remove empty values
+    // Iterate over mileage_info and remove keys with empty string values
     cleanedData.mileage_info = Object.keys(cleanedData.mileage_info)
       .filter(key => cleanedData.mileage_info[key] !== '')
       .reduce((obj, key) => {
@@ -77,13 +71,26 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         return obj;
       }, {});
   
-    // Iterate over carData and remove empty values
+    // Check and clean custom_fields if it exists
+    if (Array.isArray(cleanedData.custom_fields)) {
+      cleanedData.custom_fields = cleanedData.custom_fields.map(field => {
+        // Remove empty string values within each custom field object
+        return Object.keys(field)
+          .filter(key => field[key] !== '')
+          .reduce((obj, key) => {
+            obj[key] = field[key];
+            return obj;
+          }, {});
+      }).filter(field => Object.keys(field).length > 0); // Remove empty custom field objects
+    }
+  
+    // Iterate over cleanedData and remove keys with empty string values or empty objects
     Object.keys(cleanedData).forEach(key => {
       if (cleanedData[key] === '' || (typeof cleanedData[key] === 'object' && Object.keys(cleanedData[key]).length === 0)) {
         delete cleanedData[key];
       }
     });
-  
+    console.log("+++++++++++++++",cleanCarData);
     return cleanedData;
   };
 

@@ -4,6 +4,7 @@ import { getCustomFieldList } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
+import Separator from '../../general/component'
 
 const CustomFiledListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);

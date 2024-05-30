@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Assuming you have Ionicons installed
 import {deleteUserCar,deleteCustomFieldCar} from  './api/UserCar'
 import { NavigationContainer } from '@react-navigation/native';
@@ -71,8 +70,8 @@ const CarStackScreens = () => (
   name="CustomField"
   component={CustomFieldScreen}
   options={({ route,navigation }) => ({
-    title: route.params.customField?.name || 'Car',
-    headerRight: () => (
+    title: route.params.customField?.name || 'Add Custom Field',
+    headerRight: () => route.params.customField && (
       <Icon.Button
         name="trash"
         size={24}
@@ -94,7 +93,7 @@ const CarStackScreens = () => (
         component={CarScreen}
         options={({ route, navigation }) => ({
           title: route.params?.car?.name || 'Car',
-          headerRight: () => (
+          headerRight: () =>route.params.car &&  (
             <Icon.Button
               name="trash"
               size={24}

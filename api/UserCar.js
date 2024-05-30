@@ -66,6 +66,7 @@ export const updateUserCar = async (carUniqueKey, newData) => {
     if (!token) {
       throw new Error('Token not found');
     }
+    console.log("+++++++++++++++++++++++++++++++_____+++++++++++++",newData);
     const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}/`, {
       method: 'PUT',
       headers: {
@@ -110,6 +111,7 @@ export const createUserCar = async (newData) => {
     });
     const responseText = await response.text(); // Get raw response text
     console.log('Raw response:', responseText);
+    console.log("---------------------------here")
 
     if (!response.ok) {
       // Handle non-2xx HTTP responses
@@ -186,7 +188,7 @@ export const getCustomFieldList = async (carUniqueKey) => {
   }
 };
 
-// ______________ Delete User Car ____________
+// ______________ Delete Custom Field ____________
 
 export const deleteCustomFieldCar = async (carUniqueKey, id) => {
   try {
@@ -291,4 +293,62 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
     throw error;
   }
 
+};
+
+// ______________ Get User Car ____________
+
+export const getCarMileage = async (carUniqueKey) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/mileage/${carUniqueKey}`, {
+      headers: {
+        Accept: strings.ContentType,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user car:', error);
+    throw error;
+  }
+};
+
+// ______________ Update User Car ____________
+
+export const updateCarMileage = async (carUniqueKey, newData) => {
+
+  try {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token not found');
+    }
+    const response = await fetch(`${apiUrl}api/mileage/${carUniqueKey}/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json', // Ensure the Content-Type is set
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(newData), // Stringify the request body
+    });
+
+    const responseText = await response.text(); // Get raw response text
+    console.log('Raw response:', responseText);
+
+    if (!response.ok) {
+      // Handle non-2xx HTTP responses
+      console.error('Error response from server:', responseText);
+      throw new Error(`Error updating user car: ${response.status} ${response.statusText}`);
+    }
+
+    // Attempt to parse JSON only if response is OK
+    const data = JSON.parse(responseText);
+    console.log("--------------------",data);
+
+    return data;
+  } catch (error) {
+    console.error('Error updating user car:', error);
+    throw error;
+  }
 };

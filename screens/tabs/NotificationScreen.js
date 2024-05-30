@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getNotifications } from '../../api/UserCar';
 
 const NotificationScreen = () => {
   const [carData, setCarData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
+  };
+  const fetchData = async () => {
+    try {
+      const data = await getNotifications();
+      setCarData(Object.values(data).flatMap(car => Object.values(car)));
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch car data');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const data = await getNotifications();
-        setCarData(Object.values(data).flatMap(car => Object.values(car)));
-      } catch (error) {
-        Alert.alert('Error', 'Failed to fetch car data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getData();
+    fetchData();
   }, []);
+
 
   const renderNotification = ({ item }) => (
     <View style={styles.notificationContainer}>
@@ -42,6 +49,8 @@ const NotificationScreen = () => {
         return 'orange';
       case 'Informational':
         return 'blue';
+      case 'Custom':
+          return 'gray';
       default:
         return 'black';
     }
@@ -55,6 +64,8 @@ const NotificationScreen = () => {
         return 'warning';
       case 'Informational':
         return 'information-circle';
+      case 'Custom':
+        return 'cog-outline';
       default:
         return 'help-circle';
     }
@@ -86,6 +97,9 @@ const NotificationScreen = () => {
         data={carData}
         renderItem={renderNotification}
         keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </SafeAreaView>
   );
