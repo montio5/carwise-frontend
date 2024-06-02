@@ -1,22 +1,49 @@
 // SettingScreen.js
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { logout } from '../../api/Authentication'; // Import the logout function
+import { useFocusEffect } from '@react-navigation/native';
+import { logout, getUserProfile } from '../../api/Authentication'; // Import the logout and getUserProfile functions
 
-const SettingScreen = ({ navigation }) => {
-  const userName = "John Doe"; // This should be fetched from your user data
+const SettingScreen = ({ navigation, route }) => {
+  const [userName, setUserName] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.refresh) {
+        fetchData();
+      }
+    }, [route.params])
+  );
+
+  const fetchData = async () => {
+    try {
+      const profile = await getUserProfile();
+      setProfile(profile);
+      const { first_name, last_name, email } = profile;
+      const name = first_name || last_name ? `${first_name} ${last_name}`.trim() : email;
+      setUserName(name);
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEditProfile = () => {
-    // Navigate to the Edit Profile screen
-    navigation.navigate('EditProfile');
+    navigation.navigate('EditProfile', { profile: profile });
   };
 
   const handleLogout = async () => {
     try {
       await logout();
       Alert.alert('Logged Out', 'You have been logged out.');
-      // Optionally, navigate to the login screen or another screen
       navigation.navigate('Login');
     } catch (error) {
       Alert.alert('Error', 'Failed to log out. Please try again.');
@@ -24,9 +51,16 @@ const SettingScreen = ({ navigation }) => {
   };
 
   const handleChangePassword = () => {
-    // Navigate to the Change Password screen
     navigation.navigate('ChangePassword');
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -101,6 +135,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 24,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

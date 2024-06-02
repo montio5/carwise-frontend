@@ -17,9 +17,14 @@ import AddEditCarInfoFirstScreen from './screens/car_add_edit/AddEditCarInfoFirs
 import AddEditCarInfoSecondScreen from './screens/car_add_edit/AddEditCarInfoSecondScreen';
 import CarSetupScreen from './screens/CarSetupScreen';
 import UpdateCarToolScreen from './screens/UpdateCarToolScreen'
+import EditProfileScreen from './screens/profile/EditProfileScreen'
+import ChangePasswordScreen from './screens/profile/ChangePasswordScreen'
+
+
 
 const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
+const SettingStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
 
 const AuthStackScreens = ({ setIsLoggedIn }) => (
@@ -31,6 +36,27 @@ const AuthStackScreens = ({ setIsLoggedIn }) => (
     <AuthStack.Screen name="CarScreen" component={CarScreen} />
   </AuthStack.Navigator>
 );
+const SettingStackScreens = () => (
+  <SettingStack.Navigator>
+   <SettingStack.Screen
+      name="Setting"
+      component={SettingScreen}
+      options={({ navigation }) => ({
+        title: 'Setting',
+
+      })}
+    />
+    <SettingStack.Screen
+  name="EditProfile"
+  component={EditProfileScreen}
+  />
+    <SettingStack.Screen
+  name="ChangePassword"
+  component={ChangePasswordScreen}
+  />
+
+      </SettingStack.Navigator>
+)
 
 const CarStackScreens = () => (
   <CarStack.Navigator>
@@ -167,7 +193,7 @@ const MainStackScreens = () => {
     >
       <MainStack.Screen name="Home" component={CarStackScreens} options={{ headerShown: false }} />
       <MainStack.Screen name="Notification" component={NotificationScreen} />
-      <MainStack.Screen name="Setting" component={SettingScreen} />
+      <MainStack.Screen name="Setting" component={SettingStackScreens}  options={{ headerShown: false }} />
     </MainStack.Navigator>
   );
 };
