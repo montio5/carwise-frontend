@@ -10,28 +10,43 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   const [checkedFields, setCheckedFields] = useState({});
   const car = route.params.car;
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const initialData = await getCarMileage(car.unique_key);
-        setData(initialData);
-        const initialCheckedFields = Object.keys(initialData).reduce((acc, key) => {
-          acc[key] = false;
-          return acc;
-        }, {});
-        setCheckedFields(initialCheckedFields);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
+  useEffect(() => {  
     getData();
   }, [car.unique_key]);
 
+  const getData = async () => {
+    try {
+      const initialData = await getCarMileage(car.unique_key);
+      setData(initialData);
+      const initialCheckedFields = Object.keys(initialData).reduce((acc, key) => {
+        acc[key] = false;
+        return acc;
+      }, {});
+      setCheckedFields(initialCheckedFields);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleCheckboxChange = (field) => {
+    const isChecked = !checkedFields[field];
     setCheckedFields({
       ...checkedFields,
-      [field]: !checkedFields[field],
+      [field]: isChecked,
+    });
+
+    if (isChecked && mileage) {
+      setData({
+        ...data,
+        [field]: mileage,
+      });
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setData({
+      ...data,
+      [field]: value,
     });
   };
 
@@ -67,16 +82,18 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
         keyboardType="numeric"
         onChangeText={setMileage}
       />
+
       {Object.keys(data).map((field, index) => (
         !excludedFields.includes(field) && field !== 'custom_fields' && (
           <View key={index} style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{field}</Text>
             <TextInput
               style={styles.input}
-              placeholder={checkedFields[field] ? mileage : (data[field] !== null ? String(data[field]) : 'N/A')}
-              value={checkedFields[field] ? mileage : ''}
+              placeholder={data[field] !== null ? String(data[field]) : 'N/A'}
+              value={data[field] !== null ?String(data[field]): ''}
               editable={!checkedFields[field]}
               keyboardType="numeric"
+              onChangeText={(value) => handleInputChange(field, value)}
             />
             <Checkbox
               style={styles.checkbox}
@@ -86,18 +103,28 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
           </View>
         )
       ))}
-      <Separator text="Custom fields" />
+
+      {/* Render the separator only if there are custom fields */}
+      {data.custom_fields && data.custom_fields.length > 0 && <Separator text="Custom fields" />}
+
+      {/* Map over the custom fields and render them */}
       {data.custom_fields && data.custom_fields.map((customField) => (
         customField.last_mileage_changed != null && (
           <View key={customField.id} style={styles.fieldContainer}>
+            {/* Render the custom field name */}
             <Text style={styles.fieldLabel}>{customField.name}</Text>
+            
+            {/* Render a TextInput for the custom field */}
             <TextInput
               style={styles.input}
-              placeholder={checkedFields[`custom_field_${customField.id}`] ? mileage : (customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : 'N/A')}
-              value={checkedFields[`custom_field_${customField.id}`] ? mileage : ''}
+              placeholder={customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : 'N/A'}
+              value={String(customField.last_mileage_changed)}
               editable={!checkedFields[`custom_field_${customField.id}`]}
               keyboardType="numeric"
+              onChangeText={(value) => handleInputChange(`custom_field_${customField.id}`, value)}
             />
+            
+            {/* Render a Checkbox for the custom field */}
             <Checkbox
               style={styles.checkbox}
               value={checkedFields[`custom_field_${customField.id}`]}
@@ -106,6 +133,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
           </View>
         )
       ))}
+
       <Pressable onPress={() => handleSubmit()}>
         <View style={styles.button}>
           <Text style={styles.buttonText}>Save</Text>
@@ -114,6 +142,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
