@@ -43,7 +43,7 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
 
   const handleSave = () => {
     const cleanedCarData = cleanCarData(carData);
-
+    console.log("||||||||||||||||",cleanedCarData)
     if (car !== null) {
       updateUserCar(car.unique_key, cleanedCarData)
         .then((response) => {
@@ -90,7 +90,6 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         delete cleanedData[key];
       }
     });
-    console.log("+++++++++++++++",cleanCarData);
     return cleanedData;
   };
 
@@ -206,14 +205,14 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
       <TextInput
         placeholder="Front Suspension"
         value={(carData.mileage_info && carData.mileage_info.front_suspension) ? carData.mileage_info.front_suspension.toString() : ""}
-        onChangeText={(text) => handleInputChange('spark_plug', text, true)}
+        onChangeText={(text) => handleInputChange('front_suspension', text, true)}
         style={styles.input}
         keyboardType="numeric"
       />
       <TextInput
         placeholder="Clutch Plate"
         value={(carData.mileage_info && carData.mileage_info.clutch_plate) ? carData.mileage_info.clutch_plate.toString() : ""}
-        onChangeText={(text) => handleInputChange('spark_plug', text, true)}
+        onChangeText={(text) => handleInputChange('clutch_plate', text, true)}
         style={styles.input}
         keyboardType="numeric"
       />
