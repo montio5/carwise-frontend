@@ -10,6 +10,17 @@ const SettingScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState();
 
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // Make sure this is defined and properly logs out the user
+      Alert.alert('Logged Out', 'You have been logged out.');
+      setIsLoggedIn(false); // Set the user as logged out
+    } catch (error) {
+      Alert.alert('Error', 'Failed to log out. Please try again.');
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -40,15 +51,7 @@ const SettingScreen = ({ navigation, route }) => {
     navigation.navigate('EditProfile', { profile: profile });
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      Alert.alert('Logged Out', 'You have been logged out.');
-      navigation.navigate('Login');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to log out. Please try again.');
-    }
-  };
+
 
   const handleChangePassword = () => {
     navigation.navigate('ChangePassword');
@@ -69,12 +72,12 @@ const SettingScreen = ({ navigation, route }) => {
         <Text style={styles.userName}>{userName}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+        {/* <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
           <Ionicons name="notifications-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
             <Text style={styles.buttonText}>Notification</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
           <Ionicons name="create-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>

@@ -21,6 +21,25 @@ export const getCarSetup = async (carUniqueKey) => {
     }
   };
   
+  // ______________ Get Car Dashboard ____________
+
+export const getCarDashboard = async (carUniqueKey) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/car-dashboard/${carUniqueKey}`, {
+      headers: {
+        Accept: strings.ContentType,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user car dashboard:', error);
+    throw error;
+  }
+};
+
   // ______________ Update Car Setup ____________
   
   export const updateCarSetup = async (carUniqueKey, newData) => {
