@@ -43,19 +43,18 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
 
   const handleSave = () => {
     const cleanedCarData = cleanCarData(carData);
-    console.log("||||||||||||||||",cleanedCarData)
     if (car !== null) {
       updateUserCar(car.unique_key, cleanedCarData)
         .then((response) => {
           console.log("Update response:", response);
-          navigation.navigate('CarScreen', { car: car });
+          navigation.navigate('CarScreen', { refresh: true , car: car});
         })
         .catch((error) => console.error('Error updating car:', error));
     } else {
       createUserCar(cleanedCarData)
         .then(() =>
             {         
-              navigation.navigate('Home')      })
+              navigation.navigate('Home',{refresh : true})      })
         .catch((error) => console.error('Error creating car:', error));
     }
   };
@@ -71,7 +70,10 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         return obj;
       }, {});
   
-    // Check and clean custom_fields if it exists
+      if (cleanedData.mileage_info && cleanedData.mileage_info.hasOwnProperty('custom_fields')) {
+        delete cleanedData.mileage_info['custom_fields'];
+      }
+            // Check and clean custom_fields if it exists
     if (Array.isArray(cleanedData.custom_fields)) {
       cleanedData.custom_fields = cleanedData.custom_fields.map(field => {
         // Remove empty string values within each custom field object

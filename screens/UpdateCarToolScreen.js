@@ -63,7 +63,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     try {
       await updateCarMileage(car.unique_key, updatedData);
       console.log('Data updated successfully');
-      navigation.goBack();
+      navigation.navigate('CarScreen', { refresh: true , car: car});
     } catch (error) {
       console.error(error);
     }

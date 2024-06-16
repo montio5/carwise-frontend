@@ -67,7 +67,7 @@ const CustomFieldScreen = ({ route ,navigation}) => {
     apiCall
       .then((response) => {
         console.log(customField ? "UPDATE response:" : "CREATE response:", response);
-        navigation.navigate('CarScreen', { car: car });
+        navigation.navigate('CarScreen', { refresh: true , car: car});
       })
       .catch((error) => console.error(customField ? 'Error updating custom field:' : 'Error creating custom field:', error));
   };

@@ -1,90 +1,184 @@
-import React from 'react';
-import { View, TextInput, Button, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState ,useCallback} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute,useFocusEffect } from '@react-navigation/native';
+import { getCarDashboard } from '../api/CarSetup';  // Import the API function
+import FormattedNumber from '../general/textNumber';  
 
 const CarDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const car = route.params.car;
+  const [mileage, setMileage] = useState();
 
-  
+  const [dashboardData, setDashboardData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.refresh) {
+        fetchDashboardData();
+      }
+    }, [route.params])
+  );
+
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      const data = await getCarDashboard(car.unique_key);
+      console.log('API Response:', data);  // Debugging: Log the API response
+      setMileage(data.mileage);
+      if (Array.isArray(data.statistic)) {
+        setDashboardData(data.statistic);
+      } else {
+        setError('Unexpected data format received');
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching user car dashboard:', error);
+      setError('Error fetching user car dashboard');
+      setLoading(false);
+    }
+  };
+
+  const getColorForPct = (pct) => {
+    if (pct === 'overdue') return '#FF0000'; // Red
+    if (pct < 50) return '#00FF00'; // Green
+    if (pct < 80) return 'gray'; 
+    if (pct <= 90) return 'yellow'; // 
+    return 'orange'; //  
+  };
+
   const goToCustomFieldScreen = () => {
     navigation.navigate('CustomFieldList', { car: car });
   };
 
   const goToCarSetupScreen = () => {
     navigation.navigate('CarSetupScreen', { car: car });
-
   };
 
   const goToEditCarInfoScreen = () => {
     navigation.navigate('AddEditCarInfoFirstScreen', { car: car });
-
   };
 
   const goToUpdateCarToolScreen = () => {
     navigation.navigate('UpdateCarToolScreen', { car: car });
-
   };
 
+  const isTextTooLong = (text) => text.length > 20;
   return (
     <View style={styles.container}>
-      <View >
+      <ScrollView>
+      {!loading && <FormattedNumber number={mileage} suffix="km" style={styles.mileageText} />}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity onPress={goToCustomFieldScreen} style={styles.button}>
+            <View style={styles.buttonContainer}>
+              <Ionicons name="add-circle-outline" size={24} color="black" />
+              <Text style={styles.buttonText}>Custom Field</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={goToCarSetupScreen} style={styles.button}>
+            <View style={styles.buttonContainer}>
+              <Ionicons name="settings-outline" size={24} color="black" />
+              <Text style={styles.buttonText}>Car Setup</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity onPress={goToEditCarInfoScreen} style={styles.button}>
+            <View style={styles.buttonContainer}>
+              <Ionicons name="create-outline" size={24} color="black" />
+              <Text style={styles.buttonText}>Edit Info</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={goToUpdateCarToolScreen} style={styles.button}>
+            <View style={styles.buttonContainer}>
+              <Ionicons name="build-outline" size={24} color="black" />
+              <Text style={styles.buttonText}>Update Tool</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
 
-      </View>
-      <View style={styles.buttonRow}>
-        <TouchableOpacity onPress={goToCustomFieldScreen} style={styles.button}>
-          <View style={styles.buttonContainer}>
-            <Ionicons name="add-circle-outline" size={24} color="black" />
-            <Text style={styles.buttonText}>Custom Field</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={goToCarSetupScreen} style={styles.button}>
-          <View style={styles.buttonContainer}>
-            <Ionicons name="settings-outline" size={24} color="black" />
-            <Text style={styles.buttonText}>Car Setup</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonRow}>
-        <TouchableOpacity onPress={goToEditCarInfoScreen} style={styles.button}>
-          <View style={styles.buttonContainer}>
-            <Ionicons name="create-outline" size={24} color="black" />
-            <Text style={styles.buttonText}>Edit Info</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={goToUpdateCarToolScreen} style={styles.button}>
-          <View style={styles.buttonContainer}>
-            <Ionicons name="build-outline" size={24} color="black" />
-            <Text style={styles.buttonText}>Update Tool</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      {/* <TextInput style={styles.textInput} placeholder="Enter custom text" /> */}
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : (
+          dashboardData.map((item, index) => {
+            const isLongText = isTextTooLong(item.name);
+            const hasDateAndPct = item.date && item.date_limit && item.pct !== undefined;
+            const isDateItem = item.date && item.date_limit && item.pct === undefined;
+
+            return (
+              <View key={index} style={styles.itemContainer}>
+                <Text style={styles.nameText}>{item.name}</Text>
+                {hasDateAndPct ? (
+                  <>
+                   <View style={styles.chartContainer}>
+                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
+                      </View>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? 'Overdue' : `${item.date_pct}%`}</Text>
+                    </View>
+                    <Text style={styles.limitText}>{item.date_limit}</Text>
+                                        
+                    <Text>{'\n'}</Text>                
+                    <View style={styles.chartContainer}>
+                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
+                      </View>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? 'Overdue' : `${item.pct}%`}</Text>
+                    </View>
+                    <Text style={styles.limitText}>{item.limit}</Text>
+
+                  </>
+                ) : isDateItem ? (
+                  <>
+                   <View style={styles.chartContainer}>
+                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
+                      </View>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? 'Overdue' : `${item.date_pct}%`}</Text>
+                    </View>
+                    <Text style={styles.limitText}>{item.date_limit}</Text>
+                  </>
+                ) : (
+                  <>
+                    <View style={styles.chartContainer}>
+                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
+                      </View>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? 'Overdue' : `${item.pct}%`}</Text>
+                    </View>
+                    <Text style={styles.limitText}>{item.limit}</Text>
+                  </>
+                )}
+              </View>
+            );
+          })
+        )}
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mileageText:{
+    margin:40,
+    fontSize: 40,
+    fontWeight:"bold",
+    textAlign: 'center',
+
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textInput: {
-    width: '80%',
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-    textAlign: 'center',
+    padding: 20,
+    backgroundColor: '#F5F5F5',
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '80%',
     marginBottom: 20,
   },
   button: {
@@ -102,6 +196,67 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     textAlign: 'center',
+  },
+  itemContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  nameText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 5,
+  },
+  chartContainer: {
+    width: '100%',
+    height: 20,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 5,
+    overflow: 'hidden',
+    marginBottom: 5,
+    position: 'relative',
+    justifyContent: 'center', // Center the text vertically
+  },
+  chart: {
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  chartText: {
+    width: '100%',
+    textAlign: 'center', // Center the text horizontally
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  limitText: {
+    textAlign: 'left',
+    fontSize: 14,
+    color: '#333',
+    marginTop: 5,
+  },
+  dateText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 5,
+  },
+  dateLimitText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 5,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

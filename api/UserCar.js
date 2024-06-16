@@ -66,7 +66,6 @@ export const updateUserCar = async (carUniqueKey, newData) => {
     if (!token) {
       throw new Error('Token not found');
     }
-    console.log("+++++++++++++++++++++++++++++++_____+++++++++++++",newData);
     const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}/`, {
       method: 'PUT',
       headers: {
