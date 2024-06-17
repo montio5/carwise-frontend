@@ -57,8 +57,8 @@ export const getCarDashboard = async (carUniqueKey) => {
       const response = await fetch(`${apiUrl}api/custom-setup/${carUniqueKey}/`, {
         method: 'PUT',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json', // Ensure the Content-Type is set
+          'Accept': strings.ContentType,
+          'Content-Type': strings.ContentType, // Ensure the Content-Type is set
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(newData), // Stringify the request body
@@ -92,7 +92,7 @@ export const deleteCarSetup = async (uniqueKey) => {
       const response = await fetch(`${apiUrl}api/custom-setup/${uniqueKey}/`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': strings.ContentType,
           'Authorization': `Bearer ${token}`,
         },
       });

@@ -1,7 +1,10 @@
+// NotificationScreen.js
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getNotifications } from '../../api/UserCar';
+import { strings } from '../../utils/strings'; // Import the strings object
 
 const NotificationScreen = () => {
   const [carData, setCarData] = useState([]);
@@ -13,21 +16,21 @@ const NotificationScreen = () => {
     await fetchData();
     setRefreshing(false);
   };
+
   const fetchData = async () => {
     try {
       const data = await getNotifications();
       setCarData(Object.values(data).flatMap(car => Object.values(car)));
     } catch (error) {
-      Alert.alert('Error', 'Failed to fetch car data');
+      Alert.alert(strings.notificationScreenStrings.errorTitle, strings.notificationScreenStrings.errorMessage);
     } finally {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
-
 
   const renderNotification = ({ item }) => (
     <View style={styles.notificationContainer}>
@@ -50,7 +53,7 @@ const NotificationScreen = () => {
       case 'Informational':
         return 'blue';
       case 'Custom':
-          return 'gray';
+        return 'gray';
       default:
         return 'black';
     }
@@ -72,14 +75,13 @@ const NotificationScreen = () => {
   };
 
   const getAdditionalIcon = (fieldName) => {
-    if (!fieldName) return null; // Check if fieldName is undefined or null
+    if (!fieldName) return null;
     const lowerCaseFieldName = fieldName.toLowerCase();
-    if (lowerCaseFieldName.includes('filter')) {
+    if (lowerCaseFieldName.includes(strings.notificationScreenStrings.filterFieldName)) {
       return <Ionicons name="filter" size={30} color="black" style={styles.additionalIcon} />;
-    }
-    else if (lowerCaseFieldName.includes('oil')) {
+    } else if (lowerCaseFieldName.includes(strings.notificationScreenStrings.oilFieldName)) {
       return <Ionicons name="water-outline" size={30} color="black" style={styles.additionalIcon} />;
-    }  
+    }
     return null;
   };
 

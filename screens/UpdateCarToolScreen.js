@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, ScrollView, Text, TextInput, StyleSheet, Pressable, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Import the API functions
-import Separator from '../general/component';
+import Separator from '../general/component'; // Adjust path as per your project structure
+import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
+import { strings } from '../utils/strings'; // Import the strings object
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
@@ -10,7 +11,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   const [checkedFields, setCheckedFields] = useState({});
   const car = route.params.car;
 
-  useEffect(() => {  
+  useEffect(() => {
     getData();
   }, [car.unique_key]);
 
@@ -25,6 +26,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       setCheckedFields(initialCheckedFields);
     } catch (error) {
       console.error(error);
+      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
     }
   };
 
@@ -54,7 +56,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     const updatedData = { ...data };
 
     // Update fields based on checked fields and set mileage
-    Object.keys(checkedFields).forEach(field => {
+    Object.keys(checkedFields).forEach((field) => {
       if (checkedFields[field]) {
         updatedData[field] = mileage;
       }
@@ -63,9 +65,11 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     try {
       await updateCarMileage(car.unique_key, updatedData);
       console.log('Data updated successfully');
-      navigation.navigate('CarScreen', { refresh: true , car: car});
+      navigation.navigate('CarScreen', { refresh: true, car: car });
+      Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.successUpdateMessage);
     } catch (error) {
       console.error(error);
+      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
     }
   };
 
@@ -73,11 +77,11 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Update Car Tool</Text>
-      <Text style={styles.label}>Mileage</Text>
+      <Text style={styles.header}>{strings.updateCarTool.updateCarToolHeader}</Text>
+      <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter mileage"
+        placeholder={strings.updateCarTool.enterMileagePlaceholder}
         value={mileage}
         keyboardType="numeric"
         onChangeText={setMileage}
@@ -89,8 +93,8 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
             <Text style={styles.fieldLabel}>{field}</Text>
             <TextInput
               style={styles.input}
-              placeholder={data[field] !== null ? String(data[field]) : 'N/A'}
-              value={data[field] !== null ?String(data[field]): ''}
+              placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
+              value={data[field] !== null ? String(data[field]) : ''}
               editable={!checkedFields[field]}
               keyboardType="numeric"
               onChangeText={(value) => handleInputChange(field, value)}
@@ -105,7 +109,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       ))}
 
       {/* Render the separator only if there are custom fields */}
-      {data.custom_fields && data.custom_fields.length > 0 && <Separator text="Custom fields" />}
+      {data.custom_fields && data.custom_fields.length > 0 && <Separator text={strings.updateCarTool.customFieldsSeparator} />}
 
       {/* Map over the custom fields and render them */}
       {data.custom_fields && data.custom_fields.map((customField) => (
@@ -117,7 +121,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
             {/* Render a TextInput for the custom field */}
             <TextInput
               style={styles.input}
-              placeholder={customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : 'N/A'}
+              placeholder={customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : strings.updateCarTool.naPlaceholder}
               value={String(customField.last_mileage_changed)}
               editable={!checkedFields[`custom_field_${customField.id}`]}
               keyboardType="numeric"
@@ -134,15 +138,14 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
         )
       ))}
 
-      <Pressable onPress={() => handleSubmit()}>
+      <Pressable onPress={handleSubmit}>
         <View style={styles.button}>
-          <Text style={styles.buttonText}>Save</Text>
+          <Text style={styles.buttonText}>{strings.updateCarTool.saveButton}</Text>
         </View>
       </Pressable>
     </ScrollView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -197,26 +200,11 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 200,
     fontSize: 20,
-    alignItems: "center",
-    backgroundColor: "#286090"
+    alignItems: 'center',
+    backgroundColor: '#286090',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-  },
-  separator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  line: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#737373',
-  },
-  text: {
-    marginHorizontal: 10,
-    color: '#737373',
     fontSize: 16,
   },
 });

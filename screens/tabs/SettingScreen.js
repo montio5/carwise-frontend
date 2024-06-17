@@ -1,25 +1,14 @@
-// SettingScreen.js
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { logout, getUserProfile } from '../../api/Authentication'; // Import the logout and getUserProfile functions
+import { strings } from '../../utils/strings'; // Import the strings object
 
 const SettingScreen = ({ navigation, route }) => {
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState();
-
-
-  const handleLogout = async () => {
-    try {
-      await logout(); // Make sure this is defined and properly logs out the user
-      Alert.alert('Logged Out', 'You have been logged out.');
-      setIsLoggedIn(false); // Set the user as logged out
-    } catch (error) {
-      Alert.alert('Error', 'Failed to log out. Please try again.');
-    }
-  };
 
   useEffect(() => {
     fetchData();
@@ -51,16 +40,24 @@ const SettingScreen = ({ navigation, route }) => {
     navigation.navigate('EditProfile', { profile: profile });
   };
 
-
-
   const handleChangePassword = () => {
     navigation.navigate('ChangePassword');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // Make sure this is defined and properly logs out the user
+      Alert.alert(strings.settingScreenStrings.loggedOutTitle, strings.settingScreenStrings.loggedOutMessage);
+      setIsLoggedIn(false); // Set the user as logged out
+    } catch (error) {
+      Alert.alert(strings.settingScreenStrings.logoutErrorTitle, strings.settingScreenStrings.logoutErrorMessage);
+    }
   };
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
+        <Text>{strings.settingScreenStrings.loadingText}</Text>
       </View>
     );
   }
@@ -72,28 +69,22 @@ const SettingScreen = ({ navigation, route }) => {
         <Text style={styles.userName}>{userName}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        {/* <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-          <Ionicons name="notifications-outline" size={24} color="#fff" style={styles.icon} />
-          <View style={styles.textWrapper}>
-            <Text style={styles.buttonText}>Notification</Text>
-          </View>
-        </TouchableOpacity> */}
         <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
           <Ionicons name="create-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
-            <Text style={styles.buttonText}>Edit Profile</Text>
+            <Text style={styles.buttonText}>{strings.settingScreenStrings.editProfileButton}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
           <Ionicons name="lock-closed-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
-            <Text style={styles.buttonText}>Change Password</Text>
+            <Text style={styles.buttonText}>{strings.settingScreenStrings.changePasswordButton}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
-            <Text style={styles.buttonText}>Logout</Text>
+            <Text style={styles.buttonText}>{strings.settingScreenStrings.logoutButton}</Text>
           </View>
         </TouchableOpacity>
       </View>

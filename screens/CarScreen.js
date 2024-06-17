@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute,useFocusEffect } from '@react-navigation/native';
 import { getCarDashboard } from '../api/CarSetup';  // Import the API function
 import FormattedNumber from '../general/textNumber';  
+import { strings } from '../utils/strings'; // Adjust the path as per your project structure
 
 const CarDetailScreen = () => {
   const navigation = useNavigation();
@@ -74,18 +75,18 @@ const CarDetailScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-      {!loading && <FormattedNumber number={mileage} suffix="km" style={styles.mileageText} />}
+        {!loading && <FormattedNumber number={mileage} suffix={strings.carDetialScreenStrings.mileageSuffix} style={styles.mileageText} />}
         <View style={styles.buttonRow}>
           <TouchableOpacity onPress={goToCustomFieldScreen} style={styles.button}>
             <View style={styles.buttonContainer}>
               <Ionicons name="add-circle-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>Custom Field</Text>
+              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.customFieldButton}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={goToCarSetupScreen} style={styles.button}>
             <View style={styles.buttonContainer}>
               <Ionicons name="settings-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>Car Setup</Text>
+              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.carSetupButton}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -93,13 +94,13 @@ const CarDetailScreen = () => {
           <TouchableOpacity onPress={goToEditCarInfoScreen} style={styles.button}>
             <View style={styles.buttonContainer}>
               <Ionicons name="create-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>Edit Info</Text>
+              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.editInfoButton}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={goToUpdateCarToolScreen} style={styles.button}>
             <View style={styles.buttonContainer}>
               <Ionicons name="build-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>Update Tool</Text>
+              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.updateToolButton}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -107,7 +108,7 @@ const CarDetailScreen = () => {
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : error ? (
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={styles.errorText}>{strings.carDetialScreenStrings.errorText}</Text>
         ) : (
           dashboardData.map((item, index) => {
             const isLongText = isTextTooLong(item.name);
@@ -119,28 +120,28 @@ const CarDetailScreen = () => {
                 <Text style={styles.nameText}>{item.name}</Text>
                 {hasDateAndPct ? (
                   <>
-                   <View style={styles.chartContainer}>
+                    <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? 'Overdue' : `${item.date_pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
                     </View>
                     <Text style={styles.limitText}>{item.date_limit}</Text>
-                                        
-                    <Text>{'\n'}</Text>                
+
+                    <Text>{'\n'}</Text>
                     <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? 'Overdue' : `${item.pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
                     </View>
                     <Text style={styles.limitText}>{item.limit}</Text>
 
                   </>
                 ) : isDateItem ? (
                   <>
-                   <View style={styles.chartContainer}>
+                    <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? 'Overdue' : `${item.date_pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
                     </View>
                     <Text style={styles.limitText}>{item.date_limit}</Text>
                   </>
@@ -149,7 +150,7 @@ const CarDetailScreen = () => {
                     <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? 'Overdue' : `${item.pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
                     </View>
                     <Text style={styles.limitText}>{item.limit}</Text>
                   </>

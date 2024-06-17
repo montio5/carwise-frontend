@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Pressable,Alert } from 'react-native';
-import apiUrl from '../../utils/apiConfig'; 
-import { strings } from '../../utils/strings';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// LoginScreen.js
 
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Pressable, Alert } from 'react-native';
+import apiUrl from '../../utils/apiConfig';
+import { strings } from '../../utils/strings';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -12,42 +12,36 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${apiUrl}api/token/`, { 
+      const response = await fetch(`${apiUrl}api/token/`, {
         method: 'POST',
         headers: {
-          'Content-Type': strings.ContentType,
+          'Content-Type': strings.login.contentType, // Use content type from strings
         },
         body: JSON.stringify({
           username: email,
           password: password,
         }),
       });
-      console.log(email, password);
-      console.log(response.ok);
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Token data:', data); // Log the received data to inspect its structure
         const accessToken = data.access;
-        console.log('Received access token:', accessToken); // Log the received access token to ensure it's not undefined
+
         if (accessToken) {
           await AsyncStorage.setItem('token', accessToken);
           navigation.navigate('Home');
           setIsLoggedIn(true);
         } else {
-          Alert.alert('Login failed', 'Access token not received from server');
+          Alert.alert(strings.login.alertTitle, strings.login.alertMessage);
         }
       } else {
-        // Handle authentication failure
-        Alert.alert('Login failed', 'Please check your credentials');
+        Alert.alert(strings.login.alertTitle, strings.login.alertMessage);
       }
     } catch (error) {
-      // Handle other errors like network issues
       console.error('Error during login:', error);
-      Alert.alert('Error', 'An error occurred during login. Please try again later.');
+      Alert.alert(strings.login.errorTitle, strings.login.errorMessage);
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -75,7 +69,6 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

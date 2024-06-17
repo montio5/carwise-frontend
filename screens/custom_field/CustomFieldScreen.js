@@ -1,17 +1,16 @@
+// CustomFieldScreen.js
+
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { strings } from '../../utils/strings'; // Import the strings object
 
-const CustomFieldScreen = ({ route ,navigation}) => {
+const CustomFieldScreen = ({ route, navigation }) => {
   const car = route.params.car || null;
-  const customField = route.params.customField || null; // Ensure customField is null if not passed
-  
-  // console.log("---------------------",customField.id);
-  console.log("---------------------",route);
-  console.log("---------------------",navigation);
+  const customField = route.params.customField || null;
 
   const [name, setName] = useState('');
   const [mileagePerChange, setMileagePerChange] = useState('');
@@ -67,9 +66,12 @@ const CustomFieldScreen = ({ route ,navigation}) => {
     apiCall
       .then((response) => {
         console.log(customField ? "UPDATE response:" : "CREATE response:", response);
-        navigation.navigate('CarScreen', { refresh: true , car: car});
+        navigation.navigate('CarScreen', { refresh: true, car: car });
       })
-      .catch((error) => console.error(customField ? 'Error updating custom field:' : 'Error creating custom field:', error));
+      .catch((error) => {
+        console.error(customField ? 'Error updating custom field:' : 'Error creating custom field:', error);
+        Alert.alert(strings.customFieldScreenStrings.errorFetchingCustomField);
+      });
   };
 
   return (
@@ -80,7 +82,7 @@ const CustomFieldScreen = ({ route ,navigation}) => {
           style={styles.input}
           value={name}
           onChangeText={(text) => setName(text)}
-          placeholder="Enter name"
+          placeholder={strings.customFieldScreenStrings.namePlaceholder}
         />
 
         <Text style={styles.label}>Mileage per change:</Text>
@@ -88,7 +90,7 @@ const CustomFieldScreen = ({ route ,navigation}) => {
           style={styles.input}
           value={mileagePerChange}
           onChangeText={(text) => setMileagePerChange(text)}
-          placeholder="Enter mileage per change"
+          placeholder={strings.customFieldScreenStrings.mileagePlaceholder}
           keyboardType="numeric"
         />
 
@@ -98,14 +100,14 @@ const CustomFieldScreen = ({ route ,navigation}) => {
             style={[styles.input, styles.monthInput]}
             value={monthPerChangeYear}
             onChangeText={(text) => setMonthPerChangeYear(text)}
-            placeholder="Year"
+            placeholder={strings.customFieldScreenStrings.yearPlaceholder}
             keyboardType="numeric"
           />
           <TextInput
             style={[styles.input, styles.monthInput]}
             value={monthPerChangeMonth}
             onChangeText={(text) => setMonthPerChangeMonth(text)}
-            placeholder="Month"
+            placeholder={strings.customFieldScreenStrings.monthPlaceholder}
             keyboardType="numeric"
           />
         </View>
@@ -115,14 +117,14 @@ const CustomFieldScreen = ({ route ,navigation}) => {
           style={styles.input}
           value={lastMileageChanged}
           onChangeText={(text) => setLastMileageChanged(text)}
-          placeholder="Enter last mileage changed"
+          placeholder={strings.customFieldScreenStrings.lastMileagePlaceholder}
           keyboardType="numeric"
         />
 
         <Text style={styles.label}>Last date changed:</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
           <Icon name="calendar" size={20} color="black" style={{ marginRight: 10 }} />
-          <Text>{lastDateChanged ? lastDateChanged.toDateString() : 'Select Date'}</Text>
+          <Text>{lastDateChanged ? lastDateChanged.toDateString() : strings.customFieldScreenStrings.selectDateText}</Text>
           {lastDateChanged && (
             <Icon name="close-circle" size={20} color="gray" onPress={clearDate} style={{ marginLeft: 10 }} />
           )}
@@ -138,12 +140,11 @@ const CustomFieldScreen = ({ route ,navigation}) => {
       </ScrollView>
 
       <View style={styles.bottomContainer}>
-        <Button title="Save" onPress={handleSave} />
+        <Button title={strings.customFieldScreenStrings.saveButton} onPress={handleSave} />
       </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

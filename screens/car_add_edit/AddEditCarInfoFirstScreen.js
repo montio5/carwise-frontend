@@ -1,7 +1,10 @@
+// AddEditCarInfoFirstScreen.js
+
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getUserCar, getCarModels } from '../../api/UserCar';
+import { strings } from '../../utils/strings'; // Import the strings object
 
 const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const car = route.params.car || null;
@@ -109,8 +112,8 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Name"
-        value={(carData.name) ? carData.name.toString() : ""}
+        placeholder={strings.addEditCarInfoFirstScreenStrings.namePlaceholder}
+        value={carData.name.toString()}
         onChangeText={(text) => handleInputChange('name', text)}
         style={styles.input}
       />
@@ -119,7 +122,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         onValueChange={(itemValue) => handleCompanyChange(itemValue)}
         style={styles.input}
       >
-        <Picker.Item label="Select Car Company" value={null} />
+        <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectCompanyLabel} value={null} />
         {carCompanies.map((company) => (
           <Picker.Item key={company.id} label={company.name} value={company.id} />
         ))}
@@ -130,22 +133,23 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         style={styles.input}
         enabled={selectedCompany !== null}
       >
-        <Picker.Item label="Select Car Model" value={null} />
+        <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectModelLabel} value={null} />
         {carModels.map((model) => (
           <Picker.Item key={model.id} label={model.name} value={model.id} />
         ))}
       </Picker>
       <TextInput
-        placeholder="Mileage"
-        value={(carData.mileage_info.mileage) ? carData.mileage_info.mileage.toString() : ""}
+        placeholder={strings.addEditCarInfoFirstScreenStrings.mileagePlaceholder}
+        value={carData.mileage_info.mileage.toString()}
         onChangeText={(text) => handleInputChange('mileage', text, true)}
         keyboardType="numeric"
         style={styles.input}
       />
-      <Button title="Next" onPress={handleNext} disabled={isButtonDisabled} />
+      <Button title={strings.addEditCarInfoFirstScreenStrings.nextButton} onPress={handleNext} disabled={isButtonDisabled} />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

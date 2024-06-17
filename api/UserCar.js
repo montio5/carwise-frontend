@@ -69,8 +69,8 @@ export const updateUserCar = async (carUniqueKey, newData) => {
     const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}/`, {
       method: 'PUT',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json', // Ensure the Content-Type is set
+        'Accept': strings.ContentType,
+        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(newData), // Stringify the request body
@@ -102,7 +102,7 @@ export const createUserCar = async (newData) => {
     const response = await fetch(`${apiUrl}api/user-cars/new/`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Ensure the Content-Type is set
+        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
       },
@@ -135,7 +135,7 @@ export const deleteUserCar = async (uniqueKey) => {
     const response = await fetch(`${apiUrl}api/user-cars/${uniqueKey}/`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': strings.ContentType,
         'Authorization': `Bearer ${token}`,
       },
     });
@@ -195,9 +195,10 @@ export const deleteCustomFieldCar = async (carUniqueKey, id) => {
     const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${id}/`, {
       method: 'DELETE',
       headers: {
-        Accept: 'application/json',
+        'Accept-Language' : "fa",
+        Accept: strings.ContentType,
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        'Content-Type': strings.ContentType,
       },
     });
 
@@ -205,7 +206,6 @@ export const deleteCustomFieldCar = async (carUniqueKey, id) => {
       // Handle non-2xx HTTP responses
       throw new Error(`Error deleting custom field: ${response.status} ${response.statusText}`);
     }
-
     // Deletion was successful
     return true;
   } catch (error) {
@@ -239,7 +239,7 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
     const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/${customFieldKey}/`, {
       method: 'PUT', // Use 'PATCH' if you only want to update certain fields
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': strings.ContentType,
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
       },
@@ -269,7 +269,7 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
     const response =await fetch(`${apiUrl}api/custom-field/${uniqueKey}/new/`,{
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Ensure the Content-Type is set
+        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
       },
@@ -325,8 +325,8 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
     const response = await fetch(`${apiUrl}api/mileage/${carUniqueKey}/`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json', // Ensure the Content-Type is set
+        'Accept': strings.ContentType,
+        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(newData), // Stringify the request body

@@ -1,25 +1,25 @@
-// CarDataScreen.js
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
-import { getCarSetup, updateCarSetup, deleteCarSetup } from '../api/CarSetup';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Text, View, TextInput, Button, TouchableOpacity, Alert, StyleSheet} from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // Example import
+import { strings } from '../utils/strings'; // Adjust the path as per your project structure
+import { getCarSetup, updateCarSetup, deleteCarSetup } from '../api/CarSetup'; // Adjust the paths as per your project structure
 
 const CarSetupScreen = ({ route, navigation }) => {
   const [carData, setCarData] = useState(null);
   const [loading, setLoading] = useState(true);
   const car = route.params.car;
 
-
   const loadData = async () => {
     try {
       const data = await getCarSetup(car.unique_key);
       setCarData(data);
     } catch (error) {
-      Alert.alert('Error', 'Failed to fetch data');
+      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     loadData();
   }, []);
@@ -31,9 +31,9 @@ const CarSetupScreen = ({ route, navigation }) => {
   const handleSubmit = async () => {
     try {
       await updateCarSetup(car.unique_key, carData);
-      Alert.alert('Success', 'Data updated successfully');
+      Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.successUpdateMessage);
     } catch (error) {
-      Alert.alert('Error', 'Failed to update data');
+      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
     }
   };
 
@@ -42,42 +42,46 @@ const CarSetupScreen = ({ route, navigation }) => {
       await deleteCarSetup(car.unique_key);
       setCarData(null);
       loadData(car.unique_key);
-      Alert.alert('Success', 'Car setup has been reset.');
+      Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.resetSuccessMessage);
     } catch (error) {
-
-      Alert.alert('Error', 'Failed to reset car setup');
+      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.resetErrorMessage);
     }
   };
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return <Text>{strings.carSetupScreenStrings.loadingText}</Text>;
   }
-  excludedFields = ['id','car','timing_belt_max_year']
+
+  const excludedFields = ['id', 'car', 'timing_belt_max_year']; // Assuming this is defined somewhere
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {carData && Object.keys(carData).map((key) => {
-        if (!excludedFields.includes(key) ) {
-          return (
-            <View key={key} style={styles.inputContainer}>
-              <Text style={styles.label}>{key.replace(/_/g, ' ')}</Text>
-              <TextInput
-                style={styles.input}
-                value={String(carData[key])}
-                onChangeText={(value) => handleChange(key, Number(value))}
-                keyboardType="numeric"
-              />
-            </View>
-          );
-        }
-      })}
-      <Button title="Update Data" onPress={handleSubmit} />
+      {carData &&
+        Object.keys(carData).map((key) => {
+          if (!excludedFields.includes(key)) {
+            return (
+              <View key={key} style={styles.inputContainer}>
+                <Text style={styles.label}>{key.replace(/_/g, ' ')}</Text>
+                <TextInput
+                  style={styles.input}
+                  value={String(carData[key])}
+                  onChangeText={(value) => handleChange(key, Number(value))}
+                  keyboardType="numeric"
+                />
+              </View>
+            );
+          }
+        })}
+      <Button title={strings.carSetupScreenStrings.updateButtonTitle} onPress={handleSubmit} />
       <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
         <Ionicons name="refresh-outline" size={24} color="#fff" />
-        <Text style={styles.resetButtonText}>Reset Data</Text>
+        <Text style={styles.resetButtonText}>{strings.carSetupScreenStrings.resetButtonTitle}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
