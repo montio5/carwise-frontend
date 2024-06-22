@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React from 'react';
+import Icon from 'react-native-vector-icons/Ionicons'; // Assuming you have Ionicons installed
+import {deleteUserCar,deleteCustomFieldCar} from  './api/UserCar'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -21,6 +23,8 @@ import { strings } from './utils/strings';
 
 
 const AuthStack = createStackNavigator();
+const CarStack = createStackNavigator();
+const SettingStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
 
 const AuthStackScreens = ({ setIsLoggedIn }) => (
@@ -29,6 +33,7 @@ const AuthStackScreens = ({ setIsLoggedIn }) => (
       {props => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
     </AuthStack.Screen>
     <AuthStack.Screen name="Registration" component={RegistrationScreen} />
+    <AuthStack.Screen name="CarScreen" component={CarScreen} />
   </AuthStack.Navigator>
 );
 const SettingStackScreens = () => (
@@ -39,11 +44,16 @@ const SettingStackScreens = () => (
       options={({ navigation }) => ({
         headerShown: false,
 
-const MainStackScreens = () => (
-  <MainStack.Navigator>
-    <MainStack.Screen name="Home" component={HomeScreen} />
-    <MainStack.Screen name="Setting" component={SettingScreen} />
-    <MainStack.Screen name="Notification" component={NotificationScreen} />
+      })}
+    />
+    <SettingStack.Screen
+  name="EditProfile"
+  component={EditProfileScreen}
+  />
+    <SettingStack.Screen
+  name="ChangePassword"
+  component={ChangePasswordScreen}
+  />
 
       </SettingStack.Navigator>
 )
@@ -220,5 +230,4 @@ const App = () => {
   //   </NavigationContainer>
   // );
 };
-
 export default App;
