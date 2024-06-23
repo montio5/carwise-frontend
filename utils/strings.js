@@ -1,24 +1,5 @@
 export const strings = {
     ContentType: 'application/json',
-    login: {
-      title: "ورود",
-      emailPlaceholder: "ایمیل",
-      passwordPlaceholder: "رمز عبور",
-      loginButton: "ورود",
-      noAccount: "حساب کاربری ندارید؟",
-      signupLink: "اینجا ثبت نام کنید",
-    },
-    registration: {
-      title: "ثبت نام",
-      emailPlaceholder: "ایمیل",
-      firstNamePlaceholder: "نام",
-      lastNamePlaceholder: "نام خانوادگی",
-      passwordPlaceholder: "رمز عبور",
-      rePasswordPlaceholder: "تکرار رمز عبور",
-      registerButton: "ثبت نام",
-      haveAccount: "حساب کاربری دارید؟",
-      loginLink: "اینجا وارد شوید",
-    },
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
       mileageLabel: 'مسافت پیموده شده',
@@ -115,7 +96,6 @@ export const strings = {
       alertMessage: 'لطفا اعتبار خود را بررسی کنید',
       errorTitle: 'خطا',
       errorMessage: 'در حین ورود به سیستم خطایی رخ داد. لطفا بعدا دوباره تلاش کنید.',
-      contentType: 'نوع محتوا',
     },
     registration: {
       title: 'ثبت نام',
@@ -133,7 +113,6 @@ export const strings = {
       alertMessage: 'لطفا تمام فیلدها را به درستی پر کنید.',
       registrationFailed: 'ثبت نام ناموفق بود. لطفا دوباره تلاش کنید.',
       registrationSuccess: 'ثبت نام با موفقیت انجام شد',
-      contentType: 'نوع محتوا',
     },
     mainStack: {
       home: 'خانه',

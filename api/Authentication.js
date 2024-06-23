@@ -105,3 +105,45 @@ export const changePassword = async (newData) => {
     throw error;
   }
 };
+
+//______________ Login ____________
+
+
+export const login = async (email, password) => {
+  try {
+    console.log('Sending request to API');
+    const response = await fetch(`${apiUrl}api/token/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': strings.ContentType,
+        'Accept': strings.ContentType,
+      },
+      body: JSON.stringify({
+        username: email,
+        password: password,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      const accessToken = data.access;
+      console.log('Access token:', accessToken);
+
+      if (accessToken) {
+        await AsyncStorage.setItem('token', accessToken);
+        return { success: true, accessToken };
+      } else {
+        return { success: false, message: strings.login.alertMessage };
+      }
+    } else {
+      const errorData = await response.json();
+      console.error('Error response data:', errorData);
+      return { success: false, message: strings.login.alertMessage };
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    return { success: false, message: strings.login.errorMessage };
+  }
+};

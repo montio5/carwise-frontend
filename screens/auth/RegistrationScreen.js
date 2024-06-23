@@ -23,7 +23,7 @@ const RegistrationScreen = () => {
     fetch('https://carwise.pythonanywhere.com/user/register/', {
       method: 'POST',
       headers: {
-        'Content-Type': strings.registration.contentType,
+        'Content-Type': strings.ContentType,
       },
       body: JSON.stringify({
         email,

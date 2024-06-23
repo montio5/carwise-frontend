@@ -4,42 +4,20 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Pressable, Alert } from 'react-native';
 import apiUrl from '../../utils/apiConfig';
 import { strings } from '../../utils/strings';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {login} from '../../api/Authentication'
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('mont@gmail.com');
+  const [password, setPassword] = useState('1234test');
 
   const handleLogin = async () => {
-    try {
-      const response = await fetch(`${apiUrl}api/token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': strings.login.contentType, // Use content type from strings
-        },
-        body: JSON.stringify({
-          username: email,
-          password: password,
-        }),
-      });
+    const result = await login(email, password);
 
-      if (response.ok) {
-        const data = await response.json();
-        const accessToken = data.access;
-
-        if (accessToken) {
-          await AsyncStorage.setItem('token', accessToken);
-          navigation.navigate('Home');
-          setIsLoggedIn(true);
-        } else {
-          Alert.alert(strings.login.alertTitle, strings.login.alertMessage);
-        }
-      } else {
-        Alert.alert(strings.login.alertTitle, strings.login.alertMessage);
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      Alert.alert(strings.login.errorTitle, strings.login.errorMessage);
+    if (result.success) {
+      navigation.navigate('Home');
+      setIsLoggedIn(true);
+    } else {
+      Alert.alert(strings.login.alertTitle, result.message);
     }
   };
 

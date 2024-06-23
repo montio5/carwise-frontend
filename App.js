@@ -201,19 +201,19 @@ const MainStackScreens = () => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  // return (
-  //   <NavigationContainer>
-  //     {isLoggedIn ? (
-  //       <MainStackScreens />
-  //     ) : (
-  //       <AuthStackScreens setIsLoggedIn={setIsLoggedIn} />
-  //     )}
-  //   </NavigationContainer>
-  // );
   return (
     <NavigationContainer>
+      {isLoggedIn ? (
         <MainStackScreens />
+      ) : (
+        <AuthStackScreens setIsLoggedIn={setIsLoggedIn} />
+      )}
     </NavigationContainer>
   );
+  // return (
+  //   <NavigationContainer>
+  //       <MainStackScreens />
+  //   </NavigationContainer>
+  // );
 };
 export default App;
