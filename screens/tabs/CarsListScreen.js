@@ -6,7 +6,7 @@ import { fetchUserCars } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
-import { strings } from '../../utils/strings'; // Import the strings object
+import { strings } from '../../utils/strings'; 
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
@@ -23,6 +23,7 @@ const CarsListScreen = ({ route }) => {
     try {
       const data = await fetchUserCars();
       setUserCars(data);
+
     } catch (error) {
       console.error('Error fetching user cars:', error);
       Alert.alert(strings.carsListScreenStrings.errorFetchingCars);
@@ -54,7 +55,11 @@ const CarsListScreen = ({ route }) => {
         <Text style={[styles.carCompany, { color: getCompanyColor(item.car_company) }]}>
           {item.car_company}
         </Text>
+        <Text style={styles.carName}>{item.car_model}</Text>
+        <Text></Text>
         <Text style={styles.carName}>{item.name}</Text>
+        <Text style={styles.carName}>{item.mileage}</Text>
+
       </View>
     </TouchableOpacity>
   );

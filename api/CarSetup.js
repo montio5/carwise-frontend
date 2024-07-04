@@ -21,18 +21,23 @@ export const getCarSetup = async (carUniqueKey) => {
     }
   };
   
-  // ______________ Get Car Dashboard ____________
+// ______________ Get Car Dashboard ____________
 
 export const getCarDashboard = async (carUniqueKey) => {
   try {
+
     const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token not found');
+    }    
     const response = await fetch(`${apiUrl}api/car-dashboard/${carUniqueKey}`, {
       headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
+        "Accept": "application/json",
+        'Content-Type': "application/json", // Ensure the Content-Type is set
+        "Authorization": `Bearer ${token}`,
       },
     });
-
+    console.log("_____________________",`Bearer ${token}`)
     if (!response.ok) {
       throw new Error('Network response was not ok' + response.statusText);
     }

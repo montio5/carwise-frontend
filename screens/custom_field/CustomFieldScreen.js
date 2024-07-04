@@ -77,7 +77,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.label}>Name:</Text>
+        <Text style={styles.label}>{strings.customFieldScreenStrings.name}</Text>
         <TextInput
           style={styles.input}
           value={name}
@@ -85,7 +85,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
           placeholder={strings.customFieldScreenStrings.namePlaceholder}
         />
 
-        <Text style={styles.label}>Mileage per change:</Text>
+        <Text style={styles.label}>{strings.customFieldScreenStrings.mileagePerChange}</Text>
         <TextInput
           style={styles.input}
           value={mileagePerChange}
@@ -94,7 +94,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
           keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Duration per changes:</Text>
+        <Text style={styles.label}>{strings.customFieldScreenStrings.durationPerChange}</Text>
         <View style={styles.monthPerChangeContainer}>
           <TextInput
             style={[styles.input, styles.monthInput]}
@@ -112,7 +112,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
           />
         </View>
 
-        <Text style={styles.label}>Last mileage changed:</Text>
+        <Text style={styles.label}>{strings.customFieldScreenStrings.lastMileageChanged}</Text>
         <TextInput
           style={styles.input}
           value={lastMileageChanged}
@@ -121,7 +121,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
           keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Last date changed:</Text>
+        <Text style={styles.label}>{strings.customFieldScreenStrings.lastChangedDate}</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
           <Icon name="calendar" size={20} color="black" style={{ marginRight: 10 }} />
           <Text>{lastDateChanged ? lastDateChanged.toDateString() : strings.customFieldScreenStrings.selectDateText}</Text>

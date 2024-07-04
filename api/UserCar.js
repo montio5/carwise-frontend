@@ -158,6 +158,7 @@ export const getNotifications = async () => {
       headers: {
         Accept: strings.ContentType,
         Authorization: `Bearer ${token}`,
+        'Accept-Language':'fa'
       },
     });
     const data = await response.json();

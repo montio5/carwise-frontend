@@ -19,7 +19,7 @@ import CarSetupScreen from './screens/CarSetupScreen';
 import UpdateCarToolScreen from './screens/UpdateCarToolScreen'
 import EditProfileScreen from './screens/profile/EditProfileScreen'
 import ChangePasswordScreen from './screens/profile/ChangePasswordScreen'
-
+import { strings } from './utils/strings';
 
 
 const AuthStack = createStackNavigator();
@@ -30,33 +30,32 @@ const MainStack = createBottomTabNavigator();
 const AuthStackScreens = ({ setIsLoggedIn }) => (
   <AuthStack.Navigator>
     <AuthStack.Screen name="Login">
-      {props => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+      {props => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} title={strings.mainStack.Login} />}
     </AuthStack.Screen>
-    <AuthStack.Screen name="Registration" component={RegistrationScreen} />
-    <AuthStack.Screen name="CarScreen" component={CarScreen} />
+    <AuthStack.Screen name="Registration" component={RegistrationScreen} options={{ title: strings.mainStack.Registration }} />
+    <AuthStack.Screen name="CarScreen" component={CarScreen} options={{ title: strings.mainStack.CarScreen }} />
   </AuthStack.Navigator>
 );
+
 const SettingStackScreens = () => (
   <SettingStack.Navigator>
-   <SettingStack.Screen
+    <SettingStack.Screen
       name="Setting"
       component={SettingScreen}
-      options={({ navigation }) => ({
-        title: 'Setting',
-
-      })}
+      options={{ title: strings.mainStack.Setting }}
     />
     <SettingStack.Screen
-  name="EditProfile"
-  component={EditProfileScreen}
-  />
+      name="EditProfile"
+      component={EditProfileScreen}
+      options={{ title: strings.mainStack.EditProfile }}
+    />
     <SettingStack.Screen
-  name="ChangePassword"
-  component={ChangePasswordScreen}
-  />
-
-      </SettingStack.Navigator>
-)
+      name="ChangePassword"
+      component={ChangePasswordScreen}
+      options={{ title: strings.mainStack.ChangePassword }}
+    />
+  </SettingStack.Navigator>
+);
 
 const CarStackScreens = () => (
   <CarStack.Navigator>
@@ -64,7 +63,7 @@ const CarStackScreens = () => (
       name="Home"
       component={CarsListScreen}
       options={({ navigation }) => ({
-        title: 'Home',
+        title:strings.mainStack.Home ,
         headerRight: () => (
           <Icon.Button
             name="add"
@@ -80,7 +79,7 @@ const CarStackScreens = () => (
       name="CustomFieldList"
       component={CustomFiledListScreen}
       options={({ navigation,route }) => ({
-        title: 'CustomFieldList',
+        title: strings.mainStack.CustomFieldList,
         headerRight: () => (
           <Icon.Button
             name="add"
@@ -96,7 +95,7 @@ const CarStackScreens = () => (
   name="CustomField"
   component={CustomFieldScreen}
   options={({ route,navigation }) => ({
-    title: route.params.customField?.name || 'Add Custom Field',
+    title: route.params.customField?.name || strings.mainStack.CustomFieldList,
     headerRight: () => route.params.customField && (
       <Icon.Button
         name="trash"
@@ -185,14 +184,17 @@ const MainStackScreens = () => {
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarShowLabel: false,
+
       })}
       tabBarOptions={{
         activeTintColor: 'blue',
         inactiveTintColor: 'gray',
       }}
+      
     >
       <MainStack.Screen name="Home" component={CarStackScreens} options={{ headerShown: false }} />
-      <MainStack.Screen name="Notification" component={NotificationScreen} />
+      <MainStack.Screen name="Notification" component={NotificationScreen}     options={{ headerTitle:  strings.mainStack.Notification   }}  />
       <MainStack.Screen name="Setting" component={SettingStackScreens}  options={{ headerShown: false }} />
     </MainStack.Navigator>
   );
