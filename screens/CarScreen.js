@@ -133,7 +133,8 @@ const CarDetailScreen = () => {
                       </View>
                       <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
                     </View>
-                    <Text style={styles.limitText}>{item.limit}</Text>
+                    <FormattedNumber number={item.limit} style={styles.limitText} />
+
 
                   </>
                 ) : isDateItem ? (
@@ -152,7 +153,7 @@ const CarDetailScreen = () => {
                       </View>
                       <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
                     </View>
-                    <Text style={styles.limitText}>{item.limit}</Text>
+                    <FormattedNumber number={item.limit} style={styles.limitText} />
                   </>
                 )}
               </View>

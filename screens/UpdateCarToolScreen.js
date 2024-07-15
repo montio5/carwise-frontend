@@ -4,6 +4,7 @@ import Checkbox from 'expo-checkbox';
 import Separator from '../general/component'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
 import { strings } from '../utils/strings'; // Import the strings object
+import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
@@ -73,7 +74,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     }
   };
 
-  const excludedFields = ['unique_key', 'id', 'created_date', 'mileage', 'hydraulic_fluid_updated_date', 'timing_belt_last_updated_date'];
+  const excludedFields = ['unique_key', 'id', 'created_date', 'hydraulic_fluid_updated_date', 'timing_belt_last_updated_date'];
 
   return (
     <ScrollView style={styles.container}>
@@ -87,26 +88,34 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
         onChangeText={setMileage}
       />
 
-      {Object.keys(data).map((field, index) => (
-        !excludedFields.includes(field) && field !== 'custom_fields' && (
-          <View key={index} style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>{field}</Text>
-            <TextInput
-              style={styles.input}
-              placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
-              value={data[field] !== null ? String(data[field]) : ''}
-              editable={!checkedFields[field]}
-              keyboardType="numeric"
-              onChangeText={(value) => handleInputChange(field, value)}
-            />
-            <Checkbox
-              style={styles.checkbox}
-              value={checkedFields[field]}
-              onValueChange={() => handleCheckboxChange(field)}
-            />
-          </View>
-        )
-      ))}
+{Object.keys(data).map((field, index) => {
+  if (excludedFields.includes(field) || field === 'custom_fields') {
+    return null;
+  }
+
+  const toolName = getToolName(field);
+
+  return (
+    <View key={index} style={styles.fieldContainer}>
+      <Text style={styles.fieldLabel}>{toolName}</Text>
+      <TextInput
+        style={styles.input}
+        placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
+        value={data[field] !== null ? String(data[field]) : ''}
+        editable={!checkedFields[field]}
+        keyboardType="numeric"
+        onChangeText={(value) => handleInputChange(field, value)}
+      />
+      <Checkbox
+        style={styles.checkbox}
+        value={checkedFields[field]}
+        onValueChange={() => handleCheckboxChange(field)}
+      />
+    </View>
+  );
+})}
+
+
 
       {/* Render the separator only if there are custom fields */}
       {data.custom_fields && data.custom_fields.length > 0 && <Separator text={strings.updateCarTool.customFieldsSeparator} />}
@@ -192,6 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#555',
+    
   },
   checkbox: {
     marginLeft: 8,

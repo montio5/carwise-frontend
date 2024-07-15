@@ -3,6 +3,7 @@ import { ScrollView, Text, View, TextInput, Button, TouchableOpacity, Alert, Sty
 import { Ionicons } from '@expo/vector-icons'; // Example import
 import { strings } from '../utils/strings'; // Adjust the path as per your project structure
 import { getCarSetup, updateCarSetup, deleteCarSetup } from '../api/CarSetup'; // Adjust the paths as per your project structure
+import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 
 const CarSetupScreen = ({ route, navigation }) => {
   const [carData, setCarData] = useState(null);
@@ -59,9 +60,11 @@ const CarSetupScreen = ({ route, navigation }) => {
       {carData &&
         Object.keys(carData).map((key) => {
           if (!excludedFields.includes(key)) {
+            const toolName = getToolName(key);
+
             return (
               <View key={key} style={styles.inputContainer}>
-                <Text style={styles.label}>{key.replace(/_/g, ' ')}</Text>
+                <Text style={styles.label}>{toolName}</Text>
                 <TextInput
                   style={styles.input}
                   value={String(carData[key])}

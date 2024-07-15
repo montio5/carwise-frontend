@@ -139,7 +139,7 @@ const CarStackScreens = () => (
   name="AddEditCarInfoFirstScreen"
   component={AddEditCarInfoFirstScreen}
   options={({ route }) => ({
-    title: route.params?.car?.name || 'Adding Car',
+    title: route.params?.car?.name || strings.mainStack.AddingCar,
   })}
 />
 <CarStack.Screen

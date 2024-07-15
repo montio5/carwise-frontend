@@ -1,3 +1,5 @@
+import { strings } from "../utils/strings";
+
 export const handleDateChange = (selectedDate, setLastDateChanged, setShowDatePicker) => {
     setLastDateChanged(selectedDate);
     setShowDatePicker(false);
@@ -9,3 +11,7 @@ export const handleDateChange = (selectedDate, setLastDateChanged, setShowDatePi
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+
+  export const getToolName=(key)=>{
+      return strings.defaultToolsStrings[key] || key; 
+  }
