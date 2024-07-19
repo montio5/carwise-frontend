@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { getUserProfile, updateUserProfile } from '../../api/Authentication'; // Import API functions
-
+import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
+ 
 const EditProfileScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -39,16 +40,16 @@ const EditProfileScreen = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
+        <Text>{strings.loadingText}</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Edit Profile</Text>
+      <Text style={styles.header}>{strings.mainStack.EditProfile}</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>{strings.profileString.Email}</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -56,7 +57,7 @@ const EditProfileScreen = ({ route, navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>First Name</Text>
+        <Text style={styles.label}>{strings.profileString.firstNamePlaceholder}</Text>
         <TextInput
           style={styles.input}
           value={firstName}
@@ -64,7 +65,7 @@ const EditProfileScreen = ({ route, navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Last Name</Text>
+        <Text style={styles.label}>{strings.profileString.lastNamePlaceholder}</Text>
         <TextInput
           style={styles.input}
           value={lastName}
@@ -72,7 +73,7 @@ const EditProfileScreen = ({ route, navigation }) => {
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleSaveProfile}>
-        <Text style={styles.buttonText}>Save</Text>
+        <Text style={styles.buttonText}>{strings.profileString.save}</Text>
       </TouchableOpacity>
     </View>
   );

@@ -29,7 +29,7 @@ const MainStack = createBottomTabNavigator();
 
 const AuthStackScreens = ({ setIsLoggedIn }) => (
   <AuthStack.Navigator>
-    <AuthStack.Screen name="Login">
+    <AuthStack.Screen name="Login"  options={{ title: strings.mainStack.Login }}>
       {props => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} title={strings.mainStack.Login} />}
     </AuthStack.Screen>
     <AuthStack.Screen name="Registration" component={RegistrationScreen} options={{ title: strings.mainStack.Registration }} />

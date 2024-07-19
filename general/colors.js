@@ -1,6 +1,8 @@
 // src/constants/carCompanyColors.js
 
 const carCompanyColors = {
+
+  
     Banz: '#FF4500', // Orange Red
     BMW: '#1E90FF', // Dodger Blue
     Opel: '#32CD32', // Lime Green

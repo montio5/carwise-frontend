@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Pressable, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { strings } from '../../utils/strings';
+import CustomButton from '../../general/customButtonComponent'
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
@@ -79,11 +80,11 @@ const RegistrationScreen = () => {
         secureTextEntry
         style={styles.input}
       />
-      <Button
-        style={styles.button}
-        title={strings.registration.registerButton}
-        onPress={handleRegister}
+      <CustomButton 
+              text={strings.registration.registerButton}
+              onPress={handleRegister}
       />
+
       <Pressable onPress={() => navigation.navigate('Login')}>
         <View style={{ flexDirection: 'row' }}>
           <Text>{strings.registration.haveAccount}</Text>

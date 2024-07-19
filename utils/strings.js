@@ -1,4 +1,5 @@
 export const strings = {
+    loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
@@ -61,8 +62,8 @@ export const strings = {
       loadingText: 'در حال بارگذاری...',
       errorFetchingDashboard: 'خطا در دریافت داشبورد خودرو کاربر',
       customFieldButton: 'فیلد سفارشی',
-      carSetupButton: 'تنظیمات خودرو',
-      editInfoButton: 'ویرایش اطلاعات',
+      carSetupButton: 'تغییر تنظیمات پیش‌فرض',
+      editInfoButton: 'بروزرسانی وضعیت خودرو',
       updateToolButton: 'به روزرسانی ابزار',
     },
     addEditCarInfoFirstScreenStrings: {
@@ -150,7 +151,21 @@ export const strings = {
       rear_brake_pads: "لنت ترمز عقب",
       spark_plug: "شمع",
       front_suspension: "سیستم تعلیق جلو",
-      clutch_plate: "صفحه کلاچ"
+      clutch_plate: "صفحه کلاچ",
+      mileage: " مسافت پیموده شده"
+
+    },
+    profileString: {
+      Email: "ایمیل",
+      firstNamePlaceholder: 'نام',
+      lastNamePlaceholder: 'نام خانوادگی',
+      save: "ثبت",
+      changePassword:"تغییر رمز",
+      oldPassword:"رمز عبور فعلی",
+      newPassword:"رمز جدید",
+      repeatNewPassword:"تکرار رمز",
+      
+
     },
     
   };

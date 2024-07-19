@@ -6,6 +6,7 @@ import { updateUserCar, createUserCar } from '../../api/UserCar';
 import { useFocusEffect } from '@react-navigation/native';
 import Separator from '../../general/component'
 import { strings } from '../../utils/strings'; // Import the strings object
+import CustomButton from '../../general/customButtonComponent'
 
 
 const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
@@ -97,7 +98,8 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+    <ScrollView >
       <Separator text={strings.addEditCarInfoSecondScreenStrings.oilsSeparator} />
       <TextInput
         placeholder={strings.addEditCarInfoSecondScreenStrings.engineOilPlaceholder}
@@ -201,13 +203,14 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         style={styles.input}
         keyboardType="numeric"
       />
-
-      <Pressable onPress={handleSave}>
-        <View style={styles.button}>
-          <Text>{strings.addEditCarInfoSecondScreenStrings.saveButton}</Text>
-        </View>
-      </Pressable>
     </ScrollView>
+      <View style={styles.buttonContainer}>
+            <CustomButton
+            text={strings.addEditCarInfoSecondScreenStrings.saveButton}
+            onPress={handleSave}
+            style={styles.button}/>
+        </View>
+    </View>
   );
 };
 
@@ -224,12 +227,15 @@ const styles = StyleSheet.create({
       marginBottom: 16,
       paddingHorizontal: 8,
     },
-    button :{
-      padding:20,
-      marginBottom:200,
-      fontSize: 20,
-      alignItems:"center",
-      backgroundColor: "#286090"    },
+    buttonContainer: {
+      // padding: 16,
+      marginTop: 30,
+      paddingBottom: 5, // Adds space for the button at the bottom
+      // backgroundColor: '#f9f9f9',
+    },
+    button: {
+      marginVertical: 5,
+    },
         separator: {
           flexDirection: 'row',
           alignItems: 'center',

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, View, TextInput, Button, TouchableOpacity, Alert, StyleSheet} from 'react-native';
+import { ScrollView, Text, View, TextInput, Button, TouchableOpacity, Alert, StyleSheet,ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Example import
 import { strings } from '../utils/strings'; // Adjust the path as per your project structure
 import { getCarSetup, updateCarSetup, deleteCarSetup } from '../api/CarSetup'; // Adjust the paths as per your project structure
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
+import CustomButton from '../general/customButtonComponent'
 
 const CarSetupScreen = ({ route, navigation }) => {
   const [carData, setCarData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [btnLoading, setBtnLoading] = useState(false);
   const car = route.params.car;
 
   const loadData = async () => {
@@ -30,22 +32,28 @@ const CarSetupScreen = ({ route, navigation }) => {
   };
 
   const handleSubmit = async () => {
+    setBtnLoading(true);
     try {
       await updateCarSetup(car.unique_key, carData);
-      Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.successUpdateMessage);
+      // Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.successUpdateMessage);
     } catch (error) {
-      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
+      // Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
+    } finally {
+      setBtnLoading(false);
     }
   };
 
   const handleReset = async () => {
+    setBtnLoading(true);
     try {
       await deleteCarSetup(car.unique_key);
       setCarData(null);
       loadData(car.unique_key);
-      Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.resetSuccessMessage);
+      // Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.resetSuccessMessage);
     } catch (error) {
-      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.resetErrorMessage);
+      // Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.resetErrorMessage);
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -75,11 +83,21 @@ const CarSetupScreen = ({ route, navigation }) => {
             );
           }
         })}
-      <Button title={strings.carSetupScreenStrings.updateButtonTitle} onPress={handleSubmit} />
-      <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-        <Ionicons name="refresh-outline" size={24} color="#fff" />
-        <Text style={styles.resetButtonText}>{strings.carSetupScreenStrings.resetButtonTitle}</Text>
-      </TouchableOpacity>
+        <CustomButton
+                text={strings.carSetupScreenStrings.updateButtonTitle}
+                onPress={handleSubmit}
+                style={styles.button}
+            />
+
+        <CustomButton 
+                text={strings.carSetupScreenStrings.resetButtonTitle}
+                icon ="refresh-outline"
+                onPress={handleReset}
+                backgroundColor="red"
+                style={styles.button}
+
+            />
+
     </ScrollView>
   );
 };
@@ -104,20 +122,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
-  resetButton: {
-    flexDirection: 'row',
-    backgroundColor: '#ff0000',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  resetButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    marginLeft: 10,
-  },
+  button: {
+    marginVertical: 10, // Vertical margin between buttons
+},
 });
 
 export default CarSetupScreen;

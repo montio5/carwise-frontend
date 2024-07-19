@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { changePassword } from '../../api/Authentication'; // Import the changePassword function
+import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
+import CustomButton from '../../general/customButtonComponent'
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -24,9 +26,9 @@ const ChangePasswordScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Change Password</Text>
+      <Text style={styles.header}>{strings.profileString.changePassword}</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Current Password</Text>
+        <Text style={styles.label}>{strings.profileString.oldPassword}</Text>
         <TextInput
           style={styles.input}
           value={currentPassword}
@@ -35,7 +37,7 @@ const ChangePasswordScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>New Password</Text>
+        <Text style={styles.label}>{strings.profileString.newPassword}</Text>
         <TextInput
           style={styles.input}
           value={newPassword}
@@ -44,7 +46,7 @@ const ChangePasswordScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Confirm New Password</Text>
+        <Text style={styles.label}>{strings.profileString.repeatNewPassword}</Text>
         <TextInput
           style={styles.input}
           value={confirmPassword}
@@ -52,9 +54,10 @@ const ChangePasswordScreen = ({ navigation }) => {
           secureTextEntry
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
-        <Text style={styles.buttonText}>Change Password</Text>
-      </TouchableOpacity>
+      <CustomButton
+                text={strings.carSetupScreenStrings.updateButtonTitle}
+                onPress={handleChangePassword}
+            />
     </View>
   );
 };

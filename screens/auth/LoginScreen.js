@@ -5,6 +5,7 @@ import { View, Text, TextInput, Button, StyleSheet, Pressable, Alert } from 'rea
 import apiUrl from '../../utils/apiConfig';
 import { strings } from '../../utils/strings';
 import {login} from '../../api/Authentication'
+import CustomButton from '../../general/customButtonComponent'
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = useState('mont@gmail.com');
@@ -37,7 +38,10 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
         secureTextEntry
         style={styles.input}
       />
-      <Button title={strings.login.loginButton} onPress={handleLogin} />
+      <CustomButton
+                text={strings.login.loginButton}
+                onPress={handleLogin}
+            />
       <Pressable onPress={() => navigation.navigate('Registration')}>
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>{strings.login.noAccount}</Text>

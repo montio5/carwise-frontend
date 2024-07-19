@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { strings } from '../../utils/strings'; // Import the strings object
+import CustomButton from '../../general/customButtonComponent'
 
 const CustomFieldScreen = ({ route, navigation }) => {
   const car = route.params.car || null;
@@ -139,8 +140,11 @@ const CustomFieldScreen = ({ route, navigation }) => {
         )}
       </ScrollView>
 
+
       <View style={styles.bottomContainer}>
-        <Button title={strings.customFieldScreenStrings.saveButton} onPress={handleSave} />
+      <CustomButton
+      text={strings.customFieldScreenStrings.saveButton}
+      onPress={handleSave}/>
       </View>
     </View>
   );

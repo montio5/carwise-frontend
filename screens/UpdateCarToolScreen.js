@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, TextInput, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, ScrollView, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import Separator from '../general/component'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
 import { strings } from '../utils/strings'; // Import the strings object
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
+import CustomButton from '../general/customButtonComponent'
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
@@ -77,90 +78,89 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   const excludedFields = ['unique_key', 'id', 'created_date', 'hydraulic_fluid_updated_date', 'timing_belt_last_updated_date'];
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>{strings.updateCarTool.updateCarToolHeader}</Text>
-      <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={strings.updateCarTool.enterMileagePlaceholder}
-        value={mileage}
-        keyboardType="numeric"
-        onChangeText={setMileage}
-      />
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.header}>{strings.updateCarTool.updateCarToolHeader}</Text>
+        <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder={strings.updateCarTool.enterMileagePlaceholder}
+          value={mileage}
+          keyboardType="numeric"
+          onChangeText={setMileage}
+        />
 
-{Object.keys(data).map((field, index) => {
-  if (excludedFields.includes(field) || field === 'custom_fields') {
-    return null;
-  }
+        {Object.keys(data).map((field, index) => {
+          if (excludedFields.includes(field) || field === 'custom_fields') {
+            return null;
+          }
 
-  const toolName = getToolName(field);
+          const toolName = getToolName(field);
 
-  return (
-    <View key={index} style={styles.fieldContainer}>
-      <Text style={styles.fieldLabel}>{toolName}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
-        value={data[field] !== null ? String(data[field]) : ''}
-        editable={!checkedFields[field]}
-        keyboardType="numeric"
-        onChangeText={(value) => handleInputChange(field, value)}
-      />
-      <Checkbox
-        style={styles.checkbox}
-        value={checkedFields[field]}
-        onValueChange={() => handleCheckboxChange(field)}
-      />
+          return (
+            <View key={index} style={styles.fieldContainer}>
+              <Checkbox
+                style={styles.checkbox}
+                value={checkedFields[field]}
+                onValueChange={() => handleCheckboxChange(field)}
+              />
+              <Text style={styles.fieldLabel}>{toolName}</Text>
+              <TextInput
+                style={[styles.input, checkedFields[field] && styles.disabledInput]}
+                placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
+                value={data[field] !== null ? String(data[field]) : ''}
+                editable={!checkedFields[field]}
+                keyboardType="numeric"
+                onChangeText={(value) => handleInputChange(field, value)}
+              />
+            </View>
+          );
+        })}
+
+        {/* Render the separator only if there are custom fields */}
+        {/* {data.custom_fields && data.custom_fields.length > 0 && <Separator text={strings.updateCarTool.customFieldsSeparator} />} */}
+
+        {/* Map over the custom fields and render them */}
+        {/* {data.custom_fields && data.custom_fields.map((customField) => (
+          customField.last_mileage_changed != null && (
+            <View key={customField.id} style={styles.fieldContainer}>
+              <Checkbox
+                style={styles.checkbox}
+                value={checkedFields[`custom_field_${customField.id}`]}
+                onValueChange={() => handleCheckboxChange(`custom_field_${customField.id}`)}
+              />
+              <Text style={styles.fieldLabel}>{customField.name}</Text>
+              <TextInput
+                style={[styles.input, checkedFields[`custom_field_${customField.id}`] && styles.disabledInput]}
+                placeholder={customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : strings.updateCarTool.naPlaceholder}
+                value={String(customField.last_mileage_changed)}
+                editable={!checkedFields[`custom_field_${customField.id}`]}
+                keyboardType="numeric"
+                onChangeText={(value) => handleInputChange(`custom_field_${customField.id}`, value)}
+              />
+            </View>
+          )
+        ))} */}
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <CustomButton
+          text={strings.updateCarTool.saveButton}
+          onPress={handleSubmit}
+          style={styles.button}
+        />
+      </View>
     </View>
-  );
-})}
-
-
-
-      {/* Render the separator only if there are custom fields */}
-      {data.custom_fields && data.custom_fields.length > 0 && <Separator text={strings.updateCarTool.customFieldsSeparator} />}
-
-      {/* Map over the custom fields and render them */}
-      {data.custom_fields && data.custom_fields.map((customField) => (
-        customField.last_mileage_changed != null && (
-          <View key={customField.id} style={styles.fieldContainer}>
-            {/* Render the custom field name */}
-            <Text style={styles.fieldLabel}>{customField.name}</Text>
-            
-            {/* Render a TextInput for the custom field */}
-            <TextInput
-              style={styles.input}
-              placeholder={customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : strings.updateCarTool.naPlaceholder}
-              value={String(customField.last_mileage_changed)}
-              editable={!checkedFields[`custom_field_${customField.id}`]}
-              keyboardType="numeric"
-              onChangeText={(value) => handleInputChange(`custom_field_${customField.id}`, value)}
-            />
-            
-            {/* Render a Checkbox for the custom field */}
-            <Checkbox
-              style={styles.checkbox}
-              value={checkedFields[`custom_field_${customField.id}`]}
-              onValueChange={() => handleCheckboxChange(`custom_field_${customField.id}`)}
-            />
-          </View>
-        )
-      ))}
-
-      <Pressable onPress={handleSubmit}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>{strings.updateCarTool.saveButton}</Text>
-        </View>
-      </Pressable>
-    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#f9f9f9',
+  },
+  scrollContainer: {
+    padding: 16,
+    paddingBottom: 80, // Ensures space at the bottom for the button
   },
   header: {
     fontSize: 24,
@@ -180,13 +180,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     padding: 10,
-    marginBottom: 16,
+    flex: 1,
     backgroundColor: '#fff',
+    marginBottom: 16,
+  },
+  disabledInput: {
+    backgroundColor: '#e9ecef',
   },
   fieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     marginBottom: 16,
     paddingVertical: 8,
     paddingHorizontal: 10,
@@ -198,24 +201,22 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
   fieldLabel: {
-    flex: 1,
+    flex: 2,
     fontSize: 16,
     color: '#555',
-    
+    marginLeft: 8,
+    marginRight: 8,
   },
   checkbox: {
-    marginLeft: 8,
+    marginRight: 8,
+  },
+  buttonContainer: {
+    padding: 16,
+    paddingBottom: 8, // Adds space for the button at the bottom
+    backgroundColor: '#f9f9f9',
   },
   button: {
-    padding: 20,
-    marginBottom: 200,
-    fontSize: 20,
-    alignItems: 'center',
-    backgroundColor: '#286090',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    marginVertical: 10,
   },
 });
 
