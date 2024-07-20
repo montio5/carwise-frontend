@@ -5,7 +5,7 @@ import { strings } from '../utils/strings'; // Adjust the path as per your proje
 import { getCarSetup, updateCarSetup, deleteCarSetup } from '../api/CarSetup'; // Adjust the paths as per your project structure
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 import CustomButton from '../general/customButtonComponent'
-
+import InputComponent from '../general/customInputComponent'
 const CarSetupScreen = ({ route, navigation }) => {
   const [carData, setCarData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,12 +72,12 @@ const CarSetupScreen = ({ route, navigation }) => {
 
             return (
               <View key={key} style={styles.inputContainer}>
-                <Text style={styles.label}>{toolName}</Text>
-                <TextInput
-                  style={styles.input}
+                <InputComponent
+                  isNumeric={true} // or determine if it should be numeric based on the key
                   value={String(carData[key])}
-                  onChangeText={(value) => handleChange(key, Number(value))}
-                  keyboardType="numeric"
+                  placeholder={`Enter ${toolName}`}
+                  label={toolName}
+                  onChange={(value) => handleChange(key, Number(value))}
                 />
               </View>
             );

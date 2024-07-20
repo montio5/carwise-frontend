@@ -8,6 +8,11 @@ import { createCustomField, getCustomField, updateCustomField } from '../../api/
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent'
+import InputComponent from '../../general/customInputComponent'
+import DatePickerComponent from '../../general/DatePickerComp' // Adjust the path according to your project structure
+
+
+
 
 const CustomFieldScreen = ({ route, navigation }) => {
   const car = route.params.car || null;
@@ -78,66 +83,79 @@ const CustomFieldScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.label}>{strings.customFieldScreenStrings.name}</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={(text) => setName(text)}
-          placeholder={strings.customFieldScreenStrings.namePlaceholder}
-        />
+      <InputComponent
+              isNumeric={false}
+              value={name}
+              placeholder={strings.customFieldScreenStrings.namePlaceholder}
+              label={strings.customFieldScreenStrings.name}
+              onChange={setName}
 
-        <Text style={styles.label}>{strings.customFieldScreenStrings.mileagePerChange}</Text>
-        <TextInput
-          style={styles.input}
-          value={mileagePerChange}
-          onChangeText={(text) => setMileagePerChange(text)}
-          placeholder={strings.customFieldScreenStrings.mileagePlaceholder}
-          keyboardType="numeric"
-        />
+            />
+            <InputComponent
+              isNumeric={true}
+              value={mileagePerChange}
+              placeholder={strings.customFieldScreenStrings.mileagePlaceholder}
+              label={strings.customFieldScreenStrings.mileagePerChange}
+              onChange={setMileagePerChange}
+
+            />
+            <InputComponent
+              isNumeric={true}
+              value={lastMileageChanged}
+              placeholder={strings.customFieldScreenStrings.lastMileagePlaceholder}
+              label={strings.customFieldScreenStrings.lastMileageChanged}
+              onChange={setLastMileageChanged}
+            />
 
         <Text style={styles.label}>{strings.customFieldScreenStrings.durationPerChange}</Text>
         <View style={styles.monthPerChangeContainer}>
-          <TextInput
+        <InputComponent
+              isNumeric={true}
+              style={[styles.input, styles.monthInput]}
+              value={monthPerChangeYear}
+              placeholder={strings.customFieldScreenStrings.yearPlaceholder}
+              onChange={setMonthPerChangeYear}
+            />
+        <InputComponent
+              isNumeric={true}
+              style={[styles.input, styles.monthInput]}
+              value={monthPerChangeMonth}
+              placeholder={strings.customFieldScreenStrings.monthPlaceholder}
+              onChange={setMonthPerChangeMonth}
+            />
+        </View>
+
+          {/* <TextInput
             style={[styles.input, styles.monthInput]}
             value={monthPerChangeYear}
-            onChangeText={(text) => setMonthPerChangeYear(text)}
+            onChange={(text) => setMonthPerChangeYear(text)}
             placeholder={strings.customFieldScreenStrings.yearPlaceholder}
             keyboardType="numeric"
           />
           <TextInput
             style={[styles.input, styles.monthInput]}
             value={monthPerChangeMonth}
-            onChangeText={(text) => setMonthPerChangeMonth(text)}
+            onChange={(text) => setMonthPerChangeMonth(text)}
             placeholder={strings.customFieldScreenStrings.monthPlaceholder}
             keyboardType="numeric"
-          />
-        </View>
+          /> */}
 
-        <Text style={styles.label}>{strings.customFieldScreenStrings.lastMileageChanged}</Text>
-        <TextInput
-          style={styles.input}
-          value={lastMileageChanged}
-          onChangeText={(text) => setLastMileageChanged(text)}
-          placeholder={strings.customFieldScreenStrings.lastMileagePlaceholder}
-          keyboardType="numeric"
-        />
 
-        <Text style={styles.label}>{strings.customFieldScreenStrings.lastChangedDate}</Text>
-        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
-          <Icon name="calendar" size={20} color="black" style={{ marginRight: 10 }} />
-          <Text>{lastDateChanged ? lastDateChanged.toDateString() : strings.customFieldScreenStrings.selectDateText}</Text>
-          {lastDateChanged && (
-            <Icon name="close-circle" size={20} color="gray" onPress={clearDate} style={{ marginLeft: 10 }} />
-          )}
-        </TouchableOpacity>
-        {showDatePicker && (
-          <DateTimePicker
-            value={lastDateChanged || new Date()}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        )}
+          {/* <InputComponent
+              isNumeric={false}
+              value={lastMileageChanged}
+              placeholder={strings.customFieldScreenStrings.lastMileagePlaceholder}
+              label={strings.customFieldScreenStrings.lastMileageChanged}
+            /> */}
+
+      <DatePickerComponent
+        label={strings.customFieldScreenStrings.lastChangedDate}
+        date={lastDateChanged}
+        onDateChange={setLastDateChanged}
+        placeholder={strings.customFieldScreenStrings.selectDateText}
+        clearable={true}
+        style={styles.datePickerComponent}/>
+
       </ScrollView>
 
 
@@ -167,7 +185,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 1,
+    // borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
   },

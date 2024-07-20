@@ -48,11 +48,11 @@ const CarDetailScreen = () => {
   };
 
   const getColorForPct = (pct) => {
-    if (pct === 'overdue') return '#FF0000'; // Red
+    // if (pct === 'overdue' || date_pct ==='overdue') return '#FF0000'; // Red
     if (pct < 50) return '#00FF00'; // Green
     if (pct < 80) return 'gray'; 
     if (pct <= 90) return 'yellow'; // 
-    return 'orange'; //  
+    return '#FF0000'; //  
   };
 
   const goToCustomFieldScreen = () => {
