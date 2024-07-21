@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import Separator from '../general/component'; // Adjust path as per your project structure
+import Separator from '../general/speratorComponent'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
 import { strings } from '../utils/strings'; // Import the strings object
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure

@@ -4,7 +4,7 @@ import React, { useState , useCallback } from 'react';
 import { View, TextInput, StyleSheet,ScrollView ,Pressable,Text,BackHandler } from 'react-native';
 import { updateUserCar, createUserCar } from '../../api/UserCar';
 import { useFocusEffect } from '@react-navigation/native';
-import Separator from '../../general/component'
+import Separator from '../../general/speratorComponent'
 import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent'
 
