@@ -129,7 +129,6 @@ export const login = async (email, password) => {
       console.log('Response data:', data);
 
       const accessToken = data.access;
-      console.log('Access token:', accessToken);
 
       if (accessToken) {
         await AsyncStorage.setItem('token', accessToken);
@@ -144,6 +143,7 @@ export const login = async (email, password) => {
     }
   } catch (error) {
     console.error('Error during login:', error);
+
     return { success: false, message: strings.login.errorMessage };
   }
 };

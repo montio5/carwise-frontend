@@ -7,7 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Separator from '../../general/speratorComponent'
 import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent'
-
+import InputComponent from '../../general/customInputComponent'
 
 const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const car = route.params.car;
@@ -101,114 +101,116 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
     <View style={styles.container}>
     <ScrollView >
       <Separator text={strings.addEditCarInfoSecondScreenStrings.oilsSeparator} />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.engineOilPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.engineOilPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.engine_oil) ? carData.mileage_info.engine_oil.toString() : ""}
-        onChangeText={(text) => handleInputChange('engine_oil', text, true)}
+        onChange={(text) => handleInputChange('engine_oil', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.gearboxOilPlaceholder}
+       <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.gearboxOilPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.gearbox_oil) ? carData.mileage_info.gearbox_oil.toString() : ""}
-        onChangeText={(text) => handleInputChange('gearbox_oil', text, true)}
+        onChange={(text) => handleInputChange('gearbox_oil', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.hydraulicFluidPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.hydraulicFluidPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.hydraulic_fluid) ? carData.mileage_info.hydraulic_fluid.toString() : ""}
-        onChangeText={(text) => handleInputChange('hydraulic_fluid', text, true)}
+        onChange={(text) => handleInputChange('hydraulic_fluid', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
 
       <Separator text={strings.addEditCarInfoSecondScreenStrings.filtersSeparator} />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.oilFilterPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.oilFilterPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.oil_filter) ? carData.mileage_info.oil_filter.toString() : ""}
-        onChangeText={(text) => handleInputChange('oil_filter', text, true)}
+        onChange={(text) => handleInputChange('oil_filter', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.fuelFilterPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.fuelFilterPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.fuel_filter) ? carData.mileage_info.fuel_filter.toString() : ""}
-        onChangeText={(text) => handleInputChange('fuel_filter', text, true)}
+        onChange={(text) => handleInputChange('fuel_filter', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.airFilterPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.airFilterPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.air_filter) ? carData.mileage_info.air_filter.toString() : ""}
-        onChangeText={(text) => handleInputChange('air_filter', text, true)}
+        onChange={(text) => handleInputChange('air_filter', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.cabinAirFilterPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.cabinAirFilterPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.cabin_air_filter) ? carData.mileage_info.cabin_air_filter.toString() : ""}
-        onChangeText={(text) => handleInputChange('cabin_air_filter', text, true)}
+        onChange={(text) => handleInputChange('cabin_air_filter', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
 
       <Separator />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.timingBeltPlaceholder}
+
+       <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.timingBeltPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.timing_belt) ? carData.mileage_info.timing_belt.toString() : ""}
-        onChangeText={(text) => handleInputChange('timing_belt', text, true)}
+        onChange={(text) => handleInputChange('timing_belt', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.alternatorBeltPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.alternatorBeltPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.alternator_belt) ? carData.mileage_info.alternator_belt.toString() : ""}
-        onChangeText={(text) => handleInputChange('alternator_belt', text, true)}
+        onChange={(text) => handleInputChange('alternator_belt', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.frontBrakePadsPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.frontBrakePadsPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.front_brake_pads) ? carData.mileage_info.front_brake_pads.toString() : ""}
-        onChangeText={(text) => handleInputChange('front_brake_pads', text, true)}
+        onChange={(text) => handleInputChange('front_brake_pads', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.rearBrakePadsPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.rearBrakePadsPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.rear_brake_pads) ? carData.mileage_info.rear_brake_pads.toString() : ""}
-        onChangeText={(text) => handleInputChange('rear_brake_pads', text, true)}
+        onChange={(text) => handleInputChange('rear_brake_pads', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.sparkPlugPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.sparkPlugPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.spark_plug) ? carData.mileage_info.spark_plug.toString() : ""}
-        onChangeText={(text) => handleInputChange('spark_plug', text, true)}
+        onChange={(text) => handleInputChange('spark_plug', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.frontSuspensionPlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.frontSuspensionPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.front_suspension) ? carData.mileage_info.front_suspension.toString() : ""}
-        onChangeText={(text) => handleInputChange('front_suspension', text, true)}
+        onChange={(text) => handleInputChange('front_suspension', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
-      <TextInput
-        placeholder={strings.addEditCarInfoSecondScreenStrings.clutchPlatePlaceholder}
+      <InputComponent
+        label={strings.addEditCarInfoSecondScreenStrings.clutchPlatePlaceholder}
         value={(carData.mileage_info && carData.mileage_info.clutch_plate) ? carData.mileage_info.clutch_plate.toString() : ""}
-        onChangeText={(text) => handleInputChange('clutch_plate', text, true)}
+        onChange={(text) => handleInputChange('clutch_plate', text, true)}
+        isNumeric={true}
         style={styles.input}
-        keyboardType="numeric"
       />
     </ScrollView>
       <View style={styles.buttonContainer}>
             <CustomButton
             text={strings.addEditCarInfoSecondScreenStrings.saveButton}
             onPress={handleSave}
-            style={styles.button}/>
+            style={styles.button}
+            />
         </View>
     </View>
   );
@@ -222,9 +224,9 @@ const styles = StyleSheet.create({
     },
     input: {
       height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 16,
+      // borderColor: 'gray',
+      // borderWidth: 1,
+      marginBottom: 30,
       paddingHorizontal: 8,
     },
     buttonContainer: {

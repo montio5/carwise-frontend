@@ -71,6 +71,8 @@ export const strings = {
       selectCompanyLabel: 'انتخاب شرکت خودرو',
       selectModelLabel: 'انتخاب مدل خودرو',
       mileagePlaceholder: 'مسافت پیموده شده',
+      mileage: 'مسافت',
+
       nextButton: 'بعدی',
     },
     addEditCarInfoSecondScreenStrings: {

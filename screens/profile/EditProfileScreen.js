@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { getUserProfile, updateUserProfile } from '../../api/Authentication'; // Import API functions
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
- 
+import CustomButton from '../../general/customButtonComponent'
+
 const EditProfileScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -47,7 +48,6 @@ const EditProfileScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{strings.mainStack.EditProfile}</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{strings.profileString.Email}</Text>
         <TextInput
@@ -72,9 +72,11 @@ const EditProfileScreen = ({ route, navigation }) => {
           onChangeText={setLastName}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleSaveProfile}>
-        <Text style={styles.buttonText}>{strings.profileString.save}</Text>
-      </TouchableOpacity>
+      <CustomButton 
+      text={strings.profileString.save}
+      onPress={handleSaveProfile}
+      style={styles.button}
+      />
     </View>
   );
 };

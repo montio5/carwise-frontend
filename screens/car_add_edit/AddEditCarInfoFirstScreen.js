@@ -5,6 +5,7 @@ import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getUserCar, getCarModels } from '../../api/UserCar';
 import { strings } from '../../utils/strings'; // Import the strings object
+import InputComponent from '../../general/customInputComponent' 
 
 const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const car = route.params.car || null;
@@ -138,11 +139,11 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
           <Picker.Item key={model.id} label={model.name} value={model.id} />
         ))}
       </Picker>
-      <TextInput
+      <InputComponent
         placeholder={strings.addEditCarInfoFirstScreenStrings.mileagePlaceholder}
-        value={carData.mileage_info.mileage.toString()}
-        onChangeText={(text) => handleInputChange('mileage', text, true)}
-        keyboardType="numeric"
+        value={carData.mileage_info.mileage}
+        isNumeric={true}
+        onChange={(text) => handleInputChange('mileage', text, true)}
         style={styles.input}
       />
       <Button title={strings.addEditCarInfoFirstScreenStrings.nextButton} onPress={handleNext} disabled={isButtonDisabled} />
@@ -161,7 +162,6 @@ const styles = StyleSheet.create({
   input: {
     width: '80%',
     marginBottom: 10,
-    borderBottomWidth: 1,
     padding: 10,
   },
 });

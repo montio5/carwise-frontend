@@ -26,7 +26,6 @@ const ChangePasswordScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{strings.profileString.changePassword}</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{strings.profileString.oldPassword}</Text>
         <TextInput
@@ -57,6 +56,8 @@ const ChangePasswordScreen = ({ navigation }) => {
       <CustomButton
                 text={strings.carSetupScreenStrings.updateButtonTitle}
                 onPress={handleChangePassword}
+                style={styles.button}
+
             />
     </View>
   );
