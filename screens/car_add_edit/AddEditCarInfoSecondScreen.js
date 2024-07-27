@@ -1,17 +1,17 @@
-// SecondScreen.js
-
-import React, { useState , useCallback } from 'react';
-import { View, TextInput, StyleSheet,ScrollView ,Pressable,Text,BackHandler } from 'react-native';
+import React, { useState, useCallback, useRef } from 'react';
+import { View, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import { updateUserCar, createUserCar } from '../../api/UserCar';
 import { useFocusEffect } from '@react-navigation/native';
-import Separator from '../../general/speratorComponent'
+import Separator from '../../general/speratorComponent';
 import { strings } from '../../utils/strings'; // Import the strings object
-import CustomButton from '../../general/customButtonComponent'
-import InputComponent from '../../general/customInputComponent'
+import CustomButton from '../../general/customButtonComponent';
+import InputComponent from '../../general/customInputComponent';
+import Toast from '../../general/Toast';  // Adjust the path as necessary
 
 const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const car = route.params.car;
   const [carData, setCarData] = useState(route.params.carData);
+  const toastRef = useRef();
 
   useFocusEffect(
     useCallback(() => {
@@ -47,23 +47,26 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
     const cleanedCarData = cleanCarData(carData);
     if (car !== null) {
       updateUserCar(car.unique_key, cleanedCarData)
-        .then((response) => {
-          console.log("Update response:", response);
-          navigation.navigate('CarScreen', { refresh: true , car: car});
+        .then(() => {
+          navigation.navigate('CarScreen', { refresh: true, car: car,toastMessage: strings.savedSuccessfully });
         })
-        .catch((error) => console.error('Error updating car:', error));
+        .catch((error) => {
+          toastRef.current.error(error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar );
+        });
     } else {
       createUserCar(cleanedCarData)
-        .then(() =>
-            {         
-              navigation.navigate('Home',{refresh : true})      })
-        .catch((error) => console.error('Error creating car:', error));
+        .then(() => {
+          navigation.navigate('Home', { refresh: true ,toastMessage: strings.savedSuccessfully});
+        })
+        .catch((error) => {
+          toastRef.current.error(error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar );
+        });
     }
   };
 
   const cleanCarData = (data) => {
     const cleanedData = { ...data };
-  
+
     // Iterate over mileage_info and remove keys with empty string values
     cleanedData.mileage_info = Object.keys(cleanedData.mileage_info)
       .filter(key => cleanedData.mileage_info[key] !== '')
@@ -71,11 +74,12 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         obj[key] = cleanedData.mileage_info[key];
         return obj;
       }, {});
-  
-      if (cleanedData.mileage_info && cleanedData.mileage_info.hasOwnProperty('custom_fields')) {
-        delete cleanedData.mileage_info['custom_fields'];
-      }
-            // Check and clean custom_fields if it exists
+
+    if (cleanedData.mileage_info && cleanedData.mileage_info.hasOwnProperty('custom_fields')) {
+      delete cleanedData.mileage_info['custom_fields'];
+    }
+
+    // Check and clean custom_fields if it exists
     if (Array.isArray(cleanedData.custom_fields)) {
       cleanedData.custom_fields = cleanedData.custom_fields.map(field => {
         // Remove empty string values within each custom field object
@@ -87,7 +91,7 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
           }, {});
       }).filter(field => Object.keys(field).length > 0); // Remove empty custom field objects
     }
-  
+
     // Iterate over cleanedData and remove keys with empty string values or empty objects
     Object.keys(cleanedData).forEach(key => {
       if (cleanedData[key] === '' || (typeof cleanedData[key] === 'object' && Object.keys(cleanedData[key]).length === 0)) {
@@ -212,6 +216,8 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
             style={styles.button}
             />
         </View>
+        <Toast ref={toastRef} />
+
     </View>
   );
 };

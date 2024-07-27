@@ -1,5 +1,5 @@
-import React, {forwardRef, useRef, useState, useImperativeHandle} from 'react';
-import {View, Animated, Text, StatusBar, StyleSheet} from 'react-native';
+import React, { forwardRef, useRef, useState, useImperativeHandle } from 'react';
+import { View, Animated, Text, StatusBar, StyleSheet, Dimensions } from 'react-native';
 
 const Toast = forwardRef((props, ref) => {
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -52,12 +52,12 @@ const Toast = forwardRef((props, ref) => {
         let color;
         let textColorValue;
         if (type == 'error') {
-            color = 'red';
+            color = '#ff4d4d';
             textColorValue = 'white';
         }
         if (type == 'success') {
-            color = 'green';
-            textColorValue = 'black';
+            color = '#4caf50';
+            textColorValue = 'white';
         }
         setMessage(message);
         setToastColor(color);
@@ -65,39 +65,40 @@ const Toast = forwardRef((props, ref) => {
     };
 
     return modalShown ? (
-        <Animated.View style={[styles.container, {backgroundColor: toastColor, transform: [{translateY: animation}]}]}>
+        <Animated.View style={[styles.container, { backgroundColor: toastColor, transform: [{ translateY: animation }] }]}>
             <View style={styles.row}>
-                <Text style={[styles.message, {color: textColor}]}>{message}</Text>
+                <Text style={[styles.message, { color: textColor }]}>{message}</Text>
             </View>
         </Animated.View>
     ) : null;
 });
 
+const { width } = Dimensions.get('window');
+
 export const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 0,
-        minHeight: 0,
-        width: '80%',
-        backgroundColor: 'green',
+        top: 5,
+        left: width * 0.1,
+        width: width * 0.8,
+        borderRadius: 10,
         zIndex: 1000,
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 14,
         shadowColor: '#000',
         shadowOffset: {
             width: 4,
             height: 5,
         },
-        shadowOpacity: 0.1,
+        shadowOpacity: 0.3,
         shadowRadius: 6.27,
-        elevation: 2,
+        elevation: 10,
     },
     message: {
-        fontSize: 14,
-        color: 'black',
-        fontWeight: 'bold',
-        marginHorizontal: 10,
-        lineHeight: 18,
+        fontSize: 16,
+        fontWeight: '600',
+        textAlign: 'center',
     },
     row: {
         flexDirection: 'row',

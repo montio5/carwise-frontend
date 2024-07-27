@@ -1,22 +1,20 @@
 // CustomFieldScreen.js
 
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, { useState, useEffect,useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent'
 import InputComponent from '../../general/customInputComponent'
 import DatePickerComponent from '../../general/DatePickerComp' // Adjust the path according to your project structure
-
-
+import Separator from '../../general/speratorComponent';
+import Toast from '../../general/Toast';
 
 
 const CustomFieldScreen = ({ route, navigation }) => {
   const car = route.params.car || null;
   const customField = route.params.customField || null;
+  const toastRef = useRef();
 
   const [name, setName] = useState('');
   const [mileagePerChange, setMileagePerChange] = useState('');
@@ -41,20 +39,12 @@ const CustomFieldScreen = ({ route, navigation }) => {
     }
   }, [customField, car.unique_key]);
 
-  const handleDateChange = (event, selectedDate) => {
-    setLastDateChanged(selectedDate || lastDateChanged);
-    setShowDatePicker(false);
-  };
-
-  const clearDate = () => {
-    setLastDateChanged(null);
-  };
 
   const handleSave = () => {
     const cleanedCarData = {
       name,
-      mileage_per_change: parseFloat(mileagePerChange),
-      last_mileage_changed: parseFloat(lastMileageChanged),
+      mileage_per_change: mileagePerChange? parseFloat(mileagePerChange):null,
+      last_mileage_changed: lastMileageChanged? parseFloat(lastMileageChanged):null,
       last_date_changed: lastDateChanged ? lastDateChanged.toISOString().split('T')[0] : null,
     };
 
@@ -72,11 +62,12 @@ const CustomFieldScreen = ({ route, navigation }) => {
     apiCall
       .then((response) => {
         console.log(customField ? "UPDATE response:" : "CREATE response:", response);
-        navigation.navigate('CarScreen', { refresh: true, car: car });
+        navigation.navigate('CustomFieldList', { refresh: true, car: car, toastMessage: strings.savedSuccessfully});
       })
       .catch((error) => {
         console.error(customField ? 'Error updating custom field:' : 'Error creating custom field:', error);
-        Alert.alert(strings.customFieldScreenStrings.errorFetchingCustomField);
+        const errorMessage = typeof error === 'string' ? error : error.message;
+        toastRef.current.error(errorMessage || strings.customFieldScreenStrings.errorFetchingCustomField || 'Error');
       });
   };
 
@@ -91,6 +82,8 @@ const CustomFieldScreen = ({ route, navigation }) => {
               onChange={setName}
 
             />
+                  <Separator text={strings.customFieldScreenStrings.mileageBase} />
+
             <InputComponent
               isNumeric={true}
               value={mileagePerChange}
@@ -106,6 +99,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
               label={strings.customFieldScreenStrings.lastMileageChanged}
               onChange={setLastMileageChanged}
             />
+                  <Separator text={strings.customFieldScreenStrings.dateBase} />
 
         <Text style={styles.label}>{strings.customFieldScreenStrings.durationPerChange}</Text>
         <View style={styles.monthPerChangeContainer}>
@@ -125,29 +119,6 @@ const CustomFieldScreen = ({ route, navigation }) => {
             />
         </View>
 
-          {/* <TextInput
-            style={[styles.input, styles.monthInput]}
-            value={monthPerChangeYear}
-            onChange={(text) => setMonthPerChangeYear(text)}
-            placeholder={strings.customFieldScreenStrings.yearPlaceholder}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={[styles.input, styles.monthInput]}
-            value={monthPerChangeMonth}
-            onChange={(text) => setMonthPerChangeMonth(text)}
-            placeholder={strings.customFieldScreenStrings.monthPlaceholder}
-            keyboardType="numeric"
-          /> */}
-
-
-          {/* <InputComponent
-              isNumeric={false}
-              value={lastMileageChanged}
-              placeholder={strings.customFieldScreenStrings.lastMileagePlaceholder}
-              label={strings.customFieldScreenStrings.lastMileageChanged}
-            /> */}
-
       <DatePickerComponent
         label={strings.customFieldScreenStrings.lastChangedDate}
         date={lastDateChanged}
@@ -164,6 +135,8 @@ const CustomFieldScreen = ({ route, navigation }) => {
       text={strings.customFieldScreenStrings.saveButton}
       onPress={handleSave}/>
       </View>
+      <Toast ref={toastRef} />
+
     </View>
   );
 };
@@ -197,13 +170,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
   },
-  datePickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 10,
-    marginBottom: 20,
+  datePickerComponent: {
+      margin:10
   },
 });
 

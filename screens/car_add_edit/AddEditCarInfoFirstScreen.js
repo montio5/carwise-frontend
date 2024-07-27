@@ -70,7 +70,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     const { name, mileage_info } = carData;
-    if (selectedCompany && selectedModel && name && mileage_info.mileage) {
+    if (selectedCompany && selectedModel && name.trim()!== '' && mileage_info.mileage) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);

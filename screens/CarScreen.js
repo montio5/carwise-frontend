@@ -1,16 +1,18 @@
-import React, { useEffect, useState ,useCallback} from 'react';
+import React, { useEffect, useState ,useCallback,useRef} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute,useFocusEffect } from '@react-navigation/native';
 import { getCarDashboard } from '../api/CarSetup';  // Import the API function
 import FormattedNumber from '../general/textNumber';  
 import { strings } from '../utils/strings'; // Adjust the path as per your project structure
+import Toast from '../general/Toast';
 
 const CarDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const car = route.params.car;
   const [mileage, setMileage] = useState();
+  const toastRef = useRef(null);
 
   const [dashboardData, setDashboardData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,10 @@ const CarDetailScreen = () => {
     useCallback(() => {
       if (route.params?.refresh) {
         fetchDashboardData();
+      }
+      if (route.params?.toastMessage) {
+        toastRef.current.success(route.params.toastMessage);
+        route.params.toastMessage=null;
       }
     }, [route.params])
   );
@@ -48,11 +54,12 @@ const CarDetailScreen = () => {
   };
 
   const getColorForPct = (pct) => {
-    // if (pct === 'overdue' || date_pct ==='overdue') return '#FF0000'; // Red
+    if (pct === 'overdue') return '#FF0000'; // Red
     if (pct < 50) return '#00FF00'; // Green
     if (pct < 80) return 'gray'; 
     if (pct <= 90) return 'yellow'; // 
-    return '#FF0000'; //  
+    if (pct> 90) return '#FF0000';
+     //  
   };
 
   const goToCustomFieldScreen = () => {
@@ -74,6 +81,8 @@ const CarDetailScreen = () => {
   const isTextTooLong = (text) => text.length > 20;
   return (
     <View style={styles.container}>
+            <Toast ref={toastRef} />
+
       <ScrollView>
         {!loading && <FormattedNumber number={mileage} suffix={strings.carDetialScreenStrings.mileageSuffix} style={styles.mileageText} />}
         <View style={styles.buttonRow}>
@@ -140,7 +149,7 @@ const CarDetailScreen = () => {
                 ) : isDateItem ? (
                   <>
                     <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
+                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
                       <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
                     </View>

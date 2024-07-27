@@ -1,6 +1,7 @@
 export const strings = {
     loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
+    savedSuccessfully:"با موفقیت ثبت شد",
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
       mileageLabel: 'مسافت پیموده شده',
@@ -44,6 +45,7 @@ export const strings = {
     customFieldScreenStrings: {
       loadingText: 'در حال بارگذاری...',
       errorFetchingCustomField: 'خطا در دریافت فیلد سفارشی',
+      errorDavingCustomField: 'خطا در ثبت فیلد سفارشی',
       saveButton: 'ذخیره',
       namePlaceholder: 'نام را وارد کنید',
       mileagePlaceholder: 'مسافت پیموده شده را وارد کنید',
@@ -55,6 +57,8 @@ export const strings = {
       durationPerChange:"مدت زمان بین هر تعویض:",
       lastMileageChanged: " آخرین کیلومتر تعویض:",
       lastChangedDate: " آخرین تاریخ تعویض:",
+      dateBase :"بر اساس تاریخ",
+      mileageBase :"بر اساس مسافت",
 
       selectDateText: 'تاریخ را انتخاب کنید',
     },
@@ -93,6 +97,7 @@ export const strings = {
       frontSuspensionPlaceholder: 'تعلیق جلو',
       clutchPlatePlaceholder: 'صفحه کلاچ',
       saveButton: 'ذخیره',
+      errorInSavingCar: 'خطا در ثبت خودرو',
     },
     login: {
       title: 'ورود',

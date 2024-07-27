@@ -104,7 +104,7 @@ const CarStackScreens = () => (
         backgroundColor="transparent"
         onPress={() => {
           deleteCustomFieldCar(route.params.car.unique_key,route.params.customField.id).then(() => {
-            navigation.navigate('CarScreen', { refresh: true , car: route.params.car});
+            navigation.navigate('CustomFieldList', { refresh: true , car: route.params.car});
           }).catch((error) => {
             console.error('Error deleting customField:', error);
           });
