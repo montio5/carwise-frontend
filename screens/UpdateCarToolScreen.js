@@ -1,11 +1,11 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, ScrollView, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import Separator from '../general/speratorComponent'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
 import { strings } from '../utils/strings'; // Import the strings object
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
-import CustomButton from '../general/customButtonComponent'
+import CustomButton from '../general/customButtonComponent';
 import Toast from '../general/Toast';
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
@@ -69,7 +69,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     try {
       await updateCarMileage(car.unique_key, updatedData);
       console.log('Data updated successfully');
-      navigation.navigate('CarScreen', { refresh: true, car: car , toastMessage:strings.carSetupScreenStrings.successUpdateMessage});
+      navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: strings.carSetupScreenStrings.successUpdateMessage });
     } catch (error) {
       console.error(error);
       toastRef.current.error(strings.carSetupScreenStrings.errorMessage);
@@ -88,7 +88,17 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
           placeholder={strings.updateCarTool.enterMileagePlaceholder}
           value={mileage}
           keyboardType="numeric"
-          onChangeText={setMileage}
+          onChangeText={(value) => {
+            setMileage(value);
+            if (value === '') {
+              // Reset checked fields when mileage is erased
+              const resetCheckedFields = Object.keys(checkedFields).reduce((acc, key) => {
+                acc[key] = false;
+                return acc;
+              }, {});
+              setCheckedFields(resetCheckedFields);
+            }
+          }}
         />
 
         {Object.keys(data).map((field, index) => {
@@ -100,11 +110,13 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
 
           return (
             <View key={index} style={styles.fieldContainer}>
-              <Checkbox
-                style={styles.checkbox}
-                value={checkedFields[field]}
-                onValueChange={() => handleCheckboxChange(field)}
-              />
+              {mileage !== '' && (
+                <Checkbox
+                  style={styles.checkbox}
+                  value={checkedFields[field]}
+                  onValueChange={() => handleCheckboxChange(field)}
+                />
+              )}
               <Text style={styles.fieldLabel}>{toolName}</Text>
               <TextInput
                 style={[styles.input, checkedFields[field] && styles.disabledInput]}
@@ -125,11 +137,13 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
         {/* {data.custom_fields && data.custom_fields.map((customField) => (
           customField.last_mileage_changed != null && (
             <View key={customField.id} style={styles.fieldContainer}>
-              <Checkbox
-                style={styles.checkbox}
-                value={checkedFields[`custom_field_${customField.id}`]}
-                onValueChange={() => handleCheckboxChange(`custom_field_${customField.id}`)}
-              />
+              {mileage !== '' && (
+                <Checkbox
+                  style={styles.checkbox}
+                  value={checkedFields[`custom_field_${customField.id}`]}
+                  onValueChange={() => handleCheckboxChange(`custom_field_${customField.id}`)}
+                />
+              )}
               <Text style={styles.fieldLabel}>{customField.name}</Text>
               <TextInput
                 style={[styles.input, checkedFields[`custom_field_${customField.id}`] && styles.disabledInput]}
@@ -151,7 +165,6 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
         />
       </View>
       <Toast ref={toastRef} />
-
     </View>
   );
 };
@@ -215,7 +228,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 16,
-    paddingBottom: 8, // Adds space for the button at the bottom
+    paddingBottom: 8,
     backgroundColor: '#f9f9f9',
   },
   button: {

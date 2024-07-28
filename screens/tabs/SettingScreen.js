@@ -88,12 +88,12 @@ const SettingScreen = ({ navigation, route }) => {
             <Text style={styles.buttonText}>{strings.settingScreenStrings.changePasswordButton}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        {/* <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
             <Text style={styles.buttonText}>{strings.settingScreenStrings.logoutButton}</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
