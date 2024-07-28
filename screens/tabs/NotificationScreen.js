@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getNotifications } from '../../api/UserCar';
-import { strings } from '../../utils/strings'; // Import the strings object
+import { strings } from '../../utils/strings';
 
 const NotificationScreen = () => {
   const [carData, setCarData] = useState([]);
@@ -21,6 +21,7 @@ const NotificationScreen = () => {
     try {
       const data = await getNotifications();
       setCarData(Object.values(data).flatMap(car => Object.values(car)));
+      console.log("+++++++++++++++++",carData)
     } catch (error) {
       Alert.alert(strings.notificationScreenStrings.errorTitle, strings.notificationScreenStrings.errorMessage);
     } finally {

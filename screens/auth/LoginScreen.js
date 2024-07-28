@@ -1,15 +1,26 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
+import React, { useState, useRef ,useCallback} from 'react';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { login } from '../../api/Authentication'; // Ensure this path is correct
 import { strings } from '../../utils/strings'; // Ensure this path is correct
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
+import { useRoute,useFocusEffect } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = useState('mont@gmail.com');
   const [password, setPassword] = useState('1234test');
   const toastRef = useRef();
+  const route = useRoute();
 
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.toastMessage) {
+        toastRef.current.success(route.params.toastMessage);
+        route.params.toastMessage=null;
+      }
+    }, [route.params])
+  );
+  
   const handleLogin = async () => {
     const result = await login(email, password);
 
@@ -68,6 +79,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     width: 300,
+    borderRadius:5
   },
   signupContainer: {
     marginTop: 20,

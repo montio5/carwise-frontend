@@ -37,6 +37,7 @@ export const strings = {
       errorMessage: 'دریافت داده‌های خودرو ناموفق بود',
       filterFieldName: 'فیلتر',
       oilFieldName: 'روغن',
+      
     },
     carsListScreenStrings: {
       loadingText: 'در حال بارگذاری...',
@@ -112,6 +113,12 @@ export const strings = {
       errorMessage: 'در حین ورود به سیستم خطایی رخ داد. لطفا بعدا دوباره تلاش کنید.',
     },
     registration: {
+      emailRequired: "ایمیل اجباری است",
+      firstNameRequired: "نام اجباری است",
+      lastNameRequired: "نام خانوادگی اجباری است",
+      passwordRequired: "رمز عبور اجباری است",
+      passwordRequired: "رمز عبور نمیتواند تنها فاصله باشد",
+      passwordMismatch: "رمز عبور و تکرار آن تطابق ندارند",
       title: 'ثبت نام',
       firstNamePlaceholder: 'نام',
       lastNamePlaceholder: 'نام خانوادگی',

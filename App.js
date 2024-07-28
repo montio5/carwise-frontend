@@ -176,7 +176,7 @@ const MainStackScreens = () => {
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = focused ? 'car' : 'car-outline';
           } else if (route.name === 'Setting') {
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Notification') {

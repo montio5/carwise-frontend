@@ -1,10 +1,11 @@
-// RegistrationScreen.js
-
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Pressable, Alert } from 'react-native';
+import React, { useState ,useRef} from 'react';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { strings } from '../../utils/strings';
-import CustomButton from '../../general/customButtonComponent'
+import { registerUser } from '../../api/Authentication';
+import CustomButton from '../../general/customButtonComponent';
+import Toast from '../../general/Toast';
+
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
@@ -12,85 +13,122 @@ const RegistrationScreen = () => {
   const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
+  const [errors, setErrors] = useState({});
+  const toastRef = useRef();
 
   const navigation = useNavigation();
 
-  const handleRegister = () => {
-    if (!email || !password || !firstName || !lastName || password !== passwordRepeat) {
-      Alert.alert(strings.registration.alertTitle, strings.registration.alertMessage);
+  const validate = () => {
+    let valid = true;
+    let errors = {};
+
+    if (!email.trim()) {
+      errors.email = strings.registration.emailRequired;
+      valid = false;
+    }
+
+    if (!firstName.trim()) {
+      errors.firstName = strings.registration.firstNameRequired;
+      valid = false;
+    }
+
+    if (!lastName.trim()) {
+      errors.lastName = strings.registration.lastNameRequired;
+      valid = false;
+    }
+    if (!password.trim()) {
+      errors.password = strings.registration.passwordRequired;
+      valid = false;
+    }
+    if (!password) {
+      errors.password = strings.registration.passwordRequired;
+      valid = false;
+    }
+
+    if (password !== passwordRepeat) {
+      errors.passwordRepeat = strings.registration.passwordMismatch;
+      valid = false;
+    }
+
+    setErrors(errors);
+    return valid;
+  };
+
+  const handleRegister = async () => {
+    if (!validate()) {
       return;
     }
 
-    fetch('https://carwise.pythonanywhere.com/user/register/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': strings.ContentType,
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          Alert.alert(strings.registration.alertTitle, strings.registration.registrationSuccess);
-          navigation.navigate('Login');
-        } else {
-          Alert.alert(strings.registration.alertTitle, strings.registration.registrationFailed);
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        Alert.alert(strings.registration.errorTitle, strings.registration.errorMessage);
-      });
+    try {
+      const response = await registerUser({ email: email.trim(), password: password, first_name: firstName, last_name: lastName });
+        navigation.navigate('Login', { toastMessage: strings.savedSuccessfully });
+        toastRef.current.success(strings.registration.registrationSuccess);
+    } catch (error) {
+      const errorMessage = typeof error.message === 'string' ? error.message : strings.carSetupScreenStrings.errorMessage;
+      toastRef.current.error(errorMessage);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{strings.registration.title}</Text>
-      <TextInput
-        placeholder={strings.registration.firstNamePlaceholder}
-        onChangeText={setFirstName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder={strings.registration.lastNamePlaceholder}
-        onChangeText={setLastName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder={strings.registration.emailPlaceholder}
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder={strings.registration.passwordPlaceholder}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      <TextInput
-        placeholder={strings.registration.rePasswordPlaceholder}
-        value={passwordRepeat}
-        onChangeText={setPasswordRepeat}
-        secureTextEntry
-        style={styles.input}
-      />
-      <CustomButton 
-              text={strings.registration.registerButton}
-              onPress={handleRegister}
-      />
-
-      <Pressable onPress={() => navigation.navigate('Login')}>
-        <View style={{ flexDirection: 'row' }}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>{strings.registration.title}</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder={strings.registration.firstNamePlaceholder}
+            onChangeText={setFirstName}
+            style={[styles.input, errors.firstName && styles.errorInput]}
+          />
+          {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder={strings.registration.lastNamePlaceholder}
+            onChangeText={setLastName}
+            style={[styles.input, errors.lastName && styles.errorInput]}
+          />
+          {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder={strings.registration.emailPlaceholder}
+            value={email}
+            onChangeText={setEmail}
+            style={[styles.input, errors.email && styles.errorInput]}
+          />
+          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder={strings.registration.passwordPlaceholder}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={[styles.input, errors.password && styles.errorInput]}
+          />
+          {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder={strings.registration.rePasswordPlaceholder}
+            value={passwordRepeat}
+            onChangeText={setPasswordRepeat}
+            secureTextEntry
+            style={[styles.input, errors.passwordRepeat && styles.errorInput]}
+          />
+          {errors.passwordRepeat && <Text style={styles.errorText}>{errors.passwordRepeat}</Text>}
+        </View>
+        <CustomButton 
+          text={strings.registration.registerButton}
+          onPress={handleRegister}
+        />
+        <Pressable onPress={() => navigation.navigate('Login')} style={styles.loginLinkContainer}>
           <Text>{strings.registration.haveAccount}</Text>
           <Text style={styles.link}>{strings.registration.loginLink}</Text>
-        </View>
-      </Pressable>
+        </Pressable>
+      </View>
+      <Toast ref={toastRef} />
+
     </View>
   );
 };
@@ -100,26 +138,44 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f9f9f9',
   },
-  button: {
-    margin: 20,
-    fontSize: 20,
-    backgroundColor: 'red',
+  formContainer: {
+    width: '80%',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
+    textAlign: 'center',
     marginBottom: 20,
+  },
+  inputContainer: {
+    marginBottom: 25,
   },
   input: {
     borderWidth: 1,
     borderColor: 'gray',
     padding: 10,
-    marginVertical: 10,
-    width: 300,
+    borderRadius: 5,
+    width: '100%',
+  },
+  errorInput: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    position: 'absolute',
+    right: 10,
+    top: -18,
+  },
+  loginLinkContainer: {
+    marginTop: 20,
+    alignItems: 'center',
   },
   link: {
     color: 'blue',
     textDecorationLine: 'underline',
+    marginTop: 5,
   },
 });
 

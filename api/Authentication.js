@@ -137,6 +137,7 @@ export const login = async (email, password) => {
       const accessToken = data.access;
 
       if (accessToken) {
+        await AsyncStorage.setItem('token', "");
         await AsyncStorage.setItem('token', accessToken);
         return { success: true, accessToken };
       } else {
@@ -151,5 +152,38 @@ export const login = async (email, password) => {
     console.error('Error during login:', error);
 
     return { success: false, message: strings.login.errorMessage };
+  }
+};
+
+
+export const registerUser = async (newData) => {
+  try {
+    const response = await fetch(`${apiUrl}user/register/`, {
+      method: 'POST', // Use 'PATCH' if you only want to update certain fields
+      headers: {
+        'Content-Type': strings.ContentType,
+        'Accept': strings.ContentType,
+        // 'Authorization': `Bearer ${token}`,
+        'Accept-Language':'fa'
+
+      },
+      body: JSON.stringify(newData),
+    });
+    const responseText = await response.text();
+    console.log('Raw response:', responseText);
+
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData['detail']['email'][0]['msg']
+      console.error('Error response from server:', responseText);
+      console.error('Error response from server:',msg);
+      throw new Error(msg);
+    }
+
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('Error updating custom field:', error);
+    throw error;
   }
 };
