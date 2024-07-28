@@ -81,8 +81,17 @@ export const updateUserCar = async (carUniqueKey, newData) => {
 
     if (!response.ok) {
       // Handle non-2xx HTTP responses
-      console.error('Error response from server:', responseText);
-      throw new Error(`Error updating user car: ${response.status} ${response.statusText}`);
+      let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
+      try {
+        const errorData = JSON.parse(responseText);
+        let detail =errorData.detail
+        if (detail) {
+          errorMessage = detail["mileage_info"][0].msg;
+        }
+      } catch (parseError) {
+        console.error('Error parsing error response:', parseError);
+      }
+      throw new Error(errorMessage);
     }
 
     // Attempt to parse JSON only if response is OK
@@ -110,12 +119,22 @@ export const createUserCar = async (newData) => {
     });
     const responseText = await response.text(); // Get raw response text
     console.log('Raw response:', responseText);
-    console.log("---------------------------here")
-
     if (!response.ok) {
+      console.log("---------------------------",responseText);
+
       // Handle non-2xx HTTP responses
-      console.error('Error response from server:', responseText);
-      throw new Error(`Error adding user car: ${response.status} ${response.statusText}`);
+        let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
+        try {
+          const errorData = JSON.parse(responseText);
+          let detail =errorData.detail
+          if (detail) {
+            errorMessage = detail["mileage_info"][0].msg;
+          }
+        } catch (parseError) {
+          console.error('Error parsing error response:', parseError);
+        }
+        throw new Error(errorMessage);
+      
     }
 
     // Attempt to parse JSON only if response is OK
@@ -247,27 +266,35 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
       body: JSON.stringify(customFieldData),
     });
     const responseText = await response.text();
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
-      console.error('Error response from server:', responseText);
-      throw new Error(`Error updating custom field: ${response.status} ${response.statusText}`);
+      // Attempt to parse the response text as JSON to extract the error message
+      let errorMessage = strings.customFieldScreenStrings.errorUpdatingCustomField;
+      try {
+        const errorData = JSON.parse(responseText);
+        if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
+          errorMessage = errorData.detail.non_field_errors[0].msg;
+        }
+      } catch (parseError) {
+        console.error('Error parsing error response:', parseError);
+      }
+      throw new Error(errorMessage);
     }
 
+    // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error updating custom field:', error);
+    console.error('Error updating custom field:', error.message);
     throw error;
   }
 };
 // ______________ Create Custom Field ____________
 
 export const createCustomField = async (uniqueKey, customFieldData) => {
-
   try {
     const token = await AsyncStorage.getItem('token');
-    const response =await fetch(`${apiUrl}api/custom-field/${uniqueKey}/new/`,{
+    const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/new/`, {
       method: 'POST',
       headers: {
         'Content-Type': strings.ContentType, // Ensure the Content-Type is set
@@ -280,19 +307,26 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
     console.log('Raw response:', responseText);
 
     if (!response.ok) {
-      // Handle non-2xx HTTP responses
-      console.error('Error response from server:', responseText);
-      throw new Error(`Error adding user car: ${response.status} ${response.statusText}`);
+      // Attempt to parse the response text as JSON to extract the error message
+      let errorMessage = strings.customFieldScreenStrings.errorDavingCustomField;
+      try {
+        const errorData = JSON.parse(responseText);
+        if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
+          errorMessage = errorData.detail.non_field_errors[0].msg;
+        }
+      } catch (parseError) {
+        console.error('Error parsing error response:', parseError);
+      }
+      throw new Error(errorMessage);
     }
 
     // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error creating user car:', error);
+    console.error('Error creating user car:', error.message);
     throw error;
   }
-
 };
 
 // ______________ Get User Car ____________

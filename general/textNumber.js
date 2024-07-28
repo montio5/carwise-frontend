@@ -10,6 +10,8 @@ const FormattedNumber = ({ number, suffix = '', style }) => {
     <Text style={style}>
       {formatNumber(number)}
       <Text style={styles.suffix}>{` ${suffix}`}</Text>
+      <Text style={styles.measure}> km</Text>
+
     </Text>
   );
 };
@@ -17,6 +19,10 @@ const FormattedNumber = ({ number, suffix = '', style }) => {
 const styles = StyleSheet.create({
   suffix: {
     fontSize: 20,
+    fontWeight: 'normal',
+  },
+  measure: {
+    fontSize: 14,
     fontWeight: 'normal',
   },
 });

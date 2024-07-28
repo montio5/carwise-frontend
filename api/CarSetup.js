@@ -37,7 +37,6 @@ export const getCarDashboard = async (carUniqueKey) => {
         "Authorization": `Bearer ${token}`,
       },
     });
-    console.log("_____________________",`Bearer ${token}`)
     if (!response.ok) {
       throw new Error('Network response was not ok' + response.statusText);
     }

@@ -104,7 +104,7 @@ const CarStackScreens = () => (
         backgroundColor="transparent"
         onPress={() => {
           deleteCustomFieldCar(route.params.car.unique_key,route.params.customField.id).then(() => {
-            navigation.navigate('CarScreen', { refresh: true , car: route.params.car});
+            navigation.navigate('CustomFieldList', { refresh: true , car: route.params.car});
           }).catch((error) => {
             console.error('Error deleting customField:', error);
           });
@@ -176,7 +176,7 @@ const MainStackScreens = () => {
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = focused ? 'car' : 'car-outline';
           } else if (route.name === 'Setting') {
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Notification') {

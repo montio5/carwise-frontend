@@ -45,7 +45,7 @@ export const getUserProfile = async () => {
     }
   };
 
-// ______________ Update Custom Field ____________
+// ______________ Update user profile ____________
 
 export const updateUserProfile = async (newData) => {
   try {
@@ -56,6 +56,7 @@ export const updateUserProfile = async (newData) => {
         'Content-Type': 'application/json',
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
+        'Accept-Language':'fa'
       },
       body: JSON.stringify(newData),
     });
@@ -82,11 +83,13 @@ export const changePassword = async (newData) => {
   try {
     const token = await AsyncStorage.getItem('token');
     const response = await fetch(`${apiUrl}user/change-password/`, {
-      method: 'PUT', // Use 'PATCH' if you only want to update certain fields
+      method: 'POST', // Use 'PATCH' if you only want to update certain fields
       headers: {
         'Content-Type': 'application/json',
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
+        'Accept-Language':'fa'
+
       },
       body: JSON.stringify(newData),
     });
@@ -94,8 +97,11 @@ export const changePassword = async (newData) => {
     console.log('Raw response:', responseText);
 
     if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData['current_password'][0]
       console.error('Error response from server:', responseText);
-      throw new Error(`Error updating custom field: ${response.status} ${response.statusText}`);
+      console.error('Error response from server:',msg);
+      throw new Error(msg);
     }
 
     const data = JSON.parse(responseText);
@@ -129,9 +135,9 @@ export const login = async (email, password) => {
       console.log('Response data:', data);
 
       const accessToken = data.access;
-      console.log('Access token:', accessToken);
 
       if (accessToken) {
+        await AsyncStorage.setItem('token', "");
         await AsyncStorage.setItem('token', accessToken);
         return { success: true, accessToken };
       } else {
@@ -144,6 +150,40 @@ export const login = async (email, password) => {
     }
   } catch (error) {
     console.error('Error during login:', error);
+
     return { success: false, message: strings.login.errorMessage };
+  }
+};
+
+
+export const registerUser = async (newData) => {
+  try {
+    const response = await fetch(`${apiUrl}user/register/`, {
+      method: 'POST', // Use 'PATCH' if you only want to update certain fields
+      headers: {
+        'Content-Type': strings.ContentType,
+        'Accept': strings.ContentType,
+        // 'Authorization': `Bearer ${token}`,
+        'Accept-Language':'fa'
+
+      },
+      body: JSON.stringify(newData),
+    });
+    const responseText = await response.text();
+    console.log('Raw response:', responseText);
+
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData['detail']['email'][0]['msg']
+      console.error('Error response from server:', responseText);
+      console.error('Error response from server:',msg);
+      throw new Error(msg);
+    }
+
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('Error updating custom field:', error);
+    throw error;
   }
 };

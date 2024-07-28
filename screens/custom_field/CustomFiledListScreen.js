@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useRef} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { getCustomFieldList } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
-import Separator from '../../general/component'
+import Separator from '../../general/speratorComponent'
+import Toast from '../../general/Toast';
 
 const CustomFiledListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const car = route.params.car;
+  const toastRef = useRef(null);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -31,6 +33,10 @@ const CustomFiledListScreen = ({ route }) => {
     useCallback(() => {
       if (route.params?.refresh) {
         fetchData();
+      }
+      if (route.params?.toastMessage) {
+        toastRef.current.success(route.params.toastMessage);
+        route.params.toastMessage=null;
       }
     }, [route.params])
   );
@@ -61,6 +67,8 @@ const CustomFiledListScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+                  <Toast ref={toastRef} />
+
       <FlatList
         data={userCars}
         renderItem={renderItem}

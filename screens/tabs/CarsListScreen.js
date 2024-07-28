@@ -1,17 +1,19 @@
 // CarsListScreen.js
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { fetchUserCars } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
 import { strings } from '../../utils/strings'; 
+import Toast from '../../general/Toast';
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
+  const toastRef = useRef(null);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -35,6 +37,11 @@ const CarsListScreen = ({ route }) => {
       if (route.params?.refresh) {
         fetchData();
       }
+      if (route.params?.toastMessage) {
+        toastRef.current.success(route.params.toastMessage);
+        route.params.toastMessage=null;
+      }
+
     }, [route.params])
   );
 
@@ -70,6 +77,7 @@ const CarsListScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <Toast ref={toastRef} />
       <FlatList
         data={userCars}
         renderItem={renderItem}

@@ -1,6 +1,7 @@
 export const strings = {
     loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
+    savedSuccessfully:"با موفقیت ثبت شد",
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
       mileageLabel: 'مسافت پیموده شده',
@@ -36,6 +37,7 @@ export const strings = {
       errorMessage: 'دریافت داده‌های خودرو ناموفق بود',
       filterFieldName: 'فیلتر',
       oilFieldName: 'روغن',
+      
     },
     carsListScreenStrings: {
       loadingText: 'در حال بارگذاری...',
@@ -44,6 +46,7 @@ export const strings = {
     customFieldScreenStrings: {
       loadingText: 'در حال بارگذاری...',
       errorFetchingCustomField: 'خطا در دریافت فیلد سفارشی',
+      errorDavingCustomField: 'خطا در ثبت فیلد سفارشی',
       saveButton: 'ذخیره',
       namePlaceholder: 'نام را وارد کنید',
       mileagePlaceholder: 'مسافت پیموده شده را وارد کنید',
@@ -55,6 +58,8 @@ export const strings = {
       durationPerChange:"مدت زمان بین هر تعویض:",
       lastMileageChanged: " آخرین کیلومتر تعویض:",
       lastChangedDate: " آخرین تاریخ تعویض:",
+      dateBase :"بر اساس تاریخ",
+      mileageBase :"بر اساس مسافت",
 
       selectDateText: 'تاریخ را انتخاب کنید',
     },
@@ -71,6 +76,8 @@ export const strings = {
       selectCompanyLabel: 'انتخاب شرکت خودرو',
       selectModelLabel: 'انتخاب مدل خودرو',
       mileagePlaceholder: 'مسافت پیموده شده',
+      mileage: 'مسافت',
+
       nextButton: 'بعدی',
     },
     addEditCarInfoSecondScreenStrings: {
@@ -91,6 +98,7 @@ export const strings = {
       frontSuspensionPlaceholder: 'تعلیق جلو',
       clutchPlatePlaceholder: 'صفحه کلاچ',
       saveButton: 'ذخیره',
+      errorInSavingCar: 'خطا در ثبت خودرو',
     },
     login: {
       title: 'ورود',
@@ -100,11 +108,17 @@ export const strings = {
       noAccount: "حساب کاربری ندارید؟",
       signupLink: 'ثبت نام',
       alertTitle: 'ورود ناموفق بود',
-      alertMessage: 'لطفا اعتبار خود را بررسی کنید',
+      alertMessage: 'نام کاربری یا رمز عبور اشتباه است',
       errorTitle: 'خطا',
       errorMessage: 'در حین ورود به سیستم خطایی رخ داد. لطفا بعدا دوباره تلاش کنید.',
     },
     registration: {
+      emailRequired: "ایمیل اجباری است",
+      firstNameRequired: "نام اجباری است",
+      lastNameRequired: "نام خانوادگی اجباری است",
+      passwordRequired: "رمز عبور اجباری است",
+      passwordRequired: "رمز عبور نمیتواند تنها فاصله باشد",
+      passwordMismatch: "رمز عبور و تکرار آن تطابق ندارند",
       title: 'ثبت نام',
       firstNamePlaceholder: 'نام',
       lastNamePlaceholder: 'نام خانوادگی',
@@ -164,8 +178,8 @@ export const strings = {
       oldPassword:"رمز عبور فعلی",
       newPassword:"رمز جدید",
       repeatNewPassword:"تکرار رمز",
-      
-
+      newPasswordAndConfirmationError:"رمز جدید و تکرار آن همخوانی ندارند",
+      errorInUpdatingProfile:"خطا در بروزرسانی اطلاعات کاربری"
     },
     
   };

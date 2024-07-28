@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback,useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { logout, getUserProfile } from '../../api/Authentication'; // Import the logout and getUserProfile functions
 import { strings } from '../../utils/strings'; // Import the strings object
-
+import Toast from '../../general/Toast'
 const SettingScreen = ({ navigation, route }) => {
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState();
+  const toastRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -18,6 +19,10 @@ const SettingScreen = ({ navigation, route }) => {
     useCallback(() => {
       if (route.params?.refresh) {
         fetchData();
+      }
+      if (route.params?.toastMessage) {
+        toastRef.current.success(route.params.toastMessage);
+        route.params.toastMessage=null;
       }
     }, [route.params])
   );
@@ -64,6 +69,8 @@ const SettingScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <Toast ref={toastRef} />
+
       <View style={styles.profileContainer}>
         <Ionicons name="person-circle-outline" size={100} color="#007BFF" />
         <Text style={styles.userName}>{userName}</Text>
@@ -81,12 +88,12 @@ const SettingScreen = ({ navigation, route }) => {
             <Text style={styles.buttonText}>{strings.settingScreenStrings.changePasswordButton}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        {/* <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
             <Text style={styles.buttonText}>{strings.settingScreenStrings.logoutButton}</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
