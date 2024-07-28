@@ -1,31 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { changePassword } from '../../api/Authentication'; // Import the changePassword function
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
 import CustomButton from '../../general/customButtonComponent'
+import Toast from '../../general/Toast';
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const toastRef = useRef(null);
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New password and confirmation password do not match.');
+      toastRef.current.error(strings.profileString.newPasswordAndConfirmationError || 'Error');
       return;
     }
-
-    try {
-      await changePassword({currentPassword, newPassword,confirmPassword});
-      Alert.alert('Password Changed', 'Your password has been changed successfully.');
-      navigation.goBack();
-    } catch (error) {
-      Alert.alert('Error', 'Failed to change password. Please try again.');
-    }
+    changePassword({current_password:currentPassword,new_password: newPassword,confirm_new_password:confirmPassword})
+    .then(() => {
+      navigation.navigate('Setting', { toastMessage: strings.savedSuccessfully});
+    })
+    .catch((error) => {
+      toastRef.current.error(error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar );
+    });
   };
 
   return (
     <View style={styles.container}>
+      <Toast ref={toastRef} />
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{strings.profileString.oldPassword}</Text>
         <TextInput

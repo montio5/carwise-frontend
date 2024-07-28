@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { View, ScrollView, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import Separator from '../general/speratorComponent'; // Adjust path as per your project structure
@@ -6,12 +6,14 @@ import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path
 import { strings } from '../utils/strings'; // Import the strings object
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 import CustomButton from '../general/customButtonComponent'
+import Toast from '../general/Toast';
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
   const [mileage, setMileage] = useState('');
   const [checkedFields, setCheckedFields] = useState({});
   const car = route.params.car;
+  const toastRef = useRef();
 
   useEffect(() => {
     getData();
@@ -67,11 +69,10 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     try {
       await updateCarMileage(car.unique_key, updatedData);
       console.log('Data updated successfully');
-      navigation.navigate('CarScreen', { refresh: true, car: car });
-      Alert.alert(strings.carSetupScreenStrings.successTitle, strings.carSetupScreenStrings.successUpdateMessage);
+      navigation.navigate('CarScreen', { refresh: true, car: car , toastMessage:strings.carSetupScreenStrings.successUpdateMessage});
     } catch (error) {
       console.error(error);
-      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
+      toastRef.current.error(strings.carSetupScreenStrings.errorMessage);
     }
   };
 
@@ -108,7 +109,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
               <TextInput
                 style={[styles.input, checkedFields[field] && styles.disabledInput]}
                 placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
-                value={data[field] !== null ? String(data[field]) : ''}
+                value={data[field] !== null ? String(data[field]) : null}
                 editable={!checkedFields[field]}
                 keyboardType="numeric"
                 onChangeText={(value) => handleInputChange(field, value)}
@@ -149,6 +150,8 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
           style={styles.button}
         />
       </View>
+      <Toast ref={toastRef} />
+
     </View>
   );
 };

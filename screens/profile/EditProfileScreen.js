@@ -1,15 +1,18 @@
 // EditProfileScreen.js
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { getUserProfile, updateUserProfile } from '../../api/Authentication'; // Import API functions
+import React, { useEffect, useState,useRef } from 'react';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {updateUserProfile } from '../../api/Authentication'; // Import API functions
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
 import CustomButton from '../../general/customButtonComponent'
+import Toast from '../../general/Toast';
 
 const EditProfileScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(true);
+  const toastRef = useRef();
+
   const profile = route.params.profile;
 
   const fetchUserProfile = async () => {
@@ -30,12 +33,13 @@ const EditProfileScreen = ({ route, navigation }) => {
   }, []);
 
   const handleSaveProfile = async () => {
-    try {
-      await updateUserProfile({ email, first_name: firstName, last_name: lastName });
-      navigation.navigate('Setting', { refresh: true });
-    } catch (error) {
-      Alert.alert('Error', 'Failed to update profile. Please try again.');
-    }
+      updateUserProfile({ email, first_name: firstName, last_name: lastName })
+    .then(() => {
+      navigation.navigate('Setting', { refresh: true, toastMessage: strings.savedSuccessfully});
+    })
+    .catch((error) => {
+      toastRef.current.error(strings.profileString.errorInUpdatingProfile );
+    })
   };
 
   if (loading) {
@@ -48,6 +52,7 @@ const EditProfileScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Toast ref={toastRef} />
       <View style={styles.inputContainer}>
         <Text style={styles.label}>{strings.profileString.Email}</Text>
         <TextInput

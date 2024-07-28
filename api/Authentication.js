@@ -45,7 +45,7 @@ export const getUserProfile = async () => {
     }
   };
 
-// ______________ Update Custom Field ____________
+// ______________ Update user profile ____________
 
 export const updateUserProfile = async (newData) => {
   try {
@@ -56,6 +56,7 @@ export const updateUserProfile = async (newData) => {
         'Content-Type': 'application/json',
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
+        'Accept-Language':'fa'
       },
       body: JSON.stringify(newData),
     });
@@ -82,11 +83,13 @@ export const changePassword = async (newData) => {
   try {
     const token = await AsyncStorage.getItem('token');
     const response = await fetch(`${apiUrl}user/change-password/`, {
-      method: 'PUT', // Use 'PATCH' if you only want to update certain fields
+      method: 'POST', // Use 'PATCH' if you only want to update certain fields
       headers: {
         'Content-Type': 'application/json',
         'Accept': strings.ContentType,
         'Authorization': `Bearer ${token}`,
+        'Accept-Language':'fa'
+
       },
       body: JSON.stringify(newData),
     });
@@ -94,8 +97,11 @@ export const changePassword = async (newData) => {
     console.log('Raw response:', responseText);
 
     if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData['current_password'][0]
       console.error('Error response from server:', responseText);
-      throw new Error(`Error updating custom field: ${response.status} ${response.statusText}`);
+      console.error('Error response from server:',msg);
+      throw new Error(msg);
     }
 
     const data = JSON.parse(responseText);

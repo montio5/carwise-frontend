@@ -107,7 +107,7 @@ export const strings = {
       noAccount: "حساب کاربری ندارید؟",
       signupLink: 'ثبت نام',
       alertTitle: 'ورود ناموفق بود',
-      alertMessage: 'لطفا اعتبار خود را بررسی کنید',
+      alertMessage: 'نام کاربری یا رمز عبور اشتباه است',
       errorTitle: 'خطا',
       errorMessage: 'در حین ورود به سیستم خطایی رخ داد. لطفا بعدا دوباره تلاش کنید.',
     },
@@ -171,8 +171,8 @@ export const strings = {
       oldPassword:"رمز عبور فعلی",
       newPassword:"رمز جدید",
       repeatNewPassword:"تکرار رمز",
-      
-
+      newPasswordAndConfirmationError:"رمز جدید و تکرار آن همخوانی ندارند",
+      errorInUpdatingProfile:"خطا در بروزرسانی اطلاعات کاربری"
     },
     
   };
