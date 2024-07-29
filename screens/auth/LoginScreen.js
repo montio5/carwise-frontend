@@ -1,17 +1,21 @@
 import React, { useState, useRef ,useCallback} from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
-import { login } from '../../api/Authentication'; // Ensure this path is correct
+import { login as apiLogin } from '../../api/Authentication'; // Ensure this path is correct
 import { strings } from '../../utils/strings'; // Ensure this path is correct
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
 import { useRoute,useFocusEffect } from '@react-navigation/native';
+import { AuthProvider, useAuth } from '../../general/AuthContext';
+
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = useState('mont@gmail.com');
   const [password, setPassword] = useState('1234test');
   const toastRef = useRef();
   const route = useRoute();
+  const { login } = useAuth();
 
+  
   useFocusEffect(
     useCallback(() => {
       if (route.params?.toastMessage) {
@@ -22,11 +26,9 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   );
   
   const handleLogin = async () => {
-    const result = await login(email, password);
-
+    const result = await apiLogin(email, password);
     if (result.success) {
-      navigation.navigate('Home');
-      setIsLoggedIn(true);
+      login(result.accessToken);
     } else {
       toastRef.current.error(result.message || 'Error message');
     }

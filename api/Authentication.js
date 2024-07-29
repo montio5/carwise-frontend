@@ -16,8 +16,9 @@ export const logout = async () => {
           'Authorization': `Bearer ${token}`,
         },
       });
-      if (response.status !== 204) { // 204 No Content is a typical response for successful delete
+      if (response.status !== 205) { // 204 No Content is a typical response for successful delete
         throw new Error('Network response was not ok');
+
       }
       return true; // logout was successful
     } catch (error) {
@@ -133,12 +134,8 @@ export const login = async (email, password) => {
     if (response.ok) {
       const data = await response.json();
       console.log('Response data:', data);
-
       const accessToken = data.access;
-
       if (accessToken) {
-        await AsyncStorage.setItem('token', "");
-        await AsyncStorage.setItem('token', accessToken);
         return { success: true, accessToken };
       } else {
         return { success: false, message: strings.login.alertMessage };
