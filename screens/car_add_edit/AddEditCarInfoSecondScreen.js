@@ -67,11 +67,10 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const cleanCarData = (data) => {
     const cleanedData = { ...data };
 
-    // Iterate over mileage_info and remove keys with empty string values
+    // Iterate over mileage_info and replace empty string values with null
     cleanedData.mileage_info = Object.keys(cleanedData.mileage_info)
-      .filter(key => cleanedData.mileage_info[key] !== '')
       .reduce((obj, key) => {
-        obj[key] = cleanedData.mileage_info[key];
+        obj[key] = cleanedData.mileage_info[key] === '' ? null : cleanedData.mileage_info[key];
         return obj;
       }, {});
 
@@ -82,24 +81,25 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
     // Check and clean custom_fields if it exists
     if (Array.isArray(cleanedData.custom_fields)) {
       cleanedData.custom_fields = cleanedData.custom_fields.map(field => {
-        // Remove empty string values within each custom field object
+        // Replace empty string values with null within each custom field object
         return Object.keys(field)
-          .filter(key => field[key] !== '')
           .reduce((obj, key) => {
-            obj[key] = field[key];
+            obj[key] = field[key] === '' ? null : field[key];
             return obj;
           }, {});
       }).filter(field => Object.keys(field).length > 0); // Remove empty custom field objects
     }
 
-    // Iterate over cleanedData and remove keys with empty string values or empty objects
+    // Iterate over cleanedData and replace empty string values with null
     Object.keys(cleanedData).forEach(key => {
-      if (cleanedData[key] === '' || (typeof cleanedData[key] === 'object' && Object.keys(cleanedData[key]).length === 0)) {
-        delete cleanedData[key];
+      if (cleanedData[key] === '') {
+        cleanedData[key] = null;
       }
     });
+    
     return cleanedData;
   };
+
 
   return (
     <View style={styles.container}>
