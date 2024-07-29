@@ -132,7 +132,7 @@ const CarDetailScreen = () => {
                     <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? '100%' : `${item.date_pct}%`}</Text>
                     </View>
                     <Text style={styles.limitText}>{item.date_limit}</Text>
 
@@ -140,7 +140,7 @@ const CarDetailScreen = () => {
                     <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? '100%' : `${item.pct}%`}</Text>
                     </View>
                     <FormattedNumber number={item.limit} style={styles.limitText} />
 
@@ -151,7 +151,7 @@ const CarDetailScreen = () => {
                     <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? '100%'  : `${item.date_pct}%`}</Text>
                     </View>
                     <Text style={styles.limitText}>{item.date_limit}</Text>
                   </>
@@ -160,7 +160,7 @@ const CarDetailScreen = () => {
                     <View style={styles.chartContainer}>
                       <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? '100%'  : `${item.pct}%`}</Text>
                     </View>
                     <FormattedNumber number={item.limit} style={styles.limitText} />
                   </>
