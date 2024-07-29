@@ -62,17 +62,14 @@ export const updateUserProfile = async (newData) => {
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
-      console.error('Error response from server:', responseText);
       throw new Error(`Error updating custom field: ${response.status} ${response.statusText}`);
     }
 
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error updating custom field:', error);
     throw error;
   }
 };
@@ -95,13 +92,10 @@ export const changePassword = async (newData) => {
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
       let msg = errorData['current_password'][0]
-      console.error('Error response from server:', responseText);
-      console.error('Error response from server:',msg);
       throw new Error(msg);
     }
 
@@ -118,7 +112,6 @@ export const changePassword = async (newData) => {
 
 export const login = async (email, password) => {
   try {
-    console.log('Sending request to API');
     const response = await fetch(`${apiUrl}api/token/`, {
       method: 'POST',
       headers: {
@@ -133,7 +126,6 @@ export const login = async (email, password) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Response data:', data);
       const accessToken = data.access;
       if (accessToken) {
         return { success: true, accessToken };
@@ -142,12 +134,9 @@ export const login = async (email, password) => {
       }
     } else {
       const errorData = await response.json();
-      console.error('Error response data:', errorData);
       return { success: false, message: strings.login.alertMessage };
     }
   } catch (error) {
-    console.error('Error during login:', error);
-
     return { success: false, message: strings.login.errorMessage };
   }
 };
@@ -167,20 +156,16 @@ export const registerUser = async (newData) => {
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
       let msg = errorData['detail']['email'][0]['msg']
-      console.error('Error response from server:', responseText);
-      console.error('Error response from server:',msg);
       throw new Error(msg);
     }
 
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error updating custom field:', error);
     throw error;
   }
 };

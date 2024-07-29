@@ -61,11 +61,9 @@ const CustomFieldScreen = ({ route, navigation }) => {
 
     apiCall
       .then((response) => {
-        console.log(customField ? "UPDATE response:" : "CREATE response:", response);
         navigation.navigate('CustomFieldList', { refresh: true, car: car, toastMessage: strings.savedSuccessfully});
       })
       .catch((error) => {
-        console.error(customField ? 'Error updating custom field:' : 'Error creating custom field:', error);
         const errorMessage = typeof error === 'string' ? error : error.message;
         toastRef.current.error(errorMessage || strings.customFieldScreenStrings.errorFetchingCustomField || 'Error');
       });

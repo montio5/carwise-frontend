@@ -77,7 +77,6 @@ export const updateUserCar = async (carUniqueKey, newData) => {
     });
 
     const responseText = await response.text(); // Get raw response text
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
       // Handle non-2xx HTTP responses
@@ -89,7 +88,6 @@ export const updateUserCar = async (carUniqueKey, newData) => {
           errorMessage = detail["mileage_info"][0].msg;
         }
       } catch (parseError) {
-        console.error('Error parsing error response:', parseError);
       }
       throw new Error(errorMessage);
     }
@@ -98,7 +96,6 @@ export const updateUserCar = async (carUniqueKey, newData) => {
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error updating user car:', error);
     throw error;
   }
 };
@@ -118,9 +115,7 @@ export const createUserCar = async (newData) => {
       body: JSON.stringify(newData),
     });
     const responseText = await response.text(); // Get raw response text
-    console.log('Raw response:', responseText);
     if (!response.ok) {
-      console.log("---------------------------",responseText);
 
       // Handle non-2xx HTTP responses
         let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
@@ -131,7 +126,6 @@ export const createUserCar = async (newData) => {
             errorMessage = detail["mileage_info"][0].msg;
           }
         } catch (parseError) {
-          console.error('Error parsing error response:', parseError);
         }
         throw new Error(errorMessage);
       
@@ -141,7 +135,6 @@ export const createUserCar = async (newData) => {
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error creating user car:', error);
     throw error;
   }
 };
@@ -163,7 +156,6 @@ export const deleteUserCar = async (uniqueKey) => {
     }
     return true; // Deletion was successful
   } catch (error) {
-    console.error('Error deleting car:', error);
     throw error;
   }
 };
@@ -304,7 +296,6 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
       body: JSON.stringify(customFieldData),
     });
     const responseText = await response.text(); // Get raw response text
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
       // Attempt to parse the response text as JSON to extract the error message
@@ -315,7 +306,6 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
           errorMessage = errorData.detail.non_field_errors[0].msg;
         }
       } catch (parseError) {
-        console.error('Error parsing error response:', parseError);
       }
       throw new Error(errorMessage);
     }
@@ -324,7 +314,6 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error creating user car:', error.message);
     throw error;
   }
 };
@@ -342,9 +331,7 @@ export const getCarMileage = async (carUniqueKey) => {
     });
     const data = await response.json();
     return data;
-  } catch (error) {
-    console.error('Error fetching user car:', error);
-    throw error;
+  } catch (error) {    throw error;
   }
 };
 
@@ -368,7 +355,6 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
     });
 
     const responseText = await response.text(); // Get raw response text
-    console.log('Raw response:', responseText);
 
     if (!response.ok) {
       // Handle non-2xx HTTP responses
@@ -380,18 +366,15 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
           errorMessage = detail["non_field_errors"][0];
         }
       } catch (parseError) {
-        console.error('Error parsing error response:', parseError);
       }
       throw new Error(errorMessage);
     }
 
     // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
-    console.log("--------------------",data);
 
     return data;
   } catch (error) {
-    console.error('Error updating user car:', error);
     throw error;
   }
 };

@@ -9,8 +9,8 @@ import { AuthProvider, useAuth } from '../../general/AuthContext';
 
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
-  const [email, setEmail] = useState('mont@gmail.com');
-  const [password, setPassword] = useState('1234test');
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const toastRef = useRef();
   const route = useRoute();
   const { login } = useAuth();

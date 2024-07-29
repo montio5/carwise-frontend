@@ -69,10 +69,8 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
 
     try {
       await updateCarMileage(car.unique_key, updatedData);
-      console.log('Data updated successfully');
       navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: strings.carSetupScreenStrings.successUpdateMessage });
     } catch (error) {
-      console.error(error);
       toastRef.current.error(error.message);
     }
   };

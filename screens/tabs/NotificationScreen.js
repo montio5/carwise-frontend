@@ -21,7 +21,6 @@ const NotificationScreen = () => {
     try {
       const data = await getNotifications();
       setCarData(Object.values(data).flatMap(car => Object.values(car)));
-      console.log("+++++++++++++++++",carData)
     } catch (error) {
       Alert.alert(strings.notificationScreenStrings.errorTitle, strings.notificationScreenStrings.errorMessage);
     } finally {

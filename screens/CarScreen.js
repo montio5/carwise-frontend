@@ -37,7 +37,6 @@ const CarDetailScreen = () => {
   const fetchDashboardData = async () => {
     try {
       const data = await getCarDashboard(car.unique_key);
-      console.log('API Response:', data);  // Debugging: Log the API response
       setMileage(data.mileage);
       if (Array.isArray(data.statistic)) {
         setDashboardData(data.statistic);
@@ -46,7 +45,6 @@ const CarDetailScreen = () => {
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching user car dashboard:', error);
       setError('Error fetching user car dashboard');
       setLoading(false);
     }

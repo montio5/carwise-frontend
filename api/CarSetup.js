@@ -69,21 +69,16 @@ export const getCarDashboard = async (carUniqueKey) => {
       });
   
       const responseText = await response.text(); // Get raw response text
-      console.log('Raw response:', responseText);
   
       if (!response.ok) {
         // Handle non-2xx HTTP responses
-        console.error('Error response from server:', responseText);
         throw new Error(`Error updating user car: ${response.status} ${response.statusText}`);
       }
   
       // Attempt to parse JSON only if response is OK
       const data = JSON.parse(responseText);
-      console.log("--------------------",data);
-  
       return data;
     } catch (error) {
-      console.error('Error updating user car:', error);
       throw error;
     }
   };
