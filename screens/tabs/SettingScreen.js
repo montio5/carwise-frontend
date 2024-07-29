@@ -2,14 +2,18 @@ import React, { useEffect, useState, useCallback,useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
-import { logout, getUserProfile } from '../../api/Authentication'; // Import the logout and getUserProfile functions
+import { logout as apiLogout, getUserProfile } from '../../api/Authentication'; // Import the logout and getUserProfile functions
 import { strings } from '../../utils/strings'; // Import the strings object
 import Toast from '../../general/Toast'
+import { AuthProvider, useAuth } from '../../general/AuthContext';
+
+
 const SettingScreen = ({ navigation, route }) => {
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState();
   const toastRef = useRef(null);
+  const { logout } = useAuth();
 
   useEffect(() => {
     fetchData();
@@ -22,7 +26,7 @@ const SettingScreen = ({ navigation, route }) => {
       }
       if (route.params?.toastMessage) {
         toastRef.current.success(route.params.toastMessage);
-        route.params.toastMessage=null;
+        route.params.toastMessage = null;
       }
     }, [route.params])
   );
@@ -42,7 +46,7 @@ const SettingScreen = ({ navigation, route }) => {
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfile', { profile: profile });
+    navigation.navigate('EditProfile', { profile });
   };
 
   const handleChangePassword = () => {
@@ -51,9 +55,8 @@ const SettingScreen = ({ navigation, route }) => {
 
   const handleLogout = async () => {
     try {
-      await logout(); // Make sure this is defined and properly logs out the user
-      Alert.alert(strings.settingScreenStrings.loggedOutTitle, strings.settingScreenStrings.loggedOutMessage);
-      setIsLoggedIn(false); // Set the user as logged out
+      await apiLogout(); // Ensure this properly logs out the user on the server
+      logout(); // Use the logout method from AuthContext
     } catch (error) {
       Alert.alert(strings.settingScreenStrings.logoutErrorTitle, strings.settingScreenStrings.logoutErrorMessage);
     }
@@ -88,12 +91,12 @@ const SettingScreen = ({ navigation, route }) => {
             <Text style={styles.buttonText}>{strings.settingScreenStrings.changePasswordButton}</Text>
           </View>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#fff" style={styles.icon} />
           <View style={styles.textWrapper}>
             <Text style={styles.buttonText}>{strings.settingScreenStrings.logoutButton}</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </View>
   );
