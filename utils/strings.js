@@ -85,7 +85,7 @@ export const strings = {
       filtersSeparator: 'فیلترها',
       engineOilPlaceholder: 'روغن موتور',
       gearboxOilPlaceholder: 'روغن گیربکس',
-      hydraulicFluidPlaceholder: 'مایع هیدرولیک',
+      hydraulicFluidPlaceholder: 'روغن هیدرولیک',
       oilFilterPlaceholder: 'فیلتر روغن',
       fuelFilterPlaceholder: 'فیلتر سوخت',
       airFilterPlaceholder: 'فیلتر هوا',

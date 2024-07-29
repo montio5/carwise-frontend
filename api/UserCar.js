@@ -372,8 +372,17 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
 
     if (!response.ok) {
       // Handle non-2xx HTTP responses
-      console.error('Error response from server:', responseText);
-      throw new Error(`Error updating user car: ${response.status} ${response.statusText}`);
+      let errorMessage = strings.carSetupScreenStrings.errorMessage;
+      try {
+        const errorData = JSON.parse(responseText);
+        let detail =errorData
+        if (detail) {
+          errorMessage = detail["non_field_errors"][0];
+        }
+      } catch (parseError) {
+        console.error('Error parsing error response:', parseError);
+      }
+      throw new Error(errorMessage);
     }
 
     // Attempt to parse JSON only if response is OK

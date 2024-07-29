@@ -1,7 +1,7 @@
-import React, { useEffect, useState ,useCallback,useRef} from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute,useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { getCarDashboard } from '../api/CarSetup';  // Import the API function
 import FormattedNumber from '../general/textNumber';  
 import { strings } from '../utils/strings'; // Adjust the path as per your project structure
@@ -25,11 +25,10 @@ const CarDetailScreen = () => {
       }
       if (route.params?.toastMessage) {
         toastRef.current.success(route.params.toastMessage);
-        route.params.toastMessage=null;
+        route.params.toastMessage = null;
       }
     }, [route.params])
   );
-
 
   useEffect(() => {
     fetchDashboardData();
@@ -58,8 +57,7 @@ const CarDetailScreen = () => {
     if (pct < 50) return '#00FF00'; // Green
     if (pct < 80) return 'gray'; 
     if (pct <= 90) return 'yellow'; // 
-    if (pct> 90) return '#FF0000';
-     //  
+    if (pct > 90) return '#FF0000'; // Red
   };
 
   const goToCustomFieldScreen = () => {
@@ -79,9 +77,10 @@ const CarDetailScreen = () => {
   };
 
   const isTextTooLong = (text) => text.length > 20;
+
   return (
     <View style={styles.container}>
-            <Toast ref={toastRef} />
+      <Toast ref={toastRef} />
 
       <ScrollView>
         {!loading && <FormattedNumber number={mileage} suffix={strings.carDetialScreenStrings.mileageSuffix} style={styles.mileageText} />}
@@ -123,6 +122,8 @@ const CarDetailScreen = () => {
             const isLongText = isTextTooLong(item.name);
             const hasDateAndPct = item.date && item.date_limit && item.pct !== undefined;
             const isDateItem = item.date && item.date_limit && item.pct === undefined;
+            const colorPct = getColorForPct(item.pct);
+            const colorDatePct = getColorForPct(item.date_pct);
 
             return (
               <View key={index} style={styles.itemContainer}>
@@ -130,39 +131,45 @@ const CarDetailScreen = () => {
                 {hasDateAndPct ? (
                   <>
                     <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
+                      <View style={[styles.chart, { backgroundColor: colorDatePct, width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? '100%' : `${item.date_pct}%`}</Text>
                     </View>
-                    <Text style={styles.limitText}>{item.date_limit}</Text>
+                    <Text style={styles.limitText}>
+                      <Ionicons name="calendar-outline" size={20} color={colorDatePct} style={styles.icon} /> {item.date_limit}
+                    </Text>
 
                     <Text>{'\n'}</Text>
                     <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
+                      <View style={[styles.chart, { backgroundColor: colorPct, width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? '100%' : `${item.pct}%`}</Text>
                     </View>
-                    <FormattedNumber number={item.limit} style={styles.limitText} />
-
-
+                    <Text style={styles.limitText}>
+                      <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} /> <FormattedNumber number={item.limit} style={styles.limitText} />
+                    </Text>
                   </>
                 ) : isDateItem ? (
                   <>
                     <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.date_pct), width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
+                      <View style={[styles.chart, { backgroundColor: colorDatePct, width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.date_pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? '100%'  : `${item.date_pct}%`}</Text>
                     </View>
-                    <Text style={styles.limitText}>{item.date_limit}</Text>
+                    <Text style={styles.limitText}>
+                      <Ionicons name="calendar-outline" size={20} color={colorDatePct} style={styles.icon} /> {item.date_limit}
+                    </Text>
                   </>
                 ) : (
                   <>
                     <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: getColorForPct(item.pct), width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
+                      <View style={[styles.chart, { backgroundColor: colorPct, width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
                       </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? strings.carDetialScreenStrings.overdueText : `${item.pct}%`}</Text>
+                      <Text style={styles.chartText}>{item.pct === 'overdue' ? '100%'  : `${item.pct}%`}</Text>
                     </View>
-                    <FormattedNumber number={item.limit} style={styles.limitText} />
+                    <Text style={styles.limitText}>
+                      <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} /> <FormattedNumber number={item.limit} style={styles.limitText} />
+                    </Text>
                   </>
                 )}
               </View>
@@ -173,6 +180,8 @@ const CarDetailScreen = () => {
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   mileageText:{
@@ -269,6 +278,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
+  icon:{
+    marginTop:50
+  }
 });
 
 export default CarDetailScreen;

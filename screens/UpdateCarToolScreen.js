@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, ScrollView, Text, TextInput, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import Separator from '../general/speratorComponent'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
@@ -7,6 +7,7 @@ import { strings } from '../utils/strings'; // Import the strings object
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 import CustomButton from '../general/customButtonComponent';
 import Toast from '../general/Toast';
+import InputComponent from '../general/customInputComponent'; // Import InputComponent
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
@@ -72,7 +73,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: strings.carSetupScreenStrings.successUpdateMessage });
     } catch (error) {
       console.error(error);
-      toastRef.current.error(strings.carSetupScreenStrings.errorMessage);
+      toastRef.current.error(error.message);
     }
   };
 
@@ -83,12 +84,12 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{strings.updateCarTool.updateCarToolHeader}</Text>
         <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={strings.updateCarTool.enterMileagePlaceholder}
+        <InputComponent
+        style={styles.input}
+          isNumeric
           value={mileage}
-          keyboardType="numeric"
-          onChangeText={(value) => {
+          placeholder={strings.updateCarTool.enterMileagePlaceholder}
+          onChange={(value) => {
             setMileage(value);
             if (value === '') {
               // Reset checked fields when mileage is erased
@@ -118,44 +119,17 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
                 />
               )}
               <Text style={styles.fieldLabel}>{toolName}</Text>
-              <TextInput
-                style={[styles.input, checkedFields[field] && styles.disabledInput]}
+              <InputComponent
+                isNumeric
+                value={data[field] !== null ? String(data[field]) : ''}
                 placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
-                value={data[field] !== null ? String(data[field]) : null}
+                style={checkedFields[field] ? styles.disabledInput : styles.input}
+                onChange={(value) => handleInputChange(field, value)}
                 editable={!checkedFields[field]}
-                keyboardType="numeric"
-                onChangeText={(value) => handleInputChange(field, value)}
               />
             </View>
           );
         })}
-
-        {/* Render the separator only if there are custom fields */}
-        {/* {data.custom_fields && data.custom_fields.length > 0 && <Separator text={strings.updateCarTool.customFieldsSeparator} />} */}
-
-        {/* Map over the custom fields and render them */}
-        {/* {data.custom_fields && data.custom_fields.map((customField) => (
-          customField.last_mileage_changed != null && (
-            <View key={customField.id} style={styles.fieldContainer}>
-              {mileage !== '' && (
-                <Checkbox
-                  style={styles.checkbox}
-                  value={checkedFields[`custom_field_${customField.id}`]}
-                  onValueChange={() => handleCheckboxChange(`custom_field_${customField.id}`)}
-                />
-              )}
-              <Text style={styles.fieldLabel}>{customField.name}</Text>
-              <TextInput
-                style={[styles.input, checkedFields[`custom_field_${customField.id}`] && styles.disabledInput]}
-                placeholder={customField.last_mileage_changed !== null ? String(customField.last_mileage_changed) : strings.updateCarTool.naPlaceholder}
-                value={String(customField.last_mileage_changed)}
-                editable={!checkedFields[`custom_field_${customField.id}`]}
-                keyboardType="numeric"
-                onChangeText={(value) => handleInputChange(`custom_field_${customField.id}`, value)}
-              />
-            </View>
-          )
-        ))} */}
       </ScrollView>
       <View style={styles.buttonContainer}>
         <CustomButton
@@ -192,15 +166,15 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 4,
+
     padding: 10,
     flex: 1,
     backgroundColor: '#fff',
     marginBottom: 16,
   },
   disabledInput: {
+    flex: 1,
+    marginBottom: 16,
     backgroundColor: '#e9ecef',
   },
   fieldContainer: {
