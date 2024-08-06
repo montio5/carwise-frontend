@@ -31,16 +31,16 @@ const NotificationScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
   const renderNotification = ({ item }) => (
     <View style={styles.notificationContainer}>
       <Ionicons name={getStatusIcon(item.status)} size={30} color={getStatusColor(item.status)} style={styles.icon} />
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{item.field_name} - {item.car}</Text>
+        <Text style={styles.title}>{item.car}</Text>
+        <Text style={styles.title}>{item.field_name}</Text>
         <Text style={styles.message}>{item.message}</Text>
-        <Text style={[styles.status, { color: getStatusColor(item.status) }]}>{item.status}</Text>
+        {/* <Text style={[styles.status, { color: getStatusColor(item.status) }]}>{item.status}</Text> */}
       </View>
-      {getAdditionalIcon(item.field_name)}
+      {getAdditionalIcon(item.field_name) || <View style={styles.additionalIconPlaceholder} />}
     </View>
   );
 
@@ -117,6 +117,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  additionalIcon: {
+    marginLeft: 16,
+  },
+  additionalIconPlaceholder: {
+    width: 30, // same width as the icon
+    marginLeft: 16, // same margin as the icon
   },
   notificationContainer: {
     flexDirection: 'row',

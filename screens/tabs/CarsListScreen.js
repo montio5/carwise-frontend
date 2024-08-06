@@ -82,7 +82,7 @@ const CarsListScreen = ({ route }) => {
         data={userCars}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        numColumns={2}
+        numColumns={1}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }

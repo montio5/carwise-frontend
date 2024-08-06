@@ -264,8 +264,12 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
       let errorMessage = strings.customFieldScreenStrings.errorUpdatingCustomField;
       try {
         const errorData = JSON.parse(responseText);
+
         if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
           errorMessage = errorData.detail.non_field_errors[0].msg;
+        }
+        else{
+          errorMessage = Object.values(errorData.detail)[0][0].msg;
         }
       } catch (parseError) {
         console.error('Error parsing error response:', parseError);

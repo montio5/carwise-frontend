@@ -1,7 +1,7 @@
 // CustomFieldScreen.js
 
 import React, { useState, useEffect,useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
 import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent'
