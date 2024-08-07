@@ -22,10 +22,15 @@ const RegistrationScreen = () => {
     let valid = true;
     let errors = {};
 
-    if (!email.trim()) {
-      errors.email = strings.registration.emailRequired;
-      valid = false;
-    }
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+if (!email.trim()) {
+  errors.email = strings.registration.emailRequired;
+  valid = false;
+} else if (!emailRegex.test(email)) {
+  errors.email = strings.registration.emailInvalid;
+  valid = false;
+}
 
     if (!firstName.trim()) {
       errors.firstName = strings.registration.firstNameRequired;
@@ -37,7 +42,7 @@ const RegistrationScreen = () => {
       valid = false;
     }
     if (!password.trim()) {
-      errors.password = strings.registration.passwordRequired;
+      errors.password = strings.registration.passwordCanNotJustBeSpace;
       valid = false;
     }
     if (!password) {

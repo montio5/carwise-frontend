@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator ,RefreshControl} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { getCarDashboard } from '../api/CarSetup';  // Import the API function
@@ -18,6 +18,14 @@ const CarDetailScreen = () => {
   const [dashboardData, setDashboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDashboardData();
+    setRefreshing(false);
+  };
+
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +87,9 @@ const CarDetailScreen = () => {
     <View style={styles.container}>
       <Toast ref={toastRef} />
 
-      <ScrollView>
+      <ScrollView         refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {!loading && <FormattedNumber number={mileage} suffix={strings.carDetialScreenStrings.mileageSuffix} style={styles.mileageText} />}
         <View style={styles.buttonRow}>
           <TouchableOpacity onPress={goToCustomFieldScreen} style={styles.button}>

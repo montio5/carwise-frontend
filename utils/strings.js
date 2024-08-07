@@ -114,10 +114,11 @@ export const strings = {
     },
     registration: {
       emailRequired: "ایمیل اجباری است",
+      emailInvalid: "لطفا از یک ایمیل واقعی استفاده کنید",
       firstNameRequired: "نام اجباری است",
       lastNameRequired: "نام خانوادگی اجباری است",
       passwordRequired: "رمز عبور اجباری است",
-      passwordRequired: "رمز عبور نمیتواند تنها فاصله باشد",
+      passwordCanNotJustBeSpace: "رمز عبور نمیتواند تنها فاصله باشد",
       passwordMismatch: "رمز عبور و تکرار آن تطابق ندارند",
       title: 'ثبت نام',
       firstNamePlaceholder: 'نام',
