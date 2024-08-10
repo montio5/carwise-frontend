@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Alert } from 'react-native';
+import { Alert,TouchableOpacity } from 'react-native';
 // import networkListener from './networkListener';
 // import * as Notifications from 'expo-notifications';
 
@@ -86,16 +86,30 @@ const CarStackScreens = () => (
     headerTitleAlign: 'center',
     headerTintColor: 'black',
   }}>
-    <CarStack.Screen name="Home" component={CarsListScreen} options={({ navigation }) => ({
-      title: strings.mainStack.Home,
-      headerRight: () => (
-        <Icon.Button name="add" size={24} color="#000" backgroundColor="transparent" onPress={() => navigation.navigate('AddEditCarInfoFirstScreen', { car: null })} />
-      ),
-    })} />
+      <CarStack.Screen 
+        name="Home" 
+        component={CarsListScreen} 
+        options={({ navigation }) => ({
+          title: strings.mainStack.Home,
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }} // Adjust padding if needed
+              onPress={() => navigation.navigate('AddEditCarInfoFirstScreen', { car: null })}
+            >
+              <Icon name="add" size={24} color="#000" />
+            </TouchableOpacity>
+          ),
+        })} 
+      />
     <CarStack.Screen name="CustomFieldList" component={CustomFiledListScreen} options={({ navigation, route }) => ({
       title: strings.mainStack.CustomFieldList,
       headerRight: () => (
-        <Icon.Button name="add" size={24} color="#000" backgroundColor="transparent" onPress={() => navigation.navigate('CustomField', { car: route.params.car })} />
+        <TouchableOpacity
+        style={{ padding: 10 }} // Adjust padding if needed
+        onPress={() => navigation.navigate('CustomField', { car: route.params.car })}
+      >
+        <Icon name="add" size={24} color="#000" />
+      </TouchableOpacity>
       ),
     })} />
     <CarStack.Screen name="CustomField" component={CustomFieldScreen} options={({ route, navigation }) => ({
