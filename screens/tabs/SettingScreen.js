@@ -56,9 +56,11 @@ const SettingScreen = ({ navigation, route }) => {
   const handleLogout = async () => {
     try {
       await apiLogout(); // Ensure this properly logs out the user on the server
-      logout(); // Use the logout method from AuthContext
     } catch (error) {
       Alert.alert(strings.settingScreenStrings.logoutErrorTitle, strings.settingScreenStrings.logoutErrorMessage);
+    }
+    finally{
+      logout(); // Use the logout method from AuthContext
     }
   };
 

@@ -230,16 +230,12 @@ const styles = StyleSheet.create({
     },
     input: {
       height: 40,
-      // borderColor: 'gray',
-      // borderWidth: 1,
       marginBottom: 30,
       paddingHorizontal: 8,
     },
     buttonContainer: {
-      // padding: 16,
       marginTop: 30,
       paddingBottom: 5, // Adds space for the button at the bottom
-      // backgroundColor: '#f9f9f9',
     },
     button: {
       marginVertical: 5,

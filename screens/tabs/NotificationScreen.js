@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { getNotifications } from '../../api/UserCar';
+import { getNotificationlist } from '../../api/UserCar';
 import { strings } from '../../utils/strings';
 
 const NotificationScreen = () => {
@@ -19,7 +19,7 @@ const NotificationScreen = () => {
 
   const fetchData = async () => {
     try {
-      const data = await getNotifications();
+      const data = await getNotificationlist();
       setCarData(Object.values(data).flatMap(car => Object.values(car)));
     } catch (error) {
       Alert.alert(strings.notificationScreenStrings.errorTitle, strings.notificationScreenStrings.errorMessage);

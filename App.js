@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Alert } from 'react-native';
+// import networkListener from './networkListener';
+// import * as Notifications from 'expo-notifications';
 
 import { deleteUserCar, deleteCustomFieldCar } from './api/UserCar';
 import { NavigationContainer } from '@react-navigation/native';
@@ -28,6 +30,13 @@ const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
+
+// const requestPermissions = async () => {
+//   const { status } = await Notifications.getPermissionsAsync();
+//   if (status !== 'granted') {
+//     await Notifications.requestPermissionsAsync();
+//   }
+// };
 
 const AuthStackScreens = () => (
   <AuthStack.Navigator screenOptions={{
@@ -155,14 +164,12 @@ const MainStackScreens = () => (
       return <Ionicons name={iconName} size={size} color={color} />; 
     }, 
     tabBarShowLabel: false, 
-  })}
-  tabBarOptions={{
+  
     activeTintColor: 'blue',
     inactiveTintColor: 'gray',
-    style: {
       backgroundColor: 'green',
-    }
-  }}
+  
+  })}
 >
     <MainStack.Screen name="Home" component={CarStackScreens} options={{ headerShown: false }} />
     <MainStack.Screen  name="Notification" component={NotificationScreen} options={{ headerTitle: strings.mainStack.Notification  ,   headerTitleAlign: 'center'
@@ -173,6 +180,16 @@ const MainStackScreens = () => (
 
 const App = () => {
   const { isLoggedIn } = useAuth();
+  // useEffect(() => {
+  //   requestPermissions();
+
+  //   if (isLoggedIn) {
+  //     requestPermissions();
+  //     requestPermissions();
+
+  //   }
+  // }, [isLoggedIn]);
+
 
   return (
     <NavigationContainer>

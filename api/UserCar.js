@@ -162,7 +162,7 @@ export const deleteUserCar = async (uniqueKey) => {
 
 // ______________ Get Notifications ____________
 
-export const getNotifications = async () => {
+export const getNotificationlist = async () => {
   try {
     const token = await AsyncStorage.getItem('token');
     const response = await fetch(`${apiUrl}api/check-data/`, {
@@ -379,6 +379,27 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
 
     return data;
   } catch (error) {
+    throw error;
+  }
+};
+
+// ______________ Get Notification  ____________
+
+export const getNotification = async () => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}api/notification`, {
+      headers: {
+        Accept: strings.ContentType,
+        Authorization: `Bearer ${token}`,
+        'Accept-Language':'fa'
+      },
+    });
+    const data = await response.json();
+    console.log("__________________________",data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching user car:', error);
     throw error;
   }
 };
