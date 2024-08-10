@@ -1,11 +1,10 @@
-import React, { useState ,useRef} from 'react';
-import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { strings } from '../../utils/strings';
 import { registerUser } from '../../api/Authentication';
 import CustomButton from '../../general/customButtonComponent';
 import Toast from '../../general/Toast';
-
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
@@ -22,15 +21,15 @@ const RegistrationScreen = () => {
     let valid = true;
     let errors = {};
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-if (!email.trim()) {
-  errors.email = strings.registration.emailRequired;
-  valid = false;
-} else if (!emailRegex.test(email)) {
-  errors.email = strings.registration.emailInvalid;
-  valid = false;
-}
+    if (!email.trim()) {
+      errors.email = strings.registration.emailRequired;
+      valid = false;
+    } else if (!emailRegex.test(email)) {
+      errors.email = strings.registration.emailInvalid;
+      valid = false;
+    }
 
     if (!firstName.trim()) {
       errors.firstName = strings.registration.firstNameRequired;
@@ -41,6 +40,7 @@ if (!email.trim()) {
       errors.lastName = strings.registration.lastNameRequired;
       valid = false;
     }
+
     if (!password.trim()) {
       errors.password = strings.registration.passwordCanNotJustBeSpace;
       valid = false;
@@ -66,8 +66,8 @@ if (!email.trim()) {
 
     try {
       const response = await registerUser({ email: email.trim(), password: password, first_name: firstName, last_name: lastName });
-        navigation.navigate('Login', { toastMessage: strings.savedSuccessfully });
-        toastRef.current.success(strings.registration.registrationSuccess);
+      navigation.navigate('Login', { toastMessage: strings.savedSuccessfully });
+      toastRef.current.success(strings.registration.registrationSuccess);
     } catch (error) {
       const errorMessage = typeof error.message === 'string' ? error.message : strings.carSetupScreenStrings.errorMessage;
       toastRef.current.error(errorMessage);
@@ -75,9 +75,9 @@ if (!email.trim()) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>{strings.registration.title}</Text>
+        {/* <Text style={styles.title}>{strings.registration.title}</Text> */}
         <View style={styles.inputContainer}>
           <TextInput
             placeholder={strings.registration.firstNamePlaceholder}
@@ -133,20 +133,20 @@ if (!email.trim()) {
         </Pressable>
       </View>
       <Toast ref={toastRef} />
-
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1, // Ensure the ScrollView fills the space
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f9f9f9',
+    padding: 20, // Optional padding for the ScrollView content
   },
   formContainer: {
-    width: '80%',
+    width: '90%',
   },
   title: {
     fontSize: 24,
