@@ -163,34 +163,48 @@ const CarStackScreens = () => (
   </CarStack.Navigator>
 );
 
+
 const MainStackScreens = () => (
-<MainStack.Navigator 
-  screenOptions={({ route }) => ({ 
-    tabBarIcon: ({ focused, color, size }) => { 
-      let iconName; 
-      if (route.name === 'Home') { 
-        iconName = focused ? 'car' : 'car-outline'; 
-      } else if (route.name === 'Setting') { 
-        iconName = focused ? 'settings' : 'settings-outline'; 
-      } else if (route.name === 'Notification') { 
-        iconName = focused ? 'notifications' : 'notifications-outline'; 
-      } 
-      return <Ionicons name={iconName} size={size} color={color} />; 
-    }, 
-    tabBarShowLabel: false, 
-  
-    activeTintColor: 'blue',
-    inactiveTintColor: 'gray',
-      backgroundColor: 'green',
-  
-  })}
->
+  <MainStack.Navigator 
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+        if (route.name === 'Home') {
+          iconName = focused ? 'car' : 'car-outline';
+        } else if (route.name === 'Setting') {
+          iconName = focused ? 'settings' : 'settings-outline';
+        } else if (route.name === 'Notification') {
+          iconName = focused ? 'notifications' : 'notifications-outline';
+        }
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarShowLabel: false,
+      tabBarStyle: {
+        backgroundColor: 'black', // Set the tab bar color to black
+        borderTopColor: 'black', // Optional: Set the border color (if you have a border)
+      },
+      activeTintColor: 'blue',
+      inactiveTintColor: 'gray',
+    })}
+  >
     <MainStack.Screen name="Home" component={CarStackScreens} options={{ headerShown: false }} />
-    <MainStack.Screen  name="Notification" component={NotificationScreen} options={{ headerTitle: strings.mainStack.Notification  ,   headerTitleAlign: 'center'
-}} />
+    <MainStack.Screen 
+      name="Notification" 
+      component={NotificationScreen} 
+      options={{
+        headerTitle: strings.mainStack.Notification,
+        headerTitleAlign: 'center',
+        // headerStyle: {
+        //   backgroundColor: '#24292F', // Set the header background color to black
+        // },
+        // headerTintColor: 'white', // Set the header text color to white for better contrast
+      }} 
+    />
     <MainStack.Screen name="Setting" component={SettingStackScreens} options={{ headerShown: false }} />
   </MainStack.Navigator>
 );
+
+
 
 const App = () => {
   const { isLoggedIn } = useAuth();
