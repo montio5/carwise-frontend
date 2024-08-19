@@ -2,6 +2,8 @@ export const strings = {
     loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
     savedSuccessfully:"با موفقیت ثبت شد",
+    notificationMessage: " به نظر میرسد {item} مورد باید در خودرو {car} به روز رسانی شوند",
+    alert:"هشدار",
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
       mileageLabel: 'مسافت پیموده شده',
