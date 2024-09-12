@@ -160,7 +160,7 @@ export const deleteUserCar = async (uniqueKey) => {
   }
 };
 
-// ______________ Get Notifications ____________
+// ______________ Get Notification List ____________
 
 export const getNotificationlist = async () => {
   try {

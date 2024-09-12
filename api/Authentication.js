@@ -22,7 +22,7 @@ export const logout = async () => {
       }
       return true; // logout was successful
     } catch (error) {
-      console.error('Error deleting car:', error);
+      console.error('Error in logout:', error);
       throw error;
     }
   };
@@ -141,6 +141,7 @@ export const login = async (email, password) => {
   }
 };
 
+//______________ Register User ____________
 
 export const registerUser = async (newData) => {
   try {
@@ -166,6 +167,35 @@ export const registerUser = async (newData) => {
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
+    throw error;
+  }
+};
+
+//______________ Send FCM Token ____________
+
+export const sendFCMTokenToServer  = async (newData) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await fetch(`${apiUrl}user/fcm-token/`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': strings.ContentType,
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(newData),
+    });
+    const responseText = await response.text();
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData
+      throw new Error(msg);
+    }
+
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('error adding fcm token', error);
     throw error;
   }
 };

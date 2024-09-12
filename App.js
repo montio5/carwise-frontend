@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Alert,TouchableOpacity } from 'react-native';
-// import networkListener from './networkListener';
-// import * as Notifications from 'expo-notifications';
-
 import { deleteUserCar, deleteCustomFieldCar } from './api/UserCar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -25,6 +22,15 @@ import EditProfileScreen from './screens/profile/EditProfileScreen';
 import ChangePasswordScreen from './screens/profile/ChangePasswordScreen';
 import { strings } from './utils/strings';
 import { AuthProvider, useAuth } from './general/AuthContext';
+import {sendFCMTokenToServer} from './api/Authentication'
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { 
+  configureNotificationHandler, 
+  registerForPushNotifications, 
+  setupNotificationListener 
+} from './general/notification'; // Import notification functions
 
 const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
@@ -207,17 +213,24 @@ const MainStackScreens = () => (
 
 
 const App = () => {
-  const { isLoggedIn } = useAuth();
-  // useEffect(() => {
-  //   requestPermissions();
+  const { isLoggedIn } = useAuth(); // Hook to check if the user is authenticated
 
-  //   if (isLoggedIn) {
-  //     requestPermissions();
-  //     requestPermissions();
+  useEffect(() => {// Configure the notification handler to display notifications in the foreground
+    configureNotificationHandler();
+  }, []);
 
-  //   }
-  // }, [isLoggedIn]);
+  useEffect(() => {  // Register for push notifications
+    if (isLoggedIn) {
+      registerForPushNotifications();
+    }
+  }, [isLoggedIn]);
 
+  useEffect(() => {// Set up listener for notification responses
+    const removeListener = setupNotificationListener();
+    return () => {// Cleanup the listener when the component unmounts
+      removeListener();
+    };
+  }, []);
 
   return (
     <NavigationContainer>
