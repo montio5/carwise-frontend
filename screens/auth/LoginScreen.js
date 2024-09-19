@@ -56,10 +56,20 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
       />
       <Pressable onPress={() => navigation.navigate('Registration')}>
         <View style={styles.signupContainer}>
-          <Text style={styles.signupText}>{strings.login.noAccount}</Text>
-          <Text style={[styles.signupText, styles.signupLink]}>{strings.login.signupLink}</Text>
+          <View style={styles.signupRow}>
+            <Text style={styles.signupText}>{strings.login.noAccount}</Text>
+            <Text style={[styles.signupText, styles.signupLink]}>{strings.login.signupLink}</Text>
+          </View>
+          
+          {/* Wrap the "Forgot Password" link inside a Pressable */}
+          <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
+            <View style={styles.forgotPasswordContainer}>
+              <Text style={[styles.signupText, styles.signupLink]}>{strings.login.forgotPasswordLink}</Text>
+            </View>
+          </Pressable>
         </View>
       </Pressable>
+
       <Toast ref={toastRef} />
     </View>
   );
@@ -81,10 +91,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     width: 300,
-    borderRadius:5
+    borderRadius: 5,
   },
   signupContainer: {
     marginTop: 20,
+  },
+  signupRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -95,6 +107,10 @@ const styles = StyleSheet.create({
     color: 'blue',
     textDecorationLine: 'underline',
   },
+  forgotPasswordContainer: {
+    marginTop: 10, // Space between signup text and forgot password link
+  },
 });
+
 
 export default LoginScreen;

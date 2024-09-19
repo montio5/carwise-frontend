@@ -52,7 +52,7 @@ export const updateUserProfile = async (newData) => {
   try {
     const token = await AsyncStorage.getItem('token');
     const response = await fetch(`${apiUrl}user/profile/`, {
-      method: 'PUT', // Use 'PATCH' if you only want to update certain fields
+      method: 'PUT', 
       headers: {
         'Content-Type': 'application/json',
         'Accept': strings.ContentType,
@@ -81,7 +81,7 @@ export const changePassword = async (newData) => {
   try {
     const token = await AsyncStorage.getItem('token');
     const response = await fetch(`${apiUrl}user/change-password/`, {
-      method: 'POST', // Use 'PATCH' if you only want to update certain fields
+      method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
         'Accept': strings.ContentType,
@@ -146,7 +146,7 @@ export const login = async (email, password) => {
 export const registerUser = async (newData) => {
   try {
     const response = await fetch(`${apiUrl}user/register/`, {
-      method: 'POST', // Use 'PATCH' if you only want to update certain fields
+      method: 'POST', 
       headers: {
         'Content-Type': strings.ContentType,
         'Accept': strings.ContentType,
@@ -196,6 +196,105 @@ export const sendFCMTokenToServer  = async (newData) => {
     return data;
   } catch (error) {
     console.error('error adding fcm token', error);
+    throw error;
+  }
+};
+
+// ______________ Forgot Password ____________
+
+
+export const callForgotPassword = async (newData) => {
+  try {
+    const response = await fetch(`${apiUrl}user/forgot-password/`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': strings.ContentType,
+        'Accept-Language': 'fa'
+      },
+      body: JSON.stringify(newData),
+    });
+    
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      // Parse the responseText as JSON to access the data
+      const errorData = JSON.parse(responseText);
+
+      // Safely extract the error message
+      let msg = errorData?.detail?.email?.[0]?.msg || strings.resetPasswordProcess.emailError;
+
+      // Throw the extracted message as the error
+      throw new Error(msg);
+    }
+
+    // If the request was successful, parse the response
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('Error in sending email:', error.message);
+    throw error;
+  }
+};
+
+
+// ______________ varify Code ____________
+
+
+export const varifyCode = async (newData) => {
+  try {
+    const response = await fetch(`${apiUrl}user/varify-code/`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': strings.ContentType,
+        'Accept-Language':'fa'
+
+      },
+      body: JSON.stringify(newData),
+    });
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData?.detail?.code?.[0]?.msg || strings.resetPasswordProcess.codeError;
+      throw new Error(msg);
+    }
+
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('Error varifing the code:', error);
+    throw error;
+  }
+};
+
+// ______________ Reset Password ____________
+
+
+export const ResetPassword = async (newData) => {
+  try {
+    const response = await fetch(`${apiUrl}user/reset-password/`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': strings.ContentType,
+        'Accept-Language':'fa'
+
+      },
+      body: JSON.stringify(newData),
+    });
+    const responseText = await response.text();
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      let msg = errorData?.detail?.code?.[0]?.msg || strings.resetPasswordProcess.passwordError;
+      throw new Error(msg);
+    }
+
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    console.error('Error in reseting password:', error);
     throw error;
   }
 };

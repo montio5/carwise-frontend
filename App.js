@@ -8,6 +8,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import LoginScreen from './screens/auth/LoginScreen';
 import RegistrationScreen from './screens/auth/RegistrationScreen';
+import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen';
+import VerifyCodeScreen from './screens/auth/VarifyCodeScreen';
+import ResetPasswordScreen from './screens/auth/ResetPasswordScreen';
+
 import SettingScreen from './screens/tabs/SettingScreen';
 import NotificationScreen from './screens/tabs/NotificationScreen';
 import CarsListScreen from './screens/tabs/CarsListScreen';
@@ -22,27 +26,19 @@ import EditProfileScreen from './screens/profile/EditProfileScreen';
 import ChangePasswordScreen from './screens/profile/ChangePasswordScreen';
 import { strings } from './utils/strings';
 import { AuthProvider, useAuth } from './general/AuthContext';
-import {sendFCMTokenToServer} from './api/Authentication'
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 import { 
   configureNotificationHandler, 
   registerForPushNotifications, 
   setupNotificationListener 
 } from './general/notification'; // Import notification functions
+import { varifyCode } from './api/Authentication';
 
 const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
-
-// const requestPermissions = async () => {
-//   const { status } = await Notifications.getPermissionsAsync();
-//   if (status !== 'granted') {
-//     await Notifications.requestPermissionsAsync();
-//   }
-// };
 
 const AuthStackScreens = () => (
   <AuthStack.Navigator screenOptions={{
@@ -53,6 +49,9 @@ const AuthStackScreens = () => (
       {props => <LoginScreen {...props} />}
     </AuthStack.Screen>
     <AuthStack.Screen name="Registration" component={RegistrationScreen} options={{ title: strings.mainStack.Registration }} />
+    <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: strings.mainStack.Registration }} />
+    <AuthStack.Screen name="VarifyCode" component={VerifyCodeScreen} options={{ title: strings.mainStack.Registration }} />
+    <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ title: strings.mainStack.Registration }} />
     <AuthStack.Screen name="CarScreen" component={CarScreen} options={{ title: strings.mainStack.CarScreen }} />
   </AuthStack.Navigator>
 );

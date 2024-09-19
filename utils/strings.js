@@ -109,6 +109,7 @@ export const strings = {
       loginButton: 'ورود',
       noAccount: "حساب کاربری ندارید؟",
       signupLink: 'ثبت نام',
+      forgotPasswordLink: 'رمز عبور را فراموش کرده ام',
       alertTitle: 'ورود ناموفق بود',
       alertMessage: 'نام کاربری یا رمز عبور اشتباه است',
       errorTitle: 'خطا',
@@ -190,6 +191,22 @@ export const strings = {
       newPasswordAndConfirmationError:"رمز جدید و تکرار آن همخوانی ندارند",
       errorInUpdatingProfile:"خطا در بروزرسانی اطلاعات کاربری"
     },
-    
+    resetPasswordProcess:{
+      emailPrompt: "ایمیل خود را وارد کنید تا کد بازنشانی دریافت کنید:",
+      codePrompt: "کد ۶ رقمی که از طریق ایمیل دریافت کرده‌اید را وارد کنید:",
+      newPasswordPrompt: "رمز عبور جدید خود را وارد کنید:",
+      confirmPasswordPrompt: "رمز عبور جدید خود را تأیید کنید:",
+      emailSubmitSuccess: "موفقیت! کد بازنشانی به ایمیل شما ارسال شد.",
+      verifyCodeSuccess: "کد تأیید شد! اکنون می‌توانید رمز عبور خود را بازنشانی کنید.",
+      passwordResetSuccess: "رمز عبور با موفقیت بازنشانی شد!",
+      passwordMismatchError: "خطا: رمزهای عبور مطابقت ندارند!",
+      passwordRequired: "رمز عبور اجباری است!",
+
+      emailError: "خطا: آدرس ایمیل نامعتبر است یا مشکلی رخ داده است.",
+      codeError: "خطا: کد نامعتبر است یا مشکلی رخ داده است.",
+      passwordError: "خطا: رمز عبور را نمی‌توان بازنشانی کرد.",
+      emailRequired: "ایمیل اجباری است",
+      emailInvalid: "لطفا از یک ایمیل واقعی استفاده کنید",
+    }
   };
   
