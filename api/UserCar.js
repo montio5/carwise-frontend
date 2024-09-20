@@ -165,7 +165,7 @@ export const deleteUserCar = async (uniqueKey) => {
 export const getNotificationlist = async () => {
   try {
     const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/check-data/`, {
+    const response = await fetch(`${apiUrl}api/notifications/`, {
       headers: {
         Accept: strings.ContentType,
         Authorization: `Bearer ${token}`,
@@ -385,21 +385,22 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
 
 // ______________ Get Notification  ____________
 
-export const getNotification = async () => {
-  try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/notification`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-        'Accept-Language':'fa'
-      },
-    });
-    const data = await response.json();
-    console.log("__________________________",data);
-    return data;
-  } catch (error) {
-    console.error('Error fetching user car:', error);
-    throw error;
-  }
-};
+// export const getNotification = async () => {
+//   try {
+//     const token = await AsyncStorage.getItem('token');
+//     const response = await fetch(`${apiUrl}api/notification`, {
+//       headers: {
+//         Accept: strings.ContentType,
+//         Authorization: `Bearer ${token}`,
+//         'Accept-Language':'fa'
+//       },
+//     });
+//     const data = await response.json();
+//           console.log("__________________________",response)
+//     console.log("__________________________",data);
+//     return data;
+//   } catch (error) {
+//     console.error('Error fetching user car:', error);
+//     throw error;
+//   }
+// };
