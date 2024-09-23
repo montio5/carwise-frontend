@@ -98,6 +98,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
               setCheckedFields(resetCheckedFields);
             }
           }}
+          enableCamera ={true}
         />
 
         {Object.keys(data).map((field, index) => {

@@ -6,6 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/logo.jpg",
     "userInterfaceStyle": "light",
+    "permissions": ["camera"],
+
     "splash": {
       "image": "./assets/logo.jpg",
       "resizeMode": "contain",
