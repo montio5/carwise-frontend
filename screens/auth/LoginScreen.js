@@ -80,10 +80,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#24292F',
+
   },
   title: {
     fontSize: 20,
     marginBottom: 20,
+    color:'white'
   },
   input: {
     borderWidth: 1,
@@ -92,19 +95,25 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: 300,
     borderRadius: 5,
+    backgroundColor:'white'
+
   },
   signupContainer: {
     marginTop: 20,
+    
   },
   signupRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    
   },
   signupText: {
     marginRight: 5,
+    color:'white'
+
   },
   signupLink: {
-    color: 'blue',
+    color: '#1DFFA9',
     textDecorationLine: 'underline',
   },
   forgotPasswordContainer: {

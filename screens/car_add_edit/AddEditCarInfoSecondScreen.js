@@ -157,7 +157,7 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         style={styles.input}
       />
 
-      <Separator />
+      <Separator text={strings.addEditCarInfoSecondScreenStrings.beltsSeparator} />
 
        <InputComponent
         label={strings.addEditCarInfoSecondScreenStrings.timingBeltPlaceholder}
@@ -173,6 +173,9 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         isNumeric={true}
         style={styles.input}
       />
+
+      <Separator text={strings.addEditCarInfoSecondScreenStrings.brakesSeparator} />
+
       <InputComponent
         label={strings.addEditCarInfoSecondScreenStrings.frontBrakePadsPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.front_brake_pads) ? carData.mileage_info.front_brake_pads.toString() : ""}
@@ -187,6 +190,9 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
         isNumeric={true}
         style={styles.input}
       />
+
+      <Separator />
+
       <InputComponent
         label={strings.addEditCarInfoSecondScreenStrings.sparkPlugPlaceholder}
         value={(carData.mileage_info && carData.mileage_info.spark_plug) ? carData.mileage_info.spark_plug.toString() : ""}
@@ -224,13 +230,13 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     container: {
+      backgroundColor: '#24292F',
+      padding:15,
       flex: 1,
-      padding: 16,
-      margin: 20,
+
     },
     input: {
-      height: 40,
-      marginBottom: 30,
+      marginBottom: 20,
       paddingHorizontal: 8,
     },
     buttonContainer: {

@@ -80,6 +80,7 @@ const CarSetupScreen = ({ route, navigation }) => {
               );
             }
           })}
+        <View style={styles.bottomContainer}>
         <CustomButton
           text={strings.carSetupScreenStrings.updateButtonTitle}
           onPress={handleSubmit}
@@ -93,6 +94,7 @@ const CarSetupScreen = ({ route, navigation }) => {
           backgroundColor="red"
           style={styles.button}
         />
+        </View>
       </ScrollView>
       <Toast ref={toastRef} />
     </View>
@@ -102,11 +104,11 @@ const CarSetupScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#24292F',
   },
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#24292F',
   },
   inputContainer: {
     marginBottom: 15,
@@ -124,6 +126,9 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 10, // Vertical margin between buttons
   },
+  bottomContainer:{
+    marginTop:50
+  }
 });
 
 export default CarSetupScreen;

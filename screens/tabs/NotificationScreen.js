@@ -1,5 +1,3 @@
-// NotificationScreen.js
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,6 +29,7 @@ const NotificationScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   const renderNotification = ({ item }) => (
     <View style={styles.notificationContainer}>
       <Ionicons name={getStatusIcon(item.status)} size={30} color={getStatusColor(item.status)} style={styles.icon} />
@@ -38,7 +37,6 @@ const NotificationScreen = () => {
         <Text style={styles.title}>{item.car}</Text>
         <Text style={styles.title}>{item.field_name}</Text>
         <Text style={styles.message}>{item.message}</Text>
-        {/* <Text style={[styles.status, { color: getStatusColor(item.status) }]}>{item.status}</Text> */}
       </View>
       {getAdditionalIcon(item.field_name) || <View style={styles.additionalIconPlaceholder} />}
     </View>
@@ -78,9 +76,9 @@ const NotificationScreen = () => {
     if (!fieldName) return null;
     const lowerCaseFieldName = fieldName.toLowerCase();
     if (lowerCaseFieldName.includes(strings.notificationScreenStrings.filterFieldName)) {
-      return <Ionicons name="filter" size={30} color="black" style={styles.additionalIcon} />;
+      return <Ionicons name="filter" size={30} color="white" style={styles.additionalIcon} />;
     } else if (lowerCaseFieldName.includes(strings.notificationScreenStrings.oilFieldName)) {
-      return <Ionicons name="water-outline" size={30} color="black" style={styles.additionalIcon} />;
+      return <Ionicons name="water-outline" size={30} color="white" style={styles.additionalIcon} />;
     }
     return null;
   };
@@ -111,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#24292F',
   },
   loader: {
     flex: 1,
@@ -130,9 +128,10 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#333', // Darker border to match the black theme
     borderRadius: 8,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#333', // Slightly different background color to make it look non-clickable
+    // Remove any touchable feedback styles
   },
   icon: {
     marginRight: 16,
@@ -143,17 +142,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'white', // Ensure text is visible against dark background
   },
   message: {
     fontSize: 14,
     marginVertical: 4,
+    color: 'white', // Ensure text is visible against dark background
   },
   status: {
     fontSize: 14,
     fontWeight: 'bold',
-  },
-  additionalIcon: {
-    marginLeft: 16,
   },
 });
 

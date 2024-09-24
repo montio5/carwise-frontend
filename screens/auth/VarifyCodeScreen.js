@@ -78,7 +78,7 @@ const VerifyCodeScreen = ({ navigation, route }) => {
         autoFocus={true}
       />
 
-      <CustomButton text="Verify Code" onPress={handleVerify} />
+      <CustomButton text={strings.resetPasswordProcess.varifyCode} onPress={handleVerify} />
       <Toast ref={toastRef} />
     </View>
   );
@@ -88,12 +88,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#24292F',
     justifyContent: 'center',
   },
   label: {
     fontSize: 18,
-    color: '#333',
+    color: 'white',
     marginBottom: 10,
     textAlign: 'center',
   },

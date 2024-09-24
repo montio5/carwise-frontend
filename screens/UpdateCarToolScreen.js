@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, ScrollView, Text, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import Separator from '../general/speratorComponent'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
 import { strings } from '../utils/strings'; // Import the strings object
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
@@ -81,9 +80,9 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{strings.updateCarTool.updateCarToolHeader}</Text>
-        <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text>
+        {/* <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text> */}
         <InputComponent
-        style={styles.input}
+        style={styles.mainInput}
           isNumeric
           value={mileage}
           placeholder={strings.updateCarTool.enterMileagePlaceholder}
@@ -145,18 +144,20 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#24292F',
+
   },
   scrollContainer: {
     padding: 16,
     paddingBottom: 80, // Ensures space at the bottom for the button
+    
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 30,
     textAlign: 'center',
-    color: '#333',
+    color: 'white',
   },
   label: {
     fontSize: 18,
@@ -164,9 +165,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#444',
   },
-  input: {
-
+  mainInput: {
     padding: 10,
+    flex: 1,
+    backgroundColor: '#24292F',
+    marginBottom: 16,
+  },
+  input: {
+    padding: 2,
     flex: 1,
     backgroundColor: '#fff',
     marginBottom: 16,
@@ -179,7 +185,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
     paddingVertical: 8,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
@@ -188,6 +194,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
+    
   },
   fieldLabel: {
     flex: 2,
@@ -202,7 +209,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     padding: 16,
     paddingBottom: 8,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#24292F',
   },
   button: {
     marginVertical: 10,

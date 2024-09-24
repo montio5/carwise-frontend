@@ -72,6 +72,11 @@ export const strings = {
       carSetupButton: 'تغییر تنظیمات پیش‌فرض',
       editInfoButton: 'بروزرسانی وضعیت خودرو',
       updateToolButton: 'به روزرسانی ابزار',
+      overdue:"زمان تعویض گذشته است",
+      orangeStatus:"نزدیک به زمان تعویض",
+      redStatus:"زمان تعویض",
+
+
     },
     addEditCarInfoFirstScreenStrings: {
       namePlaceholder: 'نام',
@@ -79,10 +84,11 @@ export const strings = {
       selectModelLabel: 'انتخاب مدل خودرو',
       mileagePlaceholder: 'مسافت پیموده شده',
       mileage: 'مسافت',
-
       nextButton: 'بعدی',
     },
     addEditCarInfoSecondScreenStrings: {
+      beltsSeparator: 'تسمه ها',
+      brakesSeparator: 'لنت ها',
       oilsSeparator: 'روغن‌ها',
       filtersSeparator: 'فیلترها',
       engineOilPlaceholder: 'روغن موتور',
@@ -146,7 +152,7 @@ export const strings = {
       Setting: 'تنظیمات',
       EditProfile: 'ویرایش پروفایل',
       ChangePassword: 'تغییر رمز عبور',
-      Home: 'خانه',
+      Home: 'خودرو ها',
       CustomFieldList: ' فیلد شخصی',
       Car: 'خودرو',
       AddingCar: 'اضافه کردن خودرو',
@@ -201,12 +207,13 @@ export const strings = {
       passwordResetSuccess: "رمز عبور با موفقیت بازنشانی شد!",
       passwordMismatchError: "خطا: رمزهای عبور مطابقت ندارند!",
       passwordRequired: "رمز عبور اجباری است!",
-
       emailError: "خطا: آدرس ایمیل نامعتبر است یا مشکلی رخ داده است.",
       codeError: "خطا: کد نامعتبر است یا مشکلی رخ داده است.",
       passwordError: "خطا: رمز عبور را نمی‌توان بازنشانی کرد.",
       emailRequired: "ایمیل اجباری است",
       emailInvalid: "لطفا از یک ایمیل واقعی استفاده کنید",
-    }
+      varifyCode:"اعتبار سنجی کد",
+      resetPassword:"بازنشانی رمز عبور"
+    } 
   };
   

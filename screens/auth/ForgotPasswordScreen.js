@@ -61,12 +61,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#24292F',
     justifyContent: 'center',
   },
   label: {
     fontSize: 18,
-    color: '#333',
+    color: 'white',
     marginBottom: 10,
     textAlign: 'center', // Center align the label
   },

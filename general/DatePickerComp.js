@@ -1,4 +1,3 @@
-// DatePickerComponent.js
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -47,6 +46,8 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 5,
     fontSize: 16,
+    color: '#F6F6F6',
+
   },
   datePickerButton: {
     flexDirection: 'row',
@@ -55,6 +56,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    backgroundColor: '#F6F6F6',
+
   },
 });
 

@@ -1,7 +1,5 @@
-// AddEditCarInfoFirstScreen.js
-
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getUserCar, getCarModels } from '../../api/UserCar';
 import { strings } from '../../utils/strings'; // Import the strings object
@@ -112,16 +110,20 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
+            <InputComponent
         placeholder={strings.addEditCarInfoFirstScreenStrings.namePlaceholder}
         value={carData.name.toString()}
+        isNumeric={true}
         onChangeText={(text) => handleInputChange('name', text)}
         style={styles.input}
       />
+
       <Picker
         selectedValue={selectedCompany}
         onValueChange={(itemValue) => handleCompanyChange(itemValue)}
         style={styles.input}
+        dropdownIconColor="white"  // Set arrow color to white
+
       >
         <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectCompanyLabel} value={null} />
         {carCompanies.map((company) => (
@@ -133,6 +135,8 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         onValueChange={(itemValue) => handleModelChange(itemValue)}
         style={styles.input}
         enabled={selectedCompany !== null}
+        dropdownIconColor="white"  // Set arrow color to white
+
       >
         <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectModelLabel} value={null} />
         {carModels.map((model) => (
@@ -154,6 +158,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#24292F',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -163,6 +168,7 @@ const styles = StyleSheet.create({
     width: '80%',
     marginBottom: 10,
     padding: 10,
+    color:'white'
   },
 });
 

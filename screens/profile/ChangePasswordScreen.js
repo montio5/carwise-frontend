@@ -1,5 +1,5 @@
 import React, { useState,useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { changePassword } from '../../api/Authentication'; // Import the changePassword function
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
 import CustomButton from '../../general/customButtonComponent'
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#24292F',
   },
   header: {
     fontSize: 24,
@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
+        color:'white'
+
   },
   input: {
     height: 40,

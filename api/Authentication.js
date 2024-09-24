@@ -195,7 +195,6 @@ export const sendFCMTokenToServer  = async (newData) => {
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('error adding fcm token', error);
     throw error;
   }
 };

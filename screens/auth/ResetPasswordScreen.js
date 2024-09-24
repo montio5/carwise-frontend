@@ -57,7 +57,7 @@ const ResetPasswordScreen = ({ navigation,route }) => {
         secureTextEntry
       />
       
-                  <CustomButton text="Reset Password"
+                  <CustomButton text={strings.resetPasswordProcess.resetPassword}
                       onPress={handleResetPassword}/>
                                   <Toast ref={toastRef} />
 
@@ -69,12 +69,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#24292F',
     justifyContent: 'center',
   },
   label: {
     fontSize: 18,
-    color: '#333',
+    color: 'white',
     marginBottom: 10,
   },
   input: {

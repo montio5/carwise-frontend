@@ -181,10 +181,13 @@ const InputComponent = ({
 const styles = StyleSheet.create({
   container: {
     margin: 10,
+
   },
   label: {
     marginBottom: 5,
     fontSize: 16,
+    color: '#F6F6F6',
+
   },
   inputContainer: {
     flexDirection: 'row',
@@ -196,6 +199,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     flex: 1,
+    backgroundColor: '#F6F6F6',
   },
   inputWithIcon: {
     paddingRight: 40,

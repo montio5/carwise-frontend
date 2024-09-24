@@ -128,7 +128,7 @@ const RegistrationScreen = () => {
           onPress={handleRegister}
         />
         <Pressable onPress={() => navigation.navigate('Login')} style={styles.loginLinkContainer}>
-          <Text>{strings.registration.haveAccount}</Text>
+          <Text style={styles.loginText}>{strings.registration.haveAccount}</Text>
           <Text style={styles.link}>{strings.registration.loginLink}</Text>
         </Pressable>
       </View>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flexGrow: 1, // Ensure the ScrollView fills the space
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#24292F',
     padding: 20, // Optional padding for the ScrollView content
   },
   formContainer: {
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
+    
   },
   inputContainer: {
     marginBottom: 25,
@@ -162,6 +163,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     width: '100%',
+    backgroundColor:"white"
+
   },
   errorInput: {
     borderColor: 'red',
@@ -178,9 +181,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   link: {
-    color: 'blue',
+    color: '#1DFFA9',
     textDecorationLine: 'underline',
     marginTop: 5,
+  },
+    loginText: {
+    marginRight: 5,
+    color:'white'
+
   },
 });
 

@@ -30,7 +30,7 @@ export const registerForPushNotifications = async () => {
     console.log("Fetching Expo Push Token...");
     // Get Expo Push Token
     const expoPushToken = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("Expo Push Token fetched: ", expoPushToken);
+    console.log("Expo Push Token fetched");
 
     // Store the token in AsyncStorage
     await AsyncStorage.setItem('expoPushToken', expoPushToken);
@@ -40,7 +40,7 @@ export const registerForPushNotifications = async () => {
     await sendFCMTokenToServer({ fcm_token: expoPushToken });
     console.log("Expo Push Token sent to the server");
   } catch (error) {
-    console.error("Error registering for notifications:", error);
+    console.error("Error registering for notifications:");
   }
 };
 

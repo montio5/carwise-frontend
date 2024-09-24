@@ -3,8 +3,6 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } fr
 import { getCustomFieldList } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import carCompanyColors from '../../general/colors';
-import Separator from '../../general/speratorComponent'
 import Toast from '../../general/Toast';
 
 const CustomFiledListScreen = ({ route }) => {
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#24292F',
   },
   listContent: {
     paddingHorizontal: 16,

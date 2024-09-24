@@ -1,9 +1,7 @@
-// ChartComponents.js
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import FormattedNumber from '../general/textNumber';  
+import FormattedNumber from '../general/textNumber';
 
 const Chart = ({ color, width, percentage }) => (
   <View style={styles.chartContainer}>
@@ -12,37 +10,49 @@ const Chart = ({ color, width, percentage }) => (
   </View>
 );
 
-const ChartWithDate = ({ colorDate, percentageDate, dateLimit, colorPct, percentage, limit }) => (
+const ChartWithDate = ({ colorDate, percentageDate, dateLimit, colorPct, percentage, limit, desc }) => (
   <>
     <Chart color={colorDate} width={percentageDate} percentage={percentageDate} />
-    <Text style={styles.limitText}>
-      <Ionicons name="calendar-outline" size={20} color={colorDate} style={styles.icon} /> {dateLimit}
-    </Text>
+    <View style={styles.rowContainer}>
+      <View style={styles.leftContainer}>
+        <Ionicons name="calendar-outline" size={20} color={colorDate} style={styles.icon} />
+        <Text style={styles.limitText}>{dateLimit}</Text>
+      </View>
+    </View>
     <Text>{'\n'}</Text>
     <Chart color={colorPct} width={percentage} percentage={percentage} />
-    <Text style={styles.limitText}>
-      <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} /> 
-      <FormattedNumber number={limit} style={styles.limitText} />
-    </Text>
+    <View style={styles.rowContainer}>
+      <View style={styles.leftContainer}>
+        <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} />
+        <FormattedNumber number={limit} style={styles.limitText} />
+      </View>
+      <Text style={styles.descText}>{desc}</Text>
+    </View>
   </>
 );
 
 const ChartWithDateOnly = ({ colorDate, percentageDate, dateLimit }) => (
   <>
     <Chart color={colorDate} width={percentageDate} percentage={percentageDate} />
-    <Text style={styles.limitText}>
-      <Ionicons name="calendar-outline" size={20} color={colorDate} style={styles.icon} /> {dateLimit}
-    </Text>
+    <View style={styles.rowContainer}>
+      <View style={styles.leftContainer}>
+        <Ionicons name="calendar-outline" size={20} color={colorDate} style={styles.icon} />
+        <Text style={styles.limitText}>{dateLimit}</Text>
+      </View>
+    </View>
   </>
 );
 
-const ChartWithPercentageOnly = ({ colorPct, percentage, limit }) => (
+const ChartWithPercentageOnly = ({ colorPct, percentage, limit, desc }) => (
   <>
     <Chart color={colorPct} width={percentage} percentage={percentage} />
-    <Text style={styles.limitText}>
-      <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} /> 
-      <FormattedNumber number={limit} style={styles.limitText} />
-    </Text>
+    <View style={styles.rowContainer}>
+      <View style={styles.leftContainer}>
+        <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} />
+        <FormattedNumber number={limit} style={styles.limitText} />
+      </View>
+      <Text style={styles.descText}>{desc}</Text>
+    </View>
   </>
 );
 
@@ -70,14 +80,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   limitText: {
-    textAlign: 'left',
     fontSize: 14,
-    color: '#333',
-    marginTop: 5,
+    color: 'white',
   },
   icon: {
-    marginTop: 35
-  }
+    marginRight: 5,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1, // Make left container take up available space
+  },
+  descText: {
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'right', // Align the text to the right
+    flex: 1, // Make the description take up available space
+  },
 });
 
 export { Chart, ChartWithDate, ChartWithDateOnly, ChartWithPercentageOnly };

@@ -1,5 +1,3 @@
-// CustomFieldScreen.js
-
 import React, { useState, useEffect,useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
@@ -141,6 +139,8 @@ const CustomFieldScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#24292F',
+
   },
   contentContainer: {
     padding: 20,
@@ -152,11 +152,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 10,
+    color: '#F6F6F6',
+
   },
   input: {
     height: 40,
     borderColor: 'gray',
-    // borderWidth: 1,
+    color: '#F6F6F6',
     marginBottom: 20,
     paddingHorizontal: 10,
   },
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   datePickerComponent: {
-      margin:10
+      margin:10 
   },
 });
 
