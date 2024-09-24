@@ -129,12 +129,14 @@ const getColorForPct = (pct) => {
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        {/* Hamburger Menu */}
-        <View style={styles.topLeftContainer}>
-          <TouchableOpacity onPress={toggleDropdown} style={styles.hamburgerButton}>
-            <Ionicons name="menu" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+        {/* Hamburger Menu only after loading */}
+        {!loading && (
+          <View style={styles.topLeftContainer}>
+            <TouchableOpacity onPress={toggleDropdown} style={styles.hamburgerButton}>
+              <Ionicons name="menu" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        )}
 
         {!loading && (
           <FormattedNumber
@@ -207,24 +209,22 @@ const getColorForPct = (pct) => {
                     colorPct={colorPct}
                     percentage={item.pct}
                     limit={item.limit}
-                    desc ={pctfieldStatus}
-                    dateDesc ={datePctfieldStatus}
-
+                    desc={pctfieldStatus}
+                    dateDesc={datePctfieldStatus}
                   />
                 ) : isDateItem ? (
                   <ChartWithDateOnly
                     colorDate={colorDatePct}
                     percentageDate={item.date_pct}
                     dateLimit={item.date_limit}
-                    dateDesc ={datePctfieldStatus}
+                    dateDesc={datePctfieldStatus}
                   />
                 ) : (
                   <ChartWithPercentageOnly
                     colorPct={colorPct}
                     percentage={item.pct}
                     limit={item.limit}
-                    desc ={pctfieldStatus}
-
+                    desc={pctfieldStatus}
                   />
                 )}
               </View>

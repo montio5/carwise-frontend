@@ -1,8 +1,8 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { changePassword } from '../../api/Authentication'; // Import the changePassword function
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
-import CustomButton from '../../general/customButtonComponent'
+import CustomButton from '../../general/customButtonComponent';
 import Toast from '../../general/Toast';
 
 const ChangePasswordScreen = ({ navigation }) => {
@@ -16,51 +16,62 @@ const ChangePasswordScreen = ({ navigation }) => {
       toastRef.current.error(strings.profileString.newPasswordAndConfirmationError || 'Error');
       return;
     }
-    changePassword({current_password:currentPassword,new_password: newPassword,confirm_new_password:confirmPassword})
-    .then(() => {
-      navigation.navigate('Setting', { toastMessage: strings.savedSuccessfully});
+    changePassword({
+      current_password: currentPassword,
+      new_password: newPassword,
+      confirm_new_password: confirmPassword,
     })
-    .catch((error) => {
-      toastRef.current.error(error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar );
-    });
+      .then(() => {
+        navigation.navigate('Setting', { toastMessage: strings.savedSuccessfully });
+      })
+      .catch((error) => {
+        toastRef.current.error(
+          error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar
+        );
+      });
   };
 
   return (
     <View style={styles.container}>
       <Toast ref={toastRef} />
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{strings.profileString.oldPassword}</Text>
-        <TextInput
-          style={styles.input}
-          value={currentPassword}
-          onChangeText={setCurrentPassword}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{strings.profileString.newPassword}</Text>
-        <TextInput
-          style={styles.input}
-          value={newPassword}
-          onChangeText={setNewPassword}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{strings.profileString.repeatNewPassword}</Text>
-        <TextInput
-          style={styles.input}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
-      </View>
-      <CustomButton
-                text={strings.carSetupScreenStrings.updateButtonTitle}
-                onPress={handleChangePassword}
-                style={styles.button}
 
-            />
+      {/* Input fields in the center */}
+      <View style={styles.inputWrapper}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>{strings.profileString.oldPassword}</Text>
+          <TextInput
+            style={styles.input}
+            value={currentPassword}
+            onChangeText={setCurrentPassword}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>{strings.profileString.newPassword}</Text>
+          <TextInput
+            style={styles.input}
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>{strings.profileString.repeatNewPassword}</Text>
+          <TextInput
+            style={styles.input}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          />
+        </View>
+      </View>
+
+      {/* Button stick to the bottom */}
+      <CustomButton
+        text={strings.carSetupScreenStrings.updateButtonTitle}
+        onPress={handleChangePassword}
+        style={styles.button}
+      />
     </View>
   );
 };
@@ -68,23 +79,20 @@ const ChangePasswordScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 40,
     backgroundColor: '#24292F',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+  inputWrapper: {
+    flex: 1,
+    justifyContent: 'center', // Center the input fields vertically
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 35,
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
-        color:'white'
-
+    color: 'white',
   },
   input: {
     height: 40,
@@ -95,16 +103,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button: {
+    position: 'absolute',
+    bottom: 20, // Adds spacing above the bottom edge
+    left: 20,
+    right: 20,
     backgroundColor: '#007BFF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
