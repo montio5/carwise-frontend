@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, Text, View, Alert, StyleSheet } from 'react-native';
-import { strings } from '../utils/strings'; // Adjust the path as per your project structure
+import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { getCarSetup, updateCarSetup, deleteCarSetup } from '../api/CarSetup'; // Adjust the paths as per your project structure
 import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 import CustomButton from '../general/customButtonComponent';
 import InputComponent from '../general/customInputComponent';
 import Toast from '../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 const CarSetupScreen = ({ route, navigation }) => {
   const [carData, setCarData] = useState(null);
   const [loading, setLoading] = useState(true);
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   const car = route.params.car;
 
@@ -19,7 +20,7 @@ const CarSetupScreen = ({ route, navigation }) => {
       const data = await getCarSetup(car.unique_key);
       setCarData(data);
     } catch (error) {
-      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
+      toastRef.current.error(t("carSetupScreenStrings.errorMessage"));
     } finally {
       setLoading(false);
     }
@@ -36,9 +37,9 @@ const CarSetupScreen = ({ route, navigation }) => {
   const handleSubmit = async () => {
     try {
       await updateCarSetup(car.unique_key, carData);
-      toastRef.current.success(strings.carSetupScreenStrings.successUpdateMessage);
+      toastRef.current.success(t("carSetupScreenStrings.successUpdateMessage"));
     } catch (error) {
-      toastRef.current.error(strings.carSetupScreenStrings.errorMessage);
+      toastRef.current.error(t("carSetupScreenStrings.errorMessage"));
     }
   };
 
@@ -47,14 +48,14 @@ const CarSetupScreen = ({ route, navigation }) => {
       await deleteCarSetup(car.unique_key);
       setCarData(null);
       loadData(car.unique_key);
-      toastRef.current.success(strings.carSetupScreenStrings.resetSuccessMessage);
+      toastRef.current.success(t("carSetupScreenStrings.resetSuccessMessage"));
     } catch (error) {
-      toastRef.current.error(strings.carSetupScreenStrings.resetErrorMessage);
+      toastRef.current.error(t("carSetupScreenStrings.resetErrorMessage"));
     }
   };
 
   if (loading) {
-    return <Text>{strings.carSetupScreenStrings.loadingText}</Text>;
+    return <Text>{t("carSetupScreenStrings.loadingText")}</Text>;
   }
 
   const excludedFields = ['id', 'car', 'timing_belt_max_year']; // Assuming this is defined somewhere
@@ -82,13 +83,13 @@ const CarSetupScreen = ({ route, navigation }) => {
           })}
         <View style={styles.bottomContainer}>
         <CustomButton
-          text={strings.carSetupScreenStrings.updateButtonTitle}
+          text={t("carSetupScreenStrings.updateButtonTitle")}
           onPress={handleSubmit}
           style={styles.button}
         />
 
         <CustomButton
-          text={strings.carSetupScreenStrings.resetButtonTitle}
+          text={t("carSetupScreenStrings.resetButtonTitle")}
           icon="refresh-outline"
           onPress={handleReset}
           backgroundColor="red"

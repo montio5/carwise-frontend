@@ -1,15 +1,16 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { varifyCode } from '../../api/Authentication';
-import { strings } from '../../utils/strings';
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
 import { useFocusEffect } from '@react-navigation/native';
+import {useTranslation} from 'react-i18next'
 
 const VerifyCodeScreen = ({ navigation, route }) => {
   const [code, setCode] = useState('');
   const textInputRef = useRef(null);
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   // Check for toast message passed through navigation
   useFocusEffect(
@@ -25,20 +26,20 @@ const VerifyCodeScreen = ({ navigation, route }) => {
   const handleVerify = async () => {
     // Check if code is empty
     if (!code) {
-      toastRef.current.error(strings.resetPasswordProcess.emptyCodeError || "Code cannot be empty.");
+      toastRef.current.error(t("resetPasswordProcess.emptyCodeError") || "Code cannot be empty.");
       return;
     }
 
     // Check if code length is not 6 digits
     if (code.length !== 6) {
-      toastRef.current.error(strings.resetPasswordProcess.codeError || "Code must be 6 digits.");
+      toastRef.current.error(t("resetPasswordProcess.codeError") || "Code must be 6 digits.");
       return;
     }
 
     try {
-      const response = await varifyCode({ code });
+      const response = await varifyCode({ code },t);
       // Navigate to ResetPassword on successful verification
-      navigation.navigate('ResetPassword', { code, toastMessage: strings.resetPasswordProcess.emailSubmitSuccess });
+      navigation.navigate('ResetPassword', { code, toastMessage: t("resetPasswordProcess.emailSubmitSuccess") });
     } catch (error) {
       toastRef.current.error(error.message);
     }
@@ -53,7 +54,7 @@ const VerifyCodeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{strings.resetPasswordProcess.codePrompt}</Text>
+      <Text style={styles.label}>{t("resetPasswordProcess.codePrompt")}</Text>
 
       {/* Touchable to focus the hidden input */}
       <TouchableOpacity onPress={handlePress} style={styles.codeContainer} activeOpacity={1}>
@@ -78,7 +79,7 @@ const VerifyCodeScreen = ({ navigation, route }) => {
         autoFocus={true}
       />
 
-      <CustomButton text={strings.resetPasswordProcess.varifyCode} onPress={handleVerify} />
+      <CustomButton text={t("resetPasswordProcess.varifyCode")} onPress={handleVerify} />
       <Toast ref={toastRef} />
     </View>
   );

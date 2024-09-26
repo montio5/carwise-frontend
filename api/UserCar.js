@@ -1,6 +1,5 @@
 import apiUrl from '../utils/apiConfig'; 
-import { strings } from '../utils/strings';
-import { getHeaders, getPublicHeaders } from './headers';
+import { getHeaders } from './headers';
 
 
 // ______________ Get Car Models ____________
@@ -43,7 +42,7 @@ export const getUserCar = async (carUniqueKey) => {
 };
 
 // ______________ Update User Car ____________
-export const updateUserCar = async (carUniqueKey, newData) => {
+export const updateUserCar = async (carUniqueKey, newData,t) => {
   try {
     const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}/`, {
@@ -55,7 +54,7 @@ export const updateUserCar = async (carUniqueKey, newData) => {
 
     const responseText = await response.text();
     if (!response.ok) {
-      let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
+      let errorMessage = t('addEditCarInfoSecondScreenStrings.errorInSavingCar');
       try {
         const errorData = JSON.parse(responseText);
         let detail = errorData.detail;
@@ -74,7 +73,7 @@ export const updateUserCar = async (carUniqueKey, newData) => {
 };
 
 // ______________ Create User Car ____________
-export const createUserCar = async (newData) => {
+export const createUserCar = async (newData,t) => {
   try {
     const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/new/`, {
@@ -87,7 +86,7 @@ export const createUserCar = async (newData) => {
 
     const responseText = await response.text();
     if (!response.ok) {
-      let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
+      let errorMessage = t("addEditCarInfoSecondScreenStrings.errorInSavingCar");
       try {
         const errorData = JSON.parse(responseText);
         let detail = errorData.detail;
@@ -185,7 +184,7 @@ export const getCustomField = async (carUniqueKey, id) => {
 };
 
 // ______________ Update Custom Field ____________
-export const updateCustomField = async (uniqueKey, customFieldKey, customFieldData) => {
+export const updateCustomField = async (uniqueKey, customFieldKey, customFieldData,t) => {
   try {
     const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/${customFieldKey}/`, {
@@ -198,7 +197,7 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
 
     const responseText = await response.text();
     if (!response.ok) {
-      let errorMessage = strings.customFieldScreenStrings.errorUpdatingCustomField;
+      let errorMessage = t("customFieldScreenStrings.errorUpdatingCustomField");
       try {
         const errorData = JSON.parse(responseText);
         if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
@@ -221,7 +220,7 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
 };
 
 // ______________ Create Custom Field ____________
-export const createCustomField = async (uniqueKey, customFieldData) => {
+export const createCustomField = async (uniqueKey, customFieldData,t) => {
   try {
     const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/new/`, {
@@ -234,7 +233,7 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
 
     const responseText = await response.text();
     if (!response.ok) {
-      let errorMessage = strings.customFieldScreenStrings.errorDavingCustomField;
+      let errorMessage = t("customFieldScreenStrings.errorDavingCustomField");
       try {
         const errorData = JSON.parse(responseText);
         if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
@@ -277,7 +276,7 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
 
     const responseText = await response.text();
     if (!response.ok) {
-      let errorMessage = strings.carSetupScreenStrings.errorMessage;
+      let errorMessage = t("carSetupScreenStrings.errorMessage");
       try {
         const errorData = JSON.parse(responseText);
         let detail = errorData.non_field_errors[0];

@@ -1,5 +1,4 @@
 import apiUrl from '../utils/apiConfig'; 
-import { strings } from '../utils/strings';
 import { getHeaders, getPublicHeaders } from './headers';
 
 
@@ -78,7 +77,7 @@ export const changePassword = async (newData) => {
 };
 
 //______________ Login (no token required) ____________
-export const login = async (email, password) => {
+export const login = async (email, password,t) => {
   try {
     const headers = await getPublicHeaders(); // No token for login
     const response = await fetch(`${apiUrl}api/token/`, {
@@ -96,13 +95,13 @@ export const login = async (email, password) => {
       if (accessToken) {
         return { success: true, accessToken };
       } else {
-        return { success: false, message: strings.login.alertMessage };
+        return { success: false, message: t("login.alertMessage")};
       }
     } else {
-      return { success: false, message: strings.login.alertMessage };
+      return { success: false, message: t("login.alertMessage")};
     }
   } catch (error) {
-    return { success: false, message: strings.login.errorMessage };
+    return { success: false, message: t("login.errorMessage")};
   }
 };
 
@@ -149,7 +148,7 @@ export const sendFCMTokenToServer = async (newData) => {
 };
 
 // ______________ Forgot Password (no token required) ____________
-export const callForgotPassword = async (newData) => {
+export const callForgotPassword = async (newData,t) => {
   try {
     const headers = await getPublicHeaders(); // No token for forgot password
     const response = await fetch(`${apiUrl}user/forgot-password/`, {
@@ -161,7 +160,7 @@ export const callForgotPassword = async (newData) => {
     const responseText = await response.text();
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
-      let msg = errorData?.detail?.email?.[0]?.msg || strings.resetPasswordProcess.emailError;
+      let msg = errorData?.detail?.email?.[0]?.msg || t("resetPasswordProcess.emailError");
       throw new Error(msg);
     }
     const data = JSON.parse(responseText);
@@ -173,7 +172,7 @@ export const callForgotPassword = async (newData) => {
 };
 
 // ______________ Verify Code (no token required) ____________
-export const verifyCode = async (newData) => {
+export const verifyCode = async (newData,t) => {
   try {
     const headers = await getPublicHeaders(); // No token for verify code
     const response = await fetch(`${apiUrl}user/verify-code/`, {
@@ -185,7 +184,7 @@ export const verifyCode = async (newData) => {
     const responseText = await response.text();
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
-      let msg = errorData?.detail?.code?.[0]?.msg || strings.resetPasswordProcess.codeError;
+      let msg = errorData?.detail?.code?.[0]?.msg || t("resetPasswordProcess.codeError");
       throw new Error(msg);
     }
     const data = JSON.parse(responseText);
@@ -197,7 +196,7 @@ export const verifyCode = async (newData) => {
 };
 
 // ______________ Reset Password (no token required) ____________
-export const resetPassword = async (newData) => {
+export const resetPassword = async (newData,t) => {
   try {
     const headers = await getPublicHeaders(); // No token for reset password
     const response = await fetch(`${apiUrl}user/reset-password/`, {
@@ -209,7 +208,7 @@ export const resetPassword = async (newData) => {
     const responseText = await response.text();
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
-      let msg = errorData?.detail?.code?.[0]?.msg || strings.resetPasswordProcess.passwordError;
+      let msg = errorData?.detail?.code?.[0]?.msg || t("resetPasswordProcess.passwordError");
       throw new Error(msg);
     }
     const data = JSON.parse(responseText);

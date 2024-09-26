@@ -1,16 +1,17 @@
 import React, { useState,useCallback,useRef } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { ResetPassword } from '../../api/Authentication';
-import { strings } from '../../utils/strings';
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
 import { useFocusEffect } from '@react-navigation/native';
+import {useTranslation} from 'react-i18next'
 
 const ResetPasswordScreen = ({ navigation,route }) => {
   const [code, setCode] =  useState(route.params.code);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const toastRef = useRef();
+  const { t } = useTranslation();
 
     useFocusEffect(
     useCallback(() => {
@@ -23,17 +24,17 @@ const ResetPasswordScreen = ({ navigation,route }) => {
 
   const handleResetPassword = async () => {
     if (newPassword !== confirmPassword) {
-        toastRef.current.error(strings.resetPasswordProcess.passwordMismatchError);
+        toastRef.current.error(t("resetPasswordProcess.passwordMismatchError"));
       return;
     }
     else if (!newPassword.trim()) {
-        toastRef.current.error(strings.resetPasswordProcess.passwordRequired);
+        toastRef.current.error(t("resetPasswordProcess.passwordRequired"));
       return;
     }
 
     try {
-      const response = await ResetPassword({ code:code, new_password: newPassword , confirm_new_password: confirmPassword });
-      navigation.navigate('Login' ,{toastMessage:strings.resetPasswordProcess.passwordResetSuccess});
+      const response = await ResetPassword({ code:code, new_password: newPassword , confirm_new_password: confirmPassword },t);
+      navigation.navigate('Login' ,{toastMessage:t("resetPasswordProcess.passwordResetSuccess")});
     } catch (error) {
       toastRef.current.error(error.message);
     }
@@ -41,7 +42,7 @@ const ResetPasswordScreen = ({ navigation,route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{ strings.resetPasswordProcess.newPasswordPrompt}</Text>
+      <Text style={styles.label}>{ t("resetPasswordProcess.newPasswordPrompt")}</Text>
       <TextInput
         style={styles.input}
         placeholder="New Password"
@@ -57,7 +58,7 @@ const ResetPasswordScreen = ({ navigation,route }) => {
         secureTextEntry
       />
       
-                  <CustomButton text={strings.resetPasswordProcess.resetPassword}
+                  <CustomButton text={t("resetPasswordProcess.resetPassword")}
                       onPress={handleResetPassword}/>
                                   <Toast ref={toastRef} />
 

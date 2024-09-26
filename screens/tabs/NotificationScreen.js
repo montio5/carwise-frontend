@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getNotificationlist } from '../../api/UserCar';
-import { strings } from '../../utils/strings';
+import {useTranslation} from 'react-i18next'
 
 const NotificationScreen = () => {
   const [carData, setCarData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -20,7 +21,7 @@ const NotificationScreen = () => {
       const data = await getNotificationlist();
       setCarData(Object.values(data).flatMap(car => Object.values(car)));
     } catch (error) {
-      Alert.alert(strings.notificationScreenStrings.errorTitle, strings.notificationScreenStrings.errorMessage);
+            toastRef.current.error(t("notificationScreenStrings.errorMessage"));
     } finally {
       setLoading(false);
     }
@@ -75,9 +76,9 @@ const NotificationScreen = () => {
   const getAdditionalIcon = (fieldName) => {
     if (!fieldName) return null;
     const lowerCaseFieldName = fieldName.toLowerCase();
-    if (lowerCaseFieldName.includes(strings.notificationScreenStrings.filterFieldName)) {
+    if (lowerCaseFieldName.includes(t("notificationScreenStrings.filterFieldName"))) {
       return <Ionicons name="filter" size={30} color="white" style={styles.additionalIcon} />;
-    } else if (lowerCaseFieldName.includes(strings.notificationScreenStrings.oilFieldName)) {
+    } else if (lowerCaseFieldName.includes(t("notificationScreenStrings.oilFieldName"))) {
       return <Ionicons name="water-outline" size={30} color="white" style={styles.additionalIcon} />;
     }
     return null;

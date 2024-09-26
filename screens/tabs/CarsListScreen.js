@@ -1,19 +1,20 @@
 // CarsListScreen.js
 
 import React, { useState, useEffect, useCallback,useRef } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { fetchUserCars } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
-import { strings } from '../../utils/strings'; 
 import Toast from '../../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const toastRef = useRef(null);
+  const { t } = useTranslation();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -28,7 +29,7 @@ const CarsListScreen = ({ route }) => {
 
     } catch (error) {
       console.error('Error fetching user cars:', error);
-      Alert.alert(strings.carsListScreenStrings.errorFetchingCars);
+      toastRef.current.error(t("carsListScreenStrings.errorFetchingCars"));
     }
   };
 

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getUserCar, getCarModels } from '../../api/UserCar';
-import { strings } from '../../utils/strings'; // Import the strings object
 import InputComponent from '../../general/customInputComponent' 
+import {useTranslation} from 'react-i18next'
 
 const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const car = route.params.car || null;
@@ -12,6 +12,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const [carModels, setCarModels] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
+  const { t } = useTranslation();
 
   const [carData, setCarData] = useState({
     name: '',
@@ -111,7 +112,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
             <InputComponent
-        placeholder={strings.addEditCarInfoFirstScreenStrings.namePlaceholder}
+        placeholder={t("addEditCarInfoFirstScreenStrings.namePlaceholder")}
         value={carData.name.toString()}
         isNumeric={true}
         onChangeText={(text) => handleInputChange('name', text)}
@@ -125,7 +126,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         dropdownIconColor="white"  // Set arrow color to white
 
       >
-        <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectCompanyLabel} value={null} />
+        <Picker.Item label={t("addEditCarInfoFirstScreenStrings.selectCompanyLabel")} value={null} />
         {carCompanies.map((company) => (
           <Picker.Item key={company.id} label={company.name} value={company.id} />
         ))}
@@ -138,19 +139,19 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         dropdownIconColor="white"  // Set arrow color to white
 
       >
-        <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectModelLabel} value={null} />
+        <Picker.Item label={t("addEditCarInfoFirstScreenStrings.selectModelLabel")} value={null} />
         {carModels.map((model) => (
           <Picker.Item key={model.id} label={model.name} value={model.id} />
         ))}
       </Picker>
       <InputComponent
-        placeholder={strings.addEditCarInfoFirstScreenStrings.mileagePlaceholder}
+        placeholder={t("addEditCarInfoFirstScreenStrings.mileagePlaceholder")}
         value={carData.mileage_info.mileage}
         isNumeric={true}
         onChange={(text) => handleInputChange('mileage', text, true)}
         style={styles.input}
       />
-      <Button title={strings.addEditCarInfoFirstScreenStrings.nextButton} onPress={handleNext} disabled={isButtonDisabled} />
+      <Button title={t("addEditCarInfoFirstScreenStrings.nextButton")} onPress={handleNext} disabled={isButtonDisabled} />
     </View>
   );
 };

@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { strings } from '../../utils/strings';
 import { registerUser } from '../../api/Authentication';
 import CustomButton from '../../general/customButtonComponent';
 import Toast from '../../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +14,7 @@ const RegistrationScreen = () => {
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [errors, setErrors] = useState({});
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   const navigation = useNavigation();
 
@@ -24,34 +25,34 @@ const RegistrationScreen = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!email.trim()) {
-      errors.email = strings.registration.emailRequired;
+      errors.email = t("registration.emailRequired");
       valid = false;
     } else if (!emailRegex.test(email)) {
-      errors.email = strings.registration.emailInvalid;
+      errors.email = t("registration.emailInvalid");
       valid = false;
     }
 
     if (!firstName.trim()) {
-      errors.firstName = strings.registration.firstNameRequired;
+      errors.firstName = t("registration.firstNameRequired");
       valid = false;
     }
 
     if (!lastName.trim()) {
-      errors.lastName = strings.registration.lastNameRequired;
+      errors.lastName = t("registration.lastNameRequired");
       valid = false;
     }
 
     if (!password.trim()) {
-      errors.password = strings.registration.passwordCanNotJustBeSpace;
+      errors.password = t("registration.passwordCanNotJustBeSpace");
       valid = false;
     }
     if (!password) {
-      errors.password = strings.registration.passwordRequired;
+      errors.password = t("registration.passwordRequired");
       valid = false;
     }
 
     if (password !== passwordRepeat) {
-      errors.passwordRepeat = strings.registration.passwordMismatch;
+      errors.passwordRepeat = t("registration.passwordMismatch");
       valid = false;
     }
 
@@ -66,10 +67,10 @@ const RegistrationScreen = () => {
 
     try {
       const response = await registerUser({ email: email.trim(), password: password, first_name: firstName, last_name: lastName });
-      navigation.navigate('Login', { toastMessage: strings.savedSuccessfully });
-      toastRef.current.success(strings.registration.registrationSuccess);
+      navigation.navigate('Login', { toastMessage: t("savedSuccessfully") });
+      toastRef.current.success(t("registration.registrationSuccess"));
     } catch (error) {
-      const errorMessage = typeof error.message === 'string' ? error.message : strings.carSetupScreenStrings.errorMessage;
+      const errorMessage = typeof error.message === 'string' ? error.message : t("carSetupScreenStrings.errorMessage");
       toastRef.current.error(errorMessage);
     }
   };
@@ -77,10 +78,10 @@ const RegistrationScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.formContainer}>
-        {/* <Text style={styles.title}>{strings.registration.title}</Text> */}
+        {/* <Text style={styles.title}>{t("registration.title}</Text> */}
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder={strings.registration.firstNamePlaceholder}
+            placeholder={t("registration.firstNamePlaceholder")}
             onChangeText={setFirstName}
             style={[styles.input, errors.firstName && styles.errorInput]}
           />
@@ -88,7 +89,7 @@ const RegistrationScreen = () => {
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder={strings.registration.lastNamePlaceholder}
+            placeholder={t("registration.lastNamePlaceholder")}
             onChangeText={setLastName}
             style={[styles.input, errors.lastName && styles.errorInput]}
           />
@@ -96,7 +97,7 @@ const RegistrationScreen = () => {
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder={strings.registration.emailPlaceholder}
+            placeholder={t("registration.emailPlaceholder")}
             value={email}
             onChangeText={setEmail}
             style={[styles.input, errors.email && styles.errorInput]}
@@ -105,7 +106,7 @@ const RegistrationScreen = () => {
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder={strings.registration.passwordPlaceholder}
+            placeholder={t("registration.passwordPlaceholder")}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -115,7 +116,7 @@ const RegistrationScreen = () => {
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder={strings.registration.rePasswordPlaceholder}
+            placeholder={t("registration.rePasswordPlaceholder")}
             value={passwordRepeat}
             onChangeText={setPasswordRepeat}
             secureTextEntry
@@ -124,12 +125,12 @@ const RegistrationScreen = () => {
           {errors.passwordRepeat && <Text style={styles.errorText}>{errors.passwordRepeat}</Text>}
         </View>
         <CustomButton 
-          text={strings.registration.registerButton}
+          text={t("registration.registerButton")}
           onPress={handleRegister}
         />
         <Pressable onPress={() => navigation.navigate('Login')} style={styles.loginLinkContainer}>
-          <Text style={styles.loginText}>{strings.registration.haveAccount}</Text>
-          <Text style={styles.link}>{strings.registration.loginLink}</Text>
+          <Text style={styles.loginText}>{t("registration.haveAccount")}</Text>
+          <Text style={styles.link}>{t("registration.loginLink")}</Text>
         </Pressable>
       </View>
       <Toast ref={toastRef} />

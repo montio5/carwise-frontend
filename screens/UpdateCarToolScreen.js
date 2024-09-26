@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, ScrollView, Text, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
 import { strings } from '../utils/strings'; // Import the strings object
@@ -7,6 +7,7 @@ import { getToolName } from '../general/generalFunctions'; // Adjust the path ba
 import CustomButton from '../general/customButtonComponent';
 import Toast from '../general/Toast';
 import InputComponent from '../general/customInputComponent'; // Import InputComponent
+import {useTranslation} from 'react-i18next'
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
@@ -14,6 +15,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   const [checkedFields, setCheckedFields] = useState({});
   const car = route.params.car;
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   useEffect(() => {
     getData();
@@ -30,7 +32,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       setCheckedFields(initialCheckedFields);
     } catch (error) {
       console.error(error);
-      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
+                  toastRef.current.error(t("carSetupScreenStrings.errorMessage"));
     }
   };
 
@@ -67,8 +69,8 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
     });
 
     try {
-      await updateCarMileage(car.unique_key, updatedData);
-      navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: strings.carSetupScreenStrings.successUpdateMessage });
+      await updateCarMileage(car.unique_key, updatedData,t);
+      navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: t("carSetupScreenStrings.successUpdateMessage") });
     } catch (error) {
       toastRef.current.error(error.message);
     }

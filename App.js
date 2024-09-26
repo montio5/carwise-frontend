@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Alert,TouchableOpacity } from 'react-native';
 import { deleteUserCar, deleteCustomFieldCar } from './api/UserCar';
@@ -24,48 +24,51 @@ import CarSetupScreen from './screens/CarSetupScreen';
 import UpdateCarToolScreen from './screens/UpdateCarToolScreen';
 import EditProfileScreen from './screens/profile/EditProfileScreen';
 import ChangePasswordScreen from './screens/profile/ChangePasswordScreen';
-import { strings } from './utils/strings';
 import { AuthProvider, useAuth } from './general/AuthContext';
-
-
 import { 
   configureNotificationHandler, 
   registerForPushNotifications, 
   setupNotificationListener 
-} from './general/notification'; // Import notification functions
-import { varifyCode } from './api/Authentication';
+} from './general/notification';
+import {useTranslation} from 'react-i18next';
+
 
 const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
 
-const AuthStackScreens = () => (
+const AuthStackScreens = () => {
+  const { t } = useTranslation();
+
+return  (
+
   <AuthStack.Navigator screenOptions={{
     headerTitleAlign: 'center',
-    headerTintColor: 'black',
-  }}>
-    <AuthStack.Screen name="Login" options={{ title: strings.mainStack.Login }}>
+    headerTintColor: 'black',}}>
+    <AuthStack.Screen name="Login" options={{ title: t("mainStack.Login") }}>
       {props => <LoginScreen {...props} />}
     </AuthStack.Screen>
-    <AuthStack.Screen name="Registration" component={RegistrationScreen} options={{ title: strings.mainStack.Registration }} />
-    <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: strings.mainStack.Registration }} />
-    <AuthStack.Screen name="VarifyCode" component={VerifyCodeScreen} options={{ title: strings.mainStack.Registration }} />
-    <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ title: strings.mainStack.Registration }} />
-    <AuthStack.Screen name="CarScreen" component={CarScreen} options={{ title: strings.mainStack.CarScreen }} />
+    <AuthStack.Screen name="Registration" component={RegistrationScreen} options={{ title: t("mainStack.Registration") }} />
+    <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: t("mainStack.Registration") }} />
+    <AuthStack.Screen name="VarifyCode" component={VerifyCodeScreen} options={{ title: t("mainStack.Registration") }} />
+    <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ title: t("mainStack.Registration") }} />
+    <AuthStack.Screen name="CarScreen" component={CarScreen} options={{ title: t("mainStack.CarScreen") }} />
   </AuthStack.Navigator>
-);
+)};
 
-const SettingStackScreens = () => (
+const SettingStackScreens = () => {
+    const { t } = useTranslation();
+return(
   <SettingStack.Navigator screenOptions={{
     headerTitleAlign: 'center',
     headerTintColor: 'black',
   }}>
-    <SettingStack.Screen name="Setting" component={SettingScreen} options={{ title: strings.mainStack.Setting }} />
-    <SettingStack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: strings.mainStack.EditProfile }} />
-    <SettingStack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: strings.mainStack.ChangePassword }} />
+    <SettingStack.Screen name="Setting" component={SettingScreen} options={{ title: t("mainStack.Setting") }} />
+    <SettingStack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: t("mainStack.EditProfile") }} />
+    <SettingStack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: t("mainStack.ChangePassword") }} />
   </SettingStack.Navigator>
-);
+);}
 
 const confirmDeletion = (title, message, onDelete) => {
   Alert.alert(
@@ -73,12 +76,12 @@ const confirmDeletion = (title, message, onDelete) => {
     message,
     [
       {
-        text: strings.mainStack.noMessage,
+        text: t("mainStack.noMessage"),
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {
-        text: strings.mainStack.yesMessage,
+        text: t("mainStack.yesMessage"),
         onPress: onDelete,
       },
     ],
@@ -86,7 +89,10 @@ const confirmDeletion = (title, message, onDelete) => {
   );
 };
 
-const CarStackScreens = () => (
+const CarStackScreens = () => {
+    const { t } = useTranslation();
+
+  return(
   <CarStack.Navigator screenOptions={{
     headerTitleAlign: 'center',
     headerTintColor: 'black',
@@ -95,7 +101,7 @@ const CarStackScreens = () => (
         name="Home" 
         component={CarsListScreen} 
         options={({ navigation }) => ({
-          title: strings.mainStack.Home,
+          title: t("mainStack.Home"),
           headerRight: () => (
             <TouchableOpacity
               style={{ padding: 10 }} // Adjust padding if needed
@@ -107,7 +113,7 @@ const CarStackScreens = () => (
         })} 
       />
     <CarStack.Screen name="CustomFieldList" component={CustomFiledListScreen} options={({ navigation, route }) => ({
-      title: strings.mainStack.CustomFieldList,
+      title: t("mainStack.CustomFieldList"),
       headerRight: () => (
         <TouchableOpacity
         style={{ padding: 10 }} // Adjust padding if needed
@@ -118,12 +124,12 @@ const CarStackScreens = () => (
       ),
     })} />
     <CarStack.Screen name="CustomField" component={CustomFieldScreen} options={({ route, navigation }) => ({
-      title: route.params.customField?.name || strings.mainStack.CustomFieldList,
+      title: route.params.customField?.name || t("mainStack.CustomFieldList"),
       headerRight: () => route.params.customField && (
         <Icon.Button name="trash" size={24} color="gray" backgroundColor="transparent" onPress={() => {
           confirmDeletion(
-            strings.mainStack.deleteCustomFieldTitle,
-            strings.mainStack.deleteQuestionText,
+            t("mainStack.deleteCustomFieldTitle"),
+            t("mainStack.deleteQuestionText"),
             () => {
               deleteCustomFieldCar(route.params.car.unique_key, route.params.customField.id).then(() => {
                 navigation.navigate('CustomFieldList', { refresh: true, car: route.params.car });
@@ -140,8 +146,8 @@ const CarStackScreens = () => (
       headerRight: () => route.params.car && (
         <Icon.Button name="trash" size={24} color="gray" backgroundColor="transparent" onPress={() => {
           confirmDeletion(
-            strings.mainStack.deleteCarTitle,
-            strings.mainStack.deleteQuestionText,
+            t("mainStack.deleteCarTitle"),
+            t("mainStack.deleteQuestionText"),
             () => {
               deleteUserCar(route.params.car.unique_key).then(() => {
                 navigation.navigate('Home', { refresh: true });
@@ -154,7 +160,7 @@ const CarStackScreens = () => (
       ),
     })} />
     <CarStack.Screen name="AddEditCarInfoFirstScreen" component={AddEditCarInfoFirstScreen} options={({ route }) => ({
-      title: route.params?.car?.name || strings.mainStack.AddingCar,
+      title: route.params?.car?.name || t("mainStack.AddingCar"),
     })} />
     <CarStack.Screen name="AddEditCarInfoSecondScreen" component={AddEditCarInfoSecondScreen} options={({ route }) => ({
       title: route.params?.car?.name || 'Car',
@@ -166,10 +172,13 @@ const CarStackScreens = () => (
       title: route.params.car.name || 'Car',
     })} />
   </CarStack.Navigator>
-);
+);}
 
 
-const MainStackScreens = () => (
+const MainStackScreens = () => {
+    const { t } = useTranslation();
+
+return    (
   <MainStack.Navigator 
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
@@ -197,7 +206,7 @@ const MainStackScreens = () => (
       name="Notification" 
       component={NotificationScreen} 
       options={{
-        headerTitle: strings.mainStack.Notification,
+        headerTitle: t("mainStack.Notification"),
         headerTitleAlign: 'center',
         // headerStyle: {
         //   backgroundColor: '#24292F', // Set the header background color to black
@@ -207,7 +216,7 @@ const MainStackScreens = () => (
     />
     <MainStack.Screen name="Setting" component={SettingStackScreens} options={{ headerShown: false }} />
   </MainStack.Navigator>
-);
+);}
 
 
 

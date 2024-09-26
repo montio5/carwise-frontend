@@ -1,19 +1,26 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, RefreshControl, Button } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { logout as apiLogout, getUserProfile } from '../../api/Authentication'; // Import the logout and getUserProfile functions
 import { strings } from '../../utils/strings'; // Import the strings object
 import Toast from '../../general/Toast';
 import { useAuth } from '../../general/AuthContext';
+import { setAppLanguage } from '../../i18n';
+import {useTranslation} from 'react-i18next'
 
 const SettingScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false); // Add state for refreshing
   const [profile, setProfile] = useState();
   const toastRef = useRef(null);
   const { logout } = useAuth();
+
+  const changeLanguage = (newLang) => {
+    setAppLanguage(newLang);
+  };
 
   useEffect(() => {
     fetchData();
@@ -74,7 +81,7 @@ const SettingScreen = ({ navigation, route }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>{strings.settingScreenStrings.loadingText}</Text>
+        <Text>{t("settingScreenStrings.loadingText")}</Text>
       </View>
     );
   }
@@ -97,23 +104,27 @@ const SettingScreen = ({ navigation, route }) => {
           <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
             <Ionicons name="create-outline" size={24} color="#fff" style={styles.icon} />
             <View style={styles.textWrapper}>
-              <Text style={styles.buttonText}>{strings.settingScreenStrings.editProfileButton}</Text>
+              <Text style={styles.buttonText}>{t("settingScreenStrings.editProfileButton")}</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
             <Ionicons name="lock-closed-outline" size={24} color="#fff" style={styles.icon} />
             <View style={styles.textWrapper}>
-              <Text style={styles.buttonText}>{strings.settingScreenStrings.changePasswordButton}</Text>
+              <Text style={styles.buttonText}>{t("settingScreenStrings.changePasswordButton")}</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={handleLogout}>
             <Ionicons name="log-out-outline" size={24} color="#fff" style={styles.icon} />
             <View style={styles.textWrapper}>
-              <Text style={styles.buttonText}>{strings.settingScreenStrings.logoutButton}</Text>
+              <Text style={styles.buttonText}>{t("settingScreenStrings.logoutButton")}</Text>
             </View>
           </TouchableOpacity>
+        
+          <Button title="Switch to English" onPress={() => changeLanguage('en')} />
+          <Button title="Switch to Farsi" onPress={() => changeLanguage('fa')} />
+
         </View>
       </ScrollView>
     </View>

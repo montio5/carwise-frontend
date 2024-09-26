@@ -14,9 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { getCarDashboard } from '../api/CarSetup';
 import FormattedNumber from '../general/textNumber';
-import { strings } from '../utils/strings';
 import Toast from '../general/Toast';
 import { ChartWithDate, ChartWithDateOnly, ChartWithPercentageOnly } from '../general/ChartComponents';
+import {useTranslation} from 'react-i18next'
 
 const CarDetailScreen = () => {
   const navigation = useNavigation();
@@ -33,6 +33,7 @@ const CarDetailScreen = () => {
   // Dropdown Animation State
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownAnimation = useRef(new Animated.Value(0)).current;
+  const { t } = useTranslation();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -73,11 +74,11 @@ const CarDetailScreen = () => {
   };
 
 const getColorForPct = (pct) => {
-  if (pct === 'overdue') return { color: '#FF3737', description: strings.carDetialScreenStrings.overdue }; // Red for overdue
+  if (pct === 'overdue') return { color: '#FF3737', description: t("carDetialScreenStrings.overdue") }; // Red for overdue
   if (pct < 50) return { color: '#34C759', description: '' }; // Green for good condition
   if (pct < 90) return { color: 'gray', description: '' }; // Gray for neutral
-  if (pct <= 95) return { color: '#FFC107', description: strings.carDetialScreenStrings.orangeStatus }; // Orange for warning
-  if (pct > 95) return { color: '#FF3737', description: strings.carDetialScreenStrings.redStatus }; // Red for critical
+  if (pct <= 95) return { color: '#FFC107', description: t("carDetialScreenStrings.orangeStatus") }; // Orange for warning
+  if (pct > 95) return { color: '#FF3737', description: t("carDetialScreenStrings.redStatus") }; // Red for critical
 };
 
   const goToCustomFieldScreen = () => {
@@ -141,7 +142,7 @@ const getColorForPct = (pct) => {
         {!loading && (
           <FormattedNumber
             number={mileage}
-            suffix={strings.carDetialScreenStrings.mileageSuffix}
+            suffix={""}
             style={styles.mileageText}
           />
         )}
@@ -152,14 +153,14 @@ const getColorForPct = (pct) => {
             <TouchableOpacity onPress={goToCarSetupScreen} style={styles.dropdownItem}>
               <Ionicons name="settings-outline" size={20} color="black" />
               <Text style={styles.dropdownText}>
-                {strings.carDetialScreenStrings.carSetupButton}
+                {t("carDetialScreenStrings.carSetupButton")}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={goToEditCarInfoScreen} style={styles.dropdownItem}>
               <Ionicons name="create-outline" size={20} color="black" />
               <Text style={styles.dropdownText}>
-                {strings.carDetialScreenStrings.editInfoButton}
+                {t("carDetialScreenStrings.editInfoButton")}
               </Text>
             </TouchableOpacity>
           </Animated.View>
@@ -170,7 +171,7 @@ const getColorForPct = (pct) => {
             <View style={styles.buttonContainer}>
               <Ionicons name="add-circle-outline" size={24} color="black" />
               <Text style={styles.buttonText}>
-                {strings.carDetialScreenStrings.customFieldButton}
+                {t("carDetialScreenStrings.customFieldButton")}
               </Text>
             </View>
           </TouchableOpacity>
@@ -179,7 +180,7 @@ const getColorForPct = (pct) => {
             <View style={styles.buttonContainer}>
               <Ionicons name="build-outline" size={24} color="black" />
               <Text style={styles.buttonText}>
-                {strings.carDetialScreenStrings.updateToolButton}
+                {t("carDetialScreenStrings.updateToolButton")}
               </Text>
             </View>
           </TouchableOpacity>
@@ -188,7 +189,7 @@ const getColorForPct = (pct) => {
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : error ? (
-          <Text style={styles.errorText}>{strings.carDetialScreenStrings.errorText}</Text>
+          <Text style={styles.errorText}>{t("carDetialScreenStrings.errorText")}</Text>
         ) : (
           dashboardData.map((item, index) => {
             const hasDateAndPct = item.date_pct && item.pct !== undefined;

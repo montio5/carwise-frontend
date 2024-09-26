@@ -3,15 +3,16 @@ import { View, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import { updateUserCar, createUserCar } from '../../api/UserCar';
 import { useFocusEffect } from '@react-navigation/native';
 import Separator from '../../general/speratorComponent';
-import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent';
 import InputComponent from '../../general/customInputComponent';
-import Toast from '../../general/Toast';  // Adjust the path as necessary
+import Toast from '../../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const car = route.params.car;
   const [carData, setCarData] = useState(route.params.carData);
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   useFocusEffect(
     useCallback(() => {
@@ -46,20 +47,20 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   const handleSave = () => {
     const cleanedCarData = cleanCarData(carData);
     if (car !== null) {
-      updateUserCar(car.unique_key, cleanedCarData)
+      updateUserCar(car.unique_key, cleanedCarData,t)
         .then(() => {
-          navigation.navigate('CarScreen', { refresh: true, car: car,toastMessage: strings.savedSuccessfully });
+          navigation.navigate('CarScreen', { refresh: true, car: car,toastMessage: t("savedSuccessfully") });
         })
         .catch((error) => {
-          toastRef.current.error(error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar );
+          toastRef.current.error(error.message || t("addEditCarInfoSecondScreenStrings.errorInSavingCar") );
         });
     } else {
-      createUserCar(cleanedCarData)
+      createUserCar(cleanedCarData,t)
         .then(() => {
-          navigation.navigate('Home', { refresh: true ,toastMessage: strings.savedSuccessfully});
+          navigation.navigate('Home', { refresh: true ,toastMessage: t("savedSuccessfully")});
         })
         .catch((error) => {
-          toastRef.current.error(error.message || strings.addEditCarInfoSecondScreenStrings.errorInSavingCar );
+          toastRef.current.error(error.message || t("addEditCarInfoSecondScreenStrings.errorInSavingCar") );
         });
     }
   };
@@ -104,87 +105,87 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
     <ScrollView >
-      <Separator text={strings.addEditCarInfoSecondScreenStrings.oilsSeparator} />
+      <Separator text={t("addEditCarInfoSecondScreenStrings.oilsSeparator")} />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.engineOilPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.engineOilPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.engine_oil) ? carData.mileage_info.engine_oil.toString() : ""}
         onChange={(text) => handleInputChange('engine_oil', text, true)}
         isNumeric={true}
         style={styles.input}
       />
        <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.gearboxOilPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.gearboxOilPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.gearbox_oil) ? carData.mileage_info.gearbox_oil.toString() : ""}
         onChange={(text) => handleInputChange('gearbox_oil', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.hydraulicFluidPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.hydraulicFluidPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.hydraulic_fluid) ? carData.mileage_info.hydraulic_fluid.toString() : ""}
         onChange={(text) => handleInputChange('hydraulic_fluid', text, true)}
         isNumeric={true}
         style={styles.input}
       />
 
-      <Separator text={strings.addEditCarInfoSecondScreenStrings.filtersSeparator} />
+      <Separator text={t("addEditCarInfoSecondScreenStrings.filtersSeparator")} />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.oilFilterPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.oilFilterPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.oil_filter) ? carData.mileage_info.oil_filter.toString() : ""}
         onChange={(text) => handleInputChange('oil_filter', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.fuelFilterPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.fuelFilterPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.fuel_filter) ? carData.mileage_info.fuel_filter.toString() : ""}
         onChange={(text) => handleInputChange('fuel_filter', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.airFilterPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.airFilterPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.air_filter) ? carData.mileage_info.air_filter.toString() : ""}
         onChange={(text) => handleInputChange('air_filter', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.cabinAirFilterPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.cabinAirFilterPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.cabin_air_filter) ? carData.mileage_info.cabin_air_filter.toString() : ""}
         onChange={(text) => handleInputChange('cabin_air_filter', text, true)}
         isNumeric={true}
         style={styles.input}
       />
 
-      <Separator text={strings.addEditCarInfoSecondScreenStrings.beltsSeparator} />
+      <Separator text={t("addEditCarInfoSecondScreenStrings.beltsSeparator")} />
 
        <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.timingBeltPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.timingBeltPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.timing_belt) ? carData.mileage_info.timing_belt.toString() : ""}
         onChange={(text) => handleInputChange('timing_belt', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.alternatorBeltPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.alternatorBeltPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.alternator_belt) ? carData.mileage_info.alternator_belt.toString() : ""}
         onChange={(text) => handleInputChange('alternator_belt', text, true)}
         isNumeric={true}
         style={styles.input}
       />
 
-      <Separator text={strings.addEditCarInfoSecondScreenStrings.brakesSeparator} />
+      <Separator text={t("addEditCarInfoSecondScreenStrings.brakesSeparator")} />
 
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.frontBrakePadsPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.frontBrakePadsPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.front_brake_pads) ? carData.mileage_info.front_brake_pads.toString() : ""}
         onChange={(text) => handleInputChange('front_brake_pads', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.rearBrakePadsPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.rearBrakePadsPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.rear_brake_pads) ? carData.mileage_info.rear_brake_pads.toString() : ""}
         onChange={(text) => handleInputChange('rear_brake_pads', text, true)}
         isNumeric={true}
@@ -194,21 +195,21 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
       <Separator />
 
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.sparkPlugPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.sparkPlugPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.spark_plug) ? carData.mileage_info.spark_plug.toString() : ""}
         onChange={(text) => handleInputChange('spark_plug', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.frontSuspensionPlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.frontSuspensionPlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.front_suspension) ? carData.mileage_info.front_suspension.toString() : ""}
         onChange={(text) => handleInputChange('front_suspension', text, true)}
         isNumeric={true}
         style={styles.input}
       />
       <InputComponent
-        label={strings.addEditCarInfoSecondScreenStrings.clutchPlatePlaceholder}
+        label={t("addEditCarInfoSecondScreenStrings.clutchPlatePlaceholder")}
         value={(carData.mileage_info && carData.mileage_info.clutch_plate) ? carData.mileage_info.clutch_plate.toString() : ""}
         onChange={(text) => handleInputChange('clutch_plate', text, true)}
         isNumeric={true}
@@ -217,7 +218,7 @@ const AddEditCarInfoSecondScreen = ({ navigation, route }) => {
     </ScrollView>
       <View style={styles.buttonContainer}>
             <CustomButton
-            text={strings.addEditCarInfoSecondScreenStrings.saveButton}
+            text={t("addEditCarInfoSecondScreenStrings.saveButton")}
             onPress={handleSave}
             style={styles.button}
             />

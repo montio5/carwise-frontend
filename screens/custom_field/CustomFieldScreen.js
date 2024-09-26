@@ -1,18 +1,19 @@
 import React, { useState, useEffect,useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
-import { strings } from '../../utils/strings'; // Import the strings object
 import CustomButton from '../../general/customButtonComponent'
 import InputComponent from '../../general/customInputComponent'
 import DatePickerComponent from '../../general/DatePickerComp' // Adjust the path according to your project structure
 import Separator from '../../general/speratorComponent';
 import Toast from '../../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 
 const CustomFieldScreen = ({ route, navigation }) => {
   const car = route.params.car || null;
   const customField = route.params.customField || null;
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   const [name, setName] = useState('');
   const [mileagePerChange, setMileagePerChange] = useState('');
@@ -54,16 +55,16 @@ const CustomFieldScreen = ({ route, navigation }) => {
     }
 
     const apiCall = customField
-      ? updateCustomField(car.unique_key, customField.id, cleanedCarData)
-      : createCustomField(car.unique_key, cleanedCarData);
+      ? updateCustomField(car.unique_key, customField.id, cleanedCarData,t)
+      : createCustomField(car.unique_key, cleanedCarData,t);
 
     apiCall
       .then((response) => {
-        navigation.navigate('CustomFieldList', { refresh: true, car: car, toastMessage: strings.savedSuccessfully});
+        navigation.navigate('CustomFieldList', { refresh: true, car: car, toastMessage: t("savedSuccessfully")});
       })
       .catch((error) => {
         const errorMessage = typeof error === 'string' ? error : error.message;
-        toastRef.current.error(errorMessage || strings.customFieldScreenStrings.errorFetchingCustomField || 'Error');
+        toastRef.current.error(errorMessage || t("customFieldScreenStrings.errorFetchingCustomField") || 'Error');
       });
   };
 
@@ -73,53 +74,53 @@ const CustomFieldScreen = ({ route, navigation }) => {
       <InputComponent
               isNumeric={false}
               value={name}
-              placeholder={strings.customFieldScreenStrings.namePlaceholder}
-              label={strings.customFieldScreenStrings.name}
+              placeholder={t("customFieldScreenStrings.namePlaceholder")}
+              label={t("customFieldScreenStrings.name")}
               onChange={setName}
 
             />
-                  <Separator text={strings.customFieldScreenStrings.mileageBase} />
+                  <Separator text={t("customFieldScreenStrings.mileageBase")} />
 
             <InputComponent
               isNumeric={true}
               value={mileagePerChange}
-              placeholder={strings.customFieldScreenStrings.mileagePlaceholder}
-              label={strings.customFieldScreenStrings.mileagePerChange}
+              placeholder={t("customFieldScreenStrings.mileagePlaceholder")}
+              label={t("customFieldScreenStrings.mileagePerChange")}
               onChange={setMileagePerChange}
 
             />
             <InputComponent
               isNumeric={true}
               value={lastMileageChanged}
-              placeholder={strings.customFieldScreenStrings.lastMileagePlaceholder}
-              label={strings.customFieldScreenStrings.lastMileageChanged}
+              placeholder={t("customFieldScreenStrings.lastMileagePlaceholder")}
+              label={t("customFieldScreenStrings.lastMileageChanged")}
               onChange={setLastMileageChanged}
             />
-                  <Separator text={strings.customFieldScreenStrings.dateBase} />
+                  <Separator text={t("customFieldScreenStrings.dateBase")} />
 
-        <Text style={styles.label}>{strings.customFieldScreenStrings.durationPerChange}</Text>
+        <Text style={styles.label}>{t("customFieldScreenStrings.durationPerChange")}</Text>
         <View style={styles.monthPerChangeContainer}>
         <InputComponent
               isNumeric={true}
               style={[styles.input, styles.monthInput]}
               value={monthPerChangeYear}
-              placeholder={strings.customFieldScreenStrings.yearPlaceholder}
+              placeholder={t("customFieldScreenStrings.yearPlaceholder")}
               onChange={setMonthPerChangeYear}
             />
         <InputComponent
               isNumeric={true}
               style={[styles.input, styles.monthInput]}
               value={monthPerChangeMonth}
-              placeholder={strings.customFieldScreenStrings.monthPlaceholder}
+              placeholder={t("customFieldScreenStrings.monthPlaceholder")}
               onChange={setMonthPerChangeMonth}
             />
         </View>
 
       <DatePickerComponent
-        label={strings.customFieldScreenStrings.lastChangedDate}
+        label={t("customFieldScreenStrings.lastChangedDate")}
         date={lastDateChanged}
         onDateChange={setLastDateChanged}
-        placeholder={strings.customFieldScreenStrings.selectDateText}
+        placeholder={t("customFieldScreenStrings.selectDateText")}
         clearable={true}
         style={styles.datePickerComponent}/>
 
@@ -128,7 +129,7 @@ const CustomFieldScreen = ({ route, navigation }) => {
 
       <View style={styles.bottomContainer}>
       <CustomButton
-      text={strings.customFieldScreenStrings.saveButton}
+      text={t("customFieldScreenStrings.saveButton")}
       onPress={handleSave}/>
       </View>
       <Toast ref={toastRef} />

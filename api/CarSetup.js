@@ -1,6 +1,6 @@
 import apiUrl from '../utils/apiConfig'; 
 import { strings } from '../utils/strings';
-import { getHeaders, getPublicHeaders } from './headers';
+import { getHeaders } from './headers';
 
 
 // ______________ Get Car Setup ____________

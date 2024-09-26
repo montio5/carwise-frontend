@@ -4,6 +4,7 @@ import { updateUserProfile } from '../../api/Authentication'; // Import API func
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
 import CustomButton from '../../general/customButtonComponent';
 import Toast from '../../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 const EditProfileScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const EditProfileScreen = ({ route, navigation }) => {
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(true);
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   const profile = route.params.profile;
 
@@ -46,7 +48,7 @@ const EditProfileScreen = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>{strings.loadingText}</Text>
+        <Text>{t("loadingText")}</Text>
       </View>
     );
   }
@@ -58,7 +60,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       {/* Input fields in the center */}
       <View style={styles.inputWrapper}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>{strings.profileString.Email}</Text>
+          <Text style={styles.label}>{t("profileString.Email")}</Text>
           <TextInput
             style={styles.input}
             value={email}
@@ -66,7 +68,7 @@ const EditProfileScreen = ({ route, navigation }) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>{strings.profileString.firstNamePlaceholder}</Text>
+          <Text style={styles.label}>{t("profileString.firstNamePlaceholder")}</Text>
           <TextInput
             style={styles.input}
             value={firstName}
@@ -74,7 +76,7 @@ const EditProfileScreen = ({ route, navigation }) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>{strings.profileString.lastNamePlaceholder}</Text>
+          <Text style={styles.label}>{t("profileString.lastNamePlaceholder")}</Text>
           <TextInput
             style={styles.input}
             value={lastName}
@@ -85,7 +87,7 @@ const EditProfileScreen = ({ route, navigation }) => {
 
       {/* Button stick to the bottom */}
       <CustomButton
-        text={strings.profileString.save}
+        text={t("profileString.save")}
         onPress={handleSaveProfile}
         style={styles.button}
       />

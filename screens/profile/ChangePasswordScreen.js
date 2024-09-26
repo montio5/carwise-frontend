@@ -4,12 +4,14 @@ import { changePassword } from '../../api/Authentication'; // Import the changeP
 import { strings } from '../../utils/strings'; // Adjust the path as per your project structure
 import CustomButton from '../../general/customButtonComponent';
 import Toast from '../../general/Toast';
+import {useTranslation} from 'react-i18next'
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const toastRef = useRef(null);
+  const { t } = useTranslation();
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -38,7 +40,7 @@ const ChangePasswordScreen = ({ navigation }) => {
       {/* Input fields in the center */}
       <View style={styles.inputWrapper}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>{strings.profileString.oldPassword}</Text>
+          <Text style={styles.label}>{t("profileString.oldPassword")}</Text>
           <TextInput
             style={styles.input}
             value={currentPassword}
@@ -47,7 +49,7 @@ const ChangePasswordScreen = ({ navigation }) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>{strings.profileString.newPassword}</Text>
+          <Text style={styles.label}>{t("profileString.newPassword")}</Text>
           <TextInput
             style={styles.input}
             value={newPassword}
@@ -56,7 +58,7 @@ const ChangePasswordScreen = ({ navigation }) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>{strings.profileString.repeatNewPassword}</Text>
+          <Text style={styles.label}>{t("profileString.repeatNewPassword")}</Text>
           <TextInput
             style={styles.input}
             value={confirmPassword}
@@ -68,7 +70,7 @@ const ChangePasswordScreen = ({ navigation }) => {
 
       {/* Button stick to the bottom */}
       <CustomButton
-        text={strings.carSetupScreenStrings.updateButtonTitle}
+        text={t("carSetupScreenStrings.updateButtonTitle")}
         onPress={handleChangePassword}
         style={styles.button}
       />
