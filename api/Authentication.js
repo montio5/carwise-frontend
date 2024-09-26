@@ -1,72 +1,52 @@
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiUrl from '../utils/apiConfig'; 
 import { strings } from '../utils/strings';
+import { getHeaders, getPublicHeaders } from './headers';
+
 
 // ______________ Logout ____________________
-
-
 export const logout = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await fetch(`${apiUrl}user/logout/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (response.status !== 205) { // 204 No Content is a typical response for successful delete
-        throw new Error('Network response was not ok');
-
-      }
-      return true; // logout was successful
-    } catch (error) {
-      console.error('Error in logout:', error);
-      throw error;
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}user/logout/`, {
+      method: 'POST',
+      headers,
+    });
+    if (response.status !== 205) { // 204 No Content is a typical response for successful delete
+      throw new Error('Network response was not ok');
     }
-  };
+    return true; // logout was successful
+  } catch (error) {
+    console.error('Error in logout:', error);
+    throw error;
+  }
+};
 
 // ______________ Get User Profile ____________
-
 export const getUserProfile = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await fetch(`${apiUrl}user/profile/`, {
-        headers: {
-          Accept: strings.ContentType,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching user car:', error);
-      throw error;
-    }
-  };
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}user/profile/`, { headers });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
 
-// ______________ Update user profile ____________
-
+// ______________ Update User Profile ____________
 export const updateUserProfile = async (newData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}user/profile/`, {
-      method: 'PUT', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
-        'Accept-Language':'fa'
-      },
+      method: 'PUT',
+      headers,
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
-
     if (!response.ok) {
-      throw new Error(`Error updating custom field: ${response.status} ${response.statusText}`);
+      throw new Error(`Error updating profile: ${response.status} ${response.statusText}`);
     }
-
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -75,49 +55,35 @@ export const updateUserProfile = async (newData) => {
 };
 
 // ______________ Change Password ____________
-
-
 export const changePassword = async (newData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}user/change-password/`, {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
-        'Accept-Language':'fa'
-
-      },
+      method: 'POST',
+      headers,
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
-
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
-      let msg = errorData['current_password'][0]
+      let msg = errorData['current_password'][0];
       throw new Error(msg);
     }
-
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error updating custom field:', error);
+    console.error('Error changing password:', error);
     throw error;
   }
 };
 
-//______________ Login ____________
-
-
+//______________ Login (no token required) ____________
 export const login = async (email, password) => {
   try {
+    const headers = await getPublicHeaders(); // No token for login
     const response = await fetch(`${apiUrl}api/token/`, {
       method: 'POST',
-      headers: {
-        'Content-Type': strings.ContentType,
-        'Accept': strings.ContentType,
-      },
+      headers,
       body: JSON.stringify({
         username: email,
         password: password,
@@ -133,7 +99,6 @@ export const login = async (email, password) => {
         return { success: false, message: strings.login.alertMessage };
       }
     } else {
-      const errorData = await response.json();
       return { success: false, message: strings.login.alertMessage };
     }
   } catch (error) {
@@ -141,29 +106,21 @@ export const login = async (email, password) => {
   }
 };
 
-//______________ Register User ____________
-
+//______________ Register User (no token required) ____________
 export const registerUser = async (newData) => {
   try {
+    const headers = await getPublicHeaders(); // No token for registration
     const response = await fetch(`${apiUrl}user/register/`, {
-      method: 'POST', 
-      headers: {
-        'Content-Type': strings.ContentType,
-        'Accept': strings.ContentType,
-        // 'Authorization': `Bearer ${token}`,
-        'Accept-Language':'fa'
-
-      },
+      method: 'POST',
+      headers,
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
-
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
-      let msg = errorData['detail']['email'][0]['msg']
+      let msg = errorData['detail']['email'][0]['msg'];
       throw new Error(msg);
     }
-
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -171,27 +128,19 @@ export const registerUser = async (newData) => {
   }
 };
 
-//______________ Send FCM Token ____________
-
-export const sendFCMTokenToServer  = async (newData) => {
+//______________ Send FCM Token (token required) ____________
+export const sendFCMTokenToServer = async (newData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}user/fcm-token/`, {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
-      },
+      method: 'POST',
+      headers,
       body: JSON.stringify(newData),
     });
     const responseText = await response.text();
     if (!response.ok) {
-      const errorData = JSON.parse(responseText);
-      let msg = errorData
-      throw new Error(msg);
+      throw new Error(responseText);
     }
-
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -199,35 +148,22 @@ export const sendFCMTokenToServer  = async (newData) => {
   }
 };
 
-// ______________ Forgot Password ____________
-
-
+// ______________ Forgot Password (no token required) ____________
 export const callForgotPassword = async (newData) => {
   try {
+    const headers = await getPublicHeaders(); // No token for forgot password
     const response = await fetch(`${apiUrl}user/forgot-password/`, {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': strings.ContentType,
-        'Accept-Language': 'fa'
-      },
+      method: 'POST',
+      headers,
       body: JSON.stringify(newData),
     });
-    
+
     const responseText = await response.text();
-
     if (!response.ok) {
-      // Parse the responseText as JSON to access the data
       const errorData = JSON.parse(responseText);
-
-      // Safely extract the error message
       let msg = errorData?.detail?.email?.[0]?.msg || strings.resetPasswordProcess.emailError;
-
-      // Throw the extracted message as the error
       throw new Error(msg);
     }
-
-    // If the request was successful, parse the response
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -236,64 +172,50 @@ export const callForgotPassword = async (newData) => {
   }
 };
 
-
-// ______________ varify Code ____________
-
-
-export const varifyCode = async (newData) => {
+// ______________ Verify Code (no token required) ____________
+export const verifyCode = async (newData) => {
   try {
-    const response = await fetch(`${apiUrl}user/varify-code/`, {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': strings.ContentType,
-        'Accept-Language':'fa'
-
-      },
+    const headers = await getPublicHeaders(); // No token for verify code
+    const response = await fetch(`${apiUrl}user/verify-code/`, {
+      method: 'POST',
+      headers,
       body: JSON.stringify(newData),
     });
-    const responseText = await response.text();
 
+    const responseText = await response.text();
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
       let msg = errorData?.detail?.code?.[0]?.msg || strings.resetPasswordProcess.codeError;
       throw new Error(msg);
     }
-
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error varifing the code:', error);
+    console.error('Error verifying the code:', error);
     throw error;
   }
 };
 
-// ______________ Reset Password ____________
-
-
-export const ResetPassword = async (newData) => {
+// ______________ Reset Password (no token required) ____________
+export const resetPassword = async (newData) => {
   try {
+    const headers = await getPublicHeaders(); // No token for reset password
     const response = await fetch(`${apiUrl}user/reset-password/`, {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': strings.ContentType,
-        'Accept-Language':'fa'
-
-      },
+      method: 'POST',
+      headers,
       body: JSON.stringify(newData),
     });
+
     const responseText = await response.text();
     if (!response.ok) {
       const errorData = JSON.parse(responseText);
       let msg = errorData?.detail?.code?.[0]?.msg || strings.resetPasswordProcess.passwordError;
       throw new Error(msg);
     }
-
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
-    console.error('Error in reseting password:', error);
+    console.error('Error resetting password:', error);
     throw error;
   }
 };

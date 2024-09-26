@@ -1,37 +1,26 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiUrl from '../utils/apiConfig'; 
 import { strings } from '../utils/strings';
+import { getHeaders, getPublicHeaders } from './headers';
+
 
 // ______________ Get Car Models ____________
-
 export const getCarModels = async () => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response =await fetch(`${apiUrl}api/car-models`,{
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/car-models`, { headers });
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching user car:', error);
+    console.error('Error fetching car models:', error);
     throw error;
   }
 };
 
 // ______________ Get User Cars ____________
-
 export const fetchUserCars = async () => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/user-cars/`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/user-cars/`, { headers });
     const data = await response.json();
     return data;
   } catch (error) {
@@ -41,16 +30,10 @@ export const fetchUserCars = async () => {
 };
 
 // ______________ Get User Car ____________
-
 export const getUserCar = async (carUniqueKey) => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}`, { headers });
     const data = await response.json();
     return data;
   } catch (error) {
@@ -58,41 +41,31 @@ export const getUserCar = async (carUniqueKey) => {
     throw error;
   }
 };
-// ______________ Update User Car ____________
 
+// ______________ Update User Car ____________
 export const updateUserCar = async (carUniqueKey, newData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    if (!token) {
-      throw new Error('Token not found');
-    }
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/${carUniqueKey}/`, {
       method: 'PUT',
       headers: {
-        'Accept': strings.ContentType,
-        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(newData), // Stringify the request body
+        ...headers},
+      body: JSON.stringify(newData),
     });
 
-    const responseText = await response.text(); // Get raw response text
-
+    const responseText = await response.text();
     if (!response.ok) {
-      // Handle non-2xx HTTP responses
       let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
       try {
         const errorData = JSON.parse(responseText);
-        let detail =errorData.detail
+        let detail = errorData.detail;
         if (detail) {
           errorMessage = detail["mileage_info"][0].msg;
         }
-      } catch (parseError) {
-      }
+      } catch (parseError) {}
       throw new Error(errorMessage);
     }
 
-    // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -101,37 +74,30 @@ export const updateUserCar = async (carUniqueKey, newData) => {
 };
 
 // ______________ Create User Car ____________
-
 export const createUserCar = async (newData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/new/`, {
       method: 'POST',
       headers: {
-        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
-        'Accept': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
+        ...headers
       },
       body: JSON.stringify(newData),
     });
-    const responseText = await response.text(); // Get raw response text
-    if (!response.ok) {
 
-      // Handle non-2xx HTTP responses
-        let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
-        try {
-          const errorData = JSON.parse(responseText);
-          let detail =errorData.detail
-          if (detail) {
-            errorMessage = detail["mileage_info"][0].msg;
-          }
-        } catch (parseError) {
+    const responseText = await response.text();
+    if (!response.ok) {
+      let errorMessage = strings.addEditCarInfoSecondScreenStrings.errorInSavingCar;
+      try {
+        const errorData = JSON.parse(responseText);
+        let detail = errorData.detail;
+        if (detail) {
+          errorMessage = detail["mileage_info"][0].msg;
         }
-        throw new Error(errorMessage);
-      
+      } catch (parseError) {}
+      throw new Error(errorMessage);
     }
 
-    // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -140,135 +106,104 @@ export const createUserCar = async (newData) => {
 };
 
 // ______________ Delete User Car ____________
-
 export const deleteUserCar = async (uniqueKey) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/${uniqueKey}/`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
+        ...headers
       },
     });
-    if (response.status !== 204) { // 204 No Content is a typical response for successful delete
+    if (response.status !== 204) {
       throw new Error('Network response was not ok');
     }
-    return true; // Deletion was successful
+    return true;
   } catch (error) {
     throw error;
   }
 };
 
 // ______________ Get Notification List ____________
-
 export const getNotificationlist = async () => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/notifications/`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-        'Accept-Language':'fa'
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/notifications/`, { headers });
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching user car:', error);
+    console.error('Error fetching notifications:', error);
     throw error;
   }
 };
 
 // ______________ Get Custom Field List ____________
-
 export const getCustomFieldList = async (carUniqueKey) => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}`, { headers });
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching user car:', error);
+    console.error('Error fetching custom fields:', error);
     throw error;
   }
 };
 
 // ______________ Delete Custom Field ____________
-
 export const deleteCustomFieldCar = async (carUniqueKey, id) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${id}/`, {
       method: 'DELETE',
       headers: {
-        'Accept-Language' : "fa",
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-        'Content-Type': strings.ContentType,
+        ...headers
       },
     });
 
     if (!response.ok) {
-      // Handle non-2xx HTTP responses
       throw new Error(`Error deleting custom field: ${response.status} ${response.statusText}`);
     }
-    // Deletion was successful
     return true;
   } catch (error) {
     console.error('Error deleting custom field:', error);
     throw error;
   }
 };
-// ______________ Get Custom Field ____________
 
-export const getCustomField = async (carUniqueKey,id) => {
+// ______________ Get Custom Field ____________
+export const getCustomField = async (carUniqueKey, id) => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${id}`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/custom-field/${carUniqueKey}/${id}`, { headers });
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching user car:', error);
+    console.error('Error fetching custom field:', error);
     throw error;
   }
 };
-// ______________ Update Custom Field ____________
 
+// ______________ Update Custom Field ____________
 export const updateCustomField = async (uniqueKey, customFieldKey, customFieldData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/${customFieldKey}/`, {
-      method: 'PUT', // Use 'PATCH' if you only want to update certain fields
+      method: 'PUT',
       headers: {
-        'Content-Type': strings.ContentType,
-        'Accept': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
+        ...headers
       },
       body: JSON.stringify(customFieldData),
     });
-    const responseText = await response.text();
 
+    const responseText = await response.text();
     if (!response.ok) {
-      // Attempt to parse the response text as JSON to extract the error message
       let errorMessage = strings.customFieldScreenStrings.errorUpdatingCustomField;
       try {
         const errorData = JSON.parse(responseText);
-
         if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
           errorMessage = errorData.detail.non_field_errors[0].msg;
-        }
-        else{
+        } else {
           errorMessage = Object.values(errorData.detail)[0][0].msg;
         }
       } catch (parseError) {
@@ -277,7 +212,6 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
       throw new Error(errorMessage);
     }
 
-    // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -285,36 +219,31 @@ export const updateCustomField = async (uniqueKey, customFieldKey, customFieldDa
     throw error;
   }
 };
-// ______________ Create Custom Field ____________
 
+// ______________ Create Custom Field ____________
 export const createCustomField = async (uniqueKey, customFieldData) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/custom-field/${uniqueKey}/new/`, {
       method: 'POST',
       headers: {
-        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
-        'Accept': strings.ContentType,
-        'Authorization': `Bearer ${token}`,
+        ...headers
       },
       body: JSON.stringify(customFieldData),
     });
-    const responseText = await response.text(); // Get raw response text
 
+    const responseText = await response.text();
     if (!response.ok) {
-      // Attempt to parse the response text as JSON to extract the error message
       let errorMessage = strings.customFieldScreenStrings.errorDavingCustomField;
       try {
         const errorData = JSON.parse(responseText);
         if (errorData.detail && errorData.detail.non_field_errors && errorData.detail.non_field_errors.length > 0) {
           errorMessage = errorData.detail.non_field_errors[0].msg;
         }
-      } catch (parseError) {
-      }
+      } catch (parseError) {}
       throw new Error(errorMessage);
     }
 
-    // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
     return data;
   } catch (error) {
@@ -322,85 +251,46 @@ export const createCustomField = async (uniqueKey, customFieldData) => {
   }
 };
 
-// ______________ Get User Car ____________
-
+// ______________ Get Car Mileage ____________
 export const getCarMileage = async (carUniqueKey) => {
   try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await fetch(`${apiUrl}api/mileage/${carUniqueKey}`, {
-      headers: {
-        Accept: strings.ContentType,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/mileage/${carUniqueKey}`, { headers });
     const data = await response.json();
     return data;
-  } catch (error) {    throw error;
+  } catch (error) {
+    throw error;
   }
 };
 
-// ______________ Update User Car ____________
-
+// ______________ Update Car Mileage ____________
 export const updateCarMileage = async (carUniqueKey, newData) => {
-
   try {
-    const token = await AsyncStorage.getItem('token');
-    if (!token) {
-      throw new Error('Token not found');
-    }
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/mileage/${carUniqueKey}/`, {
       method: 'POST',
       headers: {
-        'Accept': strings.ContentType,
-        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
-        'Authorization': `Bearer ${token}`,
+        ...headers
       },
-      body: JSON.stringify(newData), // Stringify the request body
+      body: JSON.stringify(newData),
     });
 
-    const responseText = await response.text(); // Get raw response text
-
+    const responseText = await response.text();
     if (!response.ok) {
-      // Handle non-2xx HTTP responses
       let errorMessage = strings.carSetupScreenStrings.errorMessage;
       try {
         const errorData = JSON.parse(responseText);
-        let detail =errorData
+        let detail = errorData.non_field_errors[0];
         if (detail) {
-          errorMessage = detail["non_field_errors"][0];
+          errorMessage = detail;
         }
-      } catch (parseError) {
-      }
+      } catch (parseError) {}
       throw new Error(errorMessage);
     }
 
-    // Attempt to parse JSON only if response is OK
     const data = JSON.parse(responseText);
-
     return data;
   } catch (error) {
     throw error;
   }
 };
-
-// ______________ Get Notification  ____________
-
-// export const getNotification = async () => {
-//   try {
-//     const token = await AsyncStorage.getItem('token');
-//     const response = await fetch(`${apiUrl}api/notification`, {
-//       headers: {
-//         Accept: strings.ContentType,
-//         Authorization: `Bearer ${token}`,
-//         'Accept-Language':'fa'
-//       },
-//     });
-//     const data = await response.json();
-//           console.log("__________________________",response)
-//     console.log("__________________________",data);
-//     return data;
-//   } catch (error) {
-//     console.error('Error fetching user car:', error);
-//     throw error;
-//   }
-// };
