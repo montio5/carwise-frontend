@@ -33,6 +33,15 @@ const EditProfileScreen = ({ route, navigation }) => {
   }, []);
 
   const handleSaveProfile = async () => {
+    if (!firstName.trim()){
+      toastRef.current.error(t("registration.firstNameRequired"));
+      return;
+    }
+    else if (!lastName.trim()){
+      toastRef.current.error(t("registration.lastNameRequired"));
+      return;
+    }
+
     updateUserProfile({ email, first_name: firstName, last_name: lastName })
       .then(() => {
         navigation.navigate('Setting', {

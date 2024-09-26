@@ -15,7 +15,15 @@ const ChangePasswordScreen = ({ navigation }) => {
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
-      toastRef.current.error(strings.profileString.newPasswordAndConfirmationError || 'Error');
+      toastRef.current.error(t("profileString.newPasswordAndConfirmationError") || 'Error');
+      return;
+    }
+    else if (!newPassword.trim()){
+      toastRef.current.error(t("resetPasswordProcess.passwordRequired"));
+      return;
+    }
+    else if (!currentPassword.trim()){
+      toastRef.current.error(t("resetPasswordProcess.currentPasswordRequired"));
       return;
     }
     changePassword({
