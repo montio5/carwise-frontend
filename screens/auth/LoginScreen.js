@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 
   },
   signupContainer: {
-    marginTop: 20,
+    marginTop: 50,
     
   },
   signupRow: {
@@ -116,7 +116,9 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   forgotPasswordContainer: {
-    marginTop: 10, // Space between signup text and forgot password link
+    marginTop: 10, 
+        alignItems: 'center',
+
   },
 });
 

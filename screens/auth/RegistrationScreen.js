@@ -5,7 +5,7 @@ import { registerUser } from '../../api/Authentication';
 import CustomButton from '../../general/customButtonComponent';
 import Toast from '../../general/Toast';
 import {useTranslation} from 'react-i18next'
-
+import LanguageSwitcher from '../../general/LanguageSwitcher';
 const RegistrationScreen = () => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -124,15 +124,21 @@ const RegistrationScreen = () => {
           />
           {errors.passwordRepeat && <Text style={styles.errorText}>{errors.passwordRepeat}</Text>}
         </View>
+
+
         <CustomButton 
           text={t("registration.registerButton")}
           onPress={handleRegister}
         />
+
         <Pressable onPress={() => navigation.navigate('Login')} style={styles.loginLinkContainer}>
           <Text style={styles.loginText}>{t("registration.haveAccount")}</Text>
           <Text style={styles.link}>{t("registration.loginLink")}</Text>
         </Pressable>
+
       </View>
+      <LanguageSwitcher/>
+
       <Toast ref={toastRef} />
     </ScrollView>
   );
@@ -178,7 +184,7 @@ const styles = StyleSheet.create({
     top: -18,
   },
   loginLinkContainer: {
-    marginTop: 20,
+    marginTop: 45,
     alignItems: 'center',
   },
   link: {

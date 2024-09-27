@@ -8,6 +8,7 @@ import Toast from '../../general/Toast';
 import { useAuth } from '../../general/AuthContext';
 import { setAppLanguage } from '../../i18n';
 import {useTranslation} from 'react-i18next'
+import LanguageSwitcher  from '../../general/LanguageSwitcher'
 
 const SettingScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
@@ -17,10 +18,6 @@ const SettingScreen = ({ navigation, route }) => {
   const [profile, setProfile] = useState();
   const toastRef = useRef(null);
   const { logout } = useAuth();
-
-  const changeLanguage = (newLang) => {
-    setAppLanguage(newLang);
-  };
 
   useEffect(() => {
     fetchData();
@@ -121,10 +118,9 @@ const SettingScreen = ({ navigation, route }) => {
               <Text style={styles.buttonText}>{t("settingScreenStrings.logoutButton")}</Text>
             </View>
           </TouchableOpacity>
-        
-          <Button title="Switch to English" onPress={() => changeLanguage('en')} />
-          <Button title="Switch to Farsi" onPress={() => changeLanguage('fa')} />
 
+
+          <LanguageSwitcher/>
         </View>
       </ScrollView>
     </View>
