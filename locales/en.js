@@ -1,6 +1,9 @@
 
 const en = {
-    title :"title",
+    cameraPermissionRequired :"Camera permission is required to take a picture.",
+    errorFindingMileage:"Unable to detect mileage from the image. Please try again.",
+    imageNotSelected:"No image was selected. Please try again.",
+
 cars: 'Cars',
 editProfile :"Edit Profile",
 // 

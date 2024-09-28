@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator'; // Import ImageManipulator for resizing/compression
+import {useTranslation} from 'react-i18next'
 
 const OCR_API_KEY = 'fadea523c488957'; // Your API key
 const OCR_API_URL = 'https://api.ocr.space/parse/image'; // OCR API endpoint
@@ -24,6 +25,7 @@ const InputComponent = ({
 }) => {
   const [displayValue, setDisplayValue] = useState(value.toString());
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const { t } = useTranslation();
 
   // Handle initial value formatting
   useEffect(() => {
@@ -59,8 +61,17 @@ const InputComponent = ({
 
   // Open the camera to take a photo
   const openCamera = async () => {
-    if (hasCameraPermission === null || !hasCameraPermission) {
-      Alert.alert("Camera permission is required!");
+    let { status } = await Camera.getCameraPermissionsAsync();
+
+    if (status !== 'granted') {
+      // Re-request permission if it was denied
+      const { status: newStatus } = await Camera.requestCameraPermissionsAsync();
+      setHasCameraPermission(newStatus === 'granted');
+      status = newStatus;
+    }
+
+    if (status !== 'granted') {
+      Alert.alert(t("cameraPermissionRequired"));
       return;
     }
 
@@ -85,10 +96,10 @@ const InputComponent = ({
         setDisplayValue(formatNumber(extractedNumber));
         onChange(extractedNumber);
       } else {
-        Alert.alert("Unable to detect mileage from the image. Please try again.");
+        Alert.alert(t("errorFindingMileage"));
       }
     } else {
-      Alert.alert("No image was selected. Please try again.");
+      Alert.alert(t("imageNotSelected"));
       console.log("Image was not selected or was cancelled.");
     }
   };
