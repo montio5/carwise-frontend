@@ -8,8 +8,8 @@ import { AuthProvider, useAuth } from '../../general/AuthContext';
 import {useTranslation} from 'react-i18next'
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const toastRef = useRef();
   const route = useRoute();
   const { login } = useAuth();
@@ -39,13 +39,13 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
       <TextInput
         placeholder={t("login.emailPlaceholder")}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(x)=>{setEmail(x)}}
         style={styles.input}
       />
       <TextInput
         placeholder={t("login.passwordPlaceholder")}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(x)=>{setPassword(x)}}
         secureTextEntry
         style={styles.input}
       />
