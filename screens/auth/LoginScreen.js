@@ -15,15 +15,15 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const { login } = useAuth();
   const { t } = useTranslation();
   
-  useFocusEffect(
-    useCallback(() => {
-      if (route.params?.toastMessage) {
-        toastRef.current.success(route.params.toastMessage);
-        route.params.toastMessage=null;
-      }
-    }, [route.params])
-  );
-  
+useFocusEffect(
+  useCallback(() => {
+    if (route.params?.toastMessage) {
+      toastRef.current.success(route.params.toastMessage);
+      route.params.toastMessage = null; // Reset the message
+    }
+  }, [route.params?.toastMessage]) // Depend only on the specific value
+);
+
   const handleLogin = async () => {
     const result = await apiLogin(email, password,t);
     if (result.success) {
