@@ -4,10 +4,10 @@ import { login as apiLogin } from '../../api/Authentication'; // Ensure this pat
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
 import { useRoute,useFocusEffect } from '@react-navigation/native';
-import { AuthProvider, useAuth } from '../../general/AuthContext';
+import { useAuth } from '../../general/AuthContext';
 import {useTranslation} from 'react-i18next'
 
-const LoginScreen = ({ navigation, setIsLoggedIn }) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toastRef = useRef();
