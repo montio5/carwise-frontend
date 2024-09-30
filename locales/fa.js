@@ -3,7 +3,7 @@ const fa = {
     errorFindingMileage: "قادر به تشخیص مسافت پیموده شده از تصویر نیستیم. لطفاً دوباره تلاش کنید.",
     imageNotSelected: "هیچ تصویری انتخاب نشد. لطفاً دوباره تلاش کنید.",
     cars: 'خودرو ها',
-editProfile : "ویرایش پروفایل",
+    editProfile : "ویرایش پروفایل",
     loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
     savedSuccessfully:"با موفقیت ثبت شد",

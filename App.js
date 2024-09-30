@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Alert,TouchableOpacity } from 'react-native';
 import { deleteUserCar, deleteCustomFieldCar } from './api/UserCar';
@@ -31,7 +31,8 @@ import {
   setupNotificationListener 
 } from './general/notification';
 import {useTranslation} from 'react-i18next';
-
+import OnboardingScreen from './screens/OnboardingScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
@@ -222,6 +223,39 @@ return    (
 
 const App = () => {
   const { isLoggedIn } = useAuth(); // Hook to check if the user is authenticated
+  const [showOnboarding, setShowOnboarding] = useState(null); // Track onboarding state
+
+
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        // ? for test onboarding
+        // await AsyncStorage.removeItem('hasCompletedOnboarding'); 
+        const hasCompletedOnboarding = await AsyncStorage.getItem('hasCompletedOnboarding');
+        if (hasCompletedOnboarding === null) {
+          setShowOnboarding(true); // Show onboarding if no flag is found
+        } else {
+          setShowOnboarding(false); // Skip onboarding if the flag is found
+        }
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  const handleFinishOnboarding = async () => {
+    try {
+      await AsyncStorage.setItem('hasCompletedOnboarding', 'true'); 
+      setShowOnboarding(false);
+    } catch (error) {
+      console.error('Error setting onboarding completion flag:', error);
+    }
+  };
+    useEffect(() => {
+    configureNotificationHandler(); // Configure notifications
+  }, []);
 
   useEffect(() => {// Configure the notification handler to display notifications in the foreground
     configureNotificationHandler();
@@ -242,7 +276,15 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <MainStackScreens /> : <AuthStackScreens />}
+      {showOnboarding && !isLoggedIn && (
+        <OnboardingScreen onFinish={handleFinishOnboarding} />
+      ) }
+    {isLoggedIn  && (
+        <MainStackScreens />
+      ) }
+      {!isLoggedIn && !showOnboarding  && (
+        <AuthStackScreens />
+      )}
     </NavigationContainer>
   );
 };
