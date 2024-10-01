@@ -43,7 +43,6 @@ const AuthStackScreens = () => {
   const { t } = useTranslation();
 
 return  (
-
   <AuthStack.Navigator screenOptions={{
     headerTitleAlign: 'center',
     headerTintColor: 'black',}}>
@@ -71,7 +70,8 @@ return(
   </SettingStack.Navigator>
 );}
 
-const confirmDeletion = (title, message, onDelete) => {
+const confirmDeletion = (t,title, message, onDelete) => {
+
   Alert.alert(
     title,
     message,
@@ -128,7 +128,7 @@ const CarStackScreens = () => {
       title: route.params.customField?.name || t("mainStack.CustomFieldList"),
       headerRight: () => route.params.customField && (
         <Icon.Button name="trash" size={24} color="gray" backgroundColor="transparent" onPress={() => {
-          confirmDeletion(
+          confirmDeletion(t,
             t("mainStack.deleteCustomFieldTitle"),
             t("mainStack.deleteQuestionText"),
             () => {
@@ -147,6 +147,7 @@ const CarStackScreens = () => {
       headerRight: () => route.params.car && (
         <Icon.Button name="trash" size={24} color="gray" backgroundColor="transparent" onPress={() => {
           confirmDeletion(
+            t,
             t("mainStack.deleteCarTitle"),
             t("mainStack.deleteQuestionText"),
             () => {
