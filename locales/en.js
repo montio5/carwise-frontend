@@ -69,6 +69,10 @@ const en = {
     dateBase: "Based on date",
     mileageBase: "Based on mileage",
     selectDateText: 'Select date',
+    status:"Importance level ",
+    statusInformation:"Informational",
+    statusMedium:"Medium",
+    statusSerious:"Serious",
   },
   carDetialScreenStrings: {
     loadingText: 'Loading...',

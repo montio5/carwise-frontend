@@ -67,8 +67,11 @@ const fa = {
       lastChangedDate: " آخرین تاریخ تعویض:",
       dateBase :"بر اساس تاریخ",
       mileageBase :"بر اساس مسافت",
-
       selectDateText: 'تاریخ را انتخاب کنید',
+      status:'میزان اهمیت',
+      statusInformation:"کم اهمیت",
+      statusMedium:"معمولی",
+      statusSerious:"ضروری"
     },
     carDetialScreenStrings: {
       loadingText: 'در حال بارگذاری...',
