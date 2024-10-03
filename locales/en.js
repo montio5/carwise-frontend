@@ -80,6 +80,8 @@ const en = {
     overdue: "Overdue",
     orangeStatus: "Near due date",
     redStatus: "Due",
+    deleteCar:"Delete car"
+
   },
   addEditCarInfoFirstScreenStrings: {
     namePlaceholder: 'Name',

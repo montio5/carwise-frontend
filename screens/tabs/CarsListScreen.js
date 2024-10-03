@@ -67,6 +67,7 @@ const CarsListScreen = ({ route }) => {
         <Text></Text>
         <Text style={styles.carName}>{item.name}</Text>
         <Text style={styles.carName}>{item.mileage}</Text>
+        <Text style={styles.carName}>{item.car_mileage_update_date}</Text>
 
       </View>
     </TouchableOpacity>

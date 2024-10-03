@@ -7,8 +7,6 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
-  Animated,
-  Easing,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
@@ -16,7 +14,7 @@ import { getCarDashboard } from '../api/CarSetup';
 import FormattedNumber from '../general/textNumber';
 import Toast from '../general/Toast';
 import { ChartWithDate, ChartWithDateOnly, ChartWithPercentageOnly } from '../general/ChartComponents';
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 
 const CarDetailScreen = () => {
   const navigation = useNavigation();
@@ -29,10 +27,6 @@ const CarDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  
-  // Dropdown Animation State
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownAnimation = useRef(new Animated.Value(0)).current;
   const { t } = useTranslation();
 
   const onRefresh = async () => {
@@ -73,13 +67,13 @@ const CarDetailScreen = () => {
     }
   };
 
-const getColorForPct = (pct) => {
-  if (pct === 'overdue') return { color: '#FF3737', description: t("carDetialScreenStrings.overdue") }; // Red for overdue
-  if (pct < 50) return { color: '#34C759', description: '' }; // Green for good condition
-  if (pct < 90) return { color: 'gray', description: '' }; // Gray for neutral
-  if (pct <= 95) return { color: '#FFC107', description: t("carDetialScreenStrings.orangeStatus") }; // Orange for warning
-  if (pct > 95) return { color: '#FF3737', description: t("carDetialScreenStrings.redStatus") }; // Red for critical
-};
+  const getColorForPct = (pct) => {
+    if (pct === 'overdue') return { color: '#FF3737', description: t("carDetialScreenStrings.overdue") }; // Red for overdue
+    if (pct < 50) return { color: '#34C759', description: '' }; // Green for good condition
+    if (pct < 90) return { color: 'gray', description: '' }; // Gray for neutral
+    if (pct <= 95) return { color: '#FFC107', description: t("carDetialScreenStrings.orangeStatus") }; // Orange for warning
+    if (pct > 95) return { color: '#FF3737', description: t("carDetialScreenStrings.redStatus") }; // Red for critical
+  };
 
   const goToCustomFieldScreen = () => {
     navigation.navigate('CustomFieldList', { car: car });
@@ -97,32 +91,6 @@ const getColorForPct = (pct) => {
     navigation.navigate('UpdateCarToolScreen', { car: car });
   };
 
-  // Function to toggle dropdown
-  const toggleDropdown = () => {
-    if (isDropdownOpen) {
-      Animated.timing(dropdownAnimation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-        easing: Easing.ease,
-      }).start(() => setIsDropdownOpen(false));
-    } else {
-      setIsDropdownOpen(true);
-      Animated.timing(dropdownAnimation, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: false,
-        easing: Easing.ease,
-      }).start();
-    }
-  };
-
-  // Dropdown style interpolation
-  const dropdownHeight = dropdownAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 100], // Height of dropdown when opened (adjust as needed)
-  });
-
   return (
     <View style={styles.container}>
       <Toast ref={toastRef} />
@@ -130,40 +98,12 @@ const getColorForPct = (pct) => {
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        {/* Hamburger Menu only after loading */}
-        {!loading && (
-          <View style={styles.topLeftContainer}>
-            <TouchableOpacity onPress={toggleDropdown} style={styles.hamburgerButton}>
-              <Ionicons name="menu" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        )}
-
         {!loading && (
           <FormattedNumber
             number={mileage}
             suffix={""}
             style={styles.mileageText}
           />
-        )}
-
-        {/* Animated Dropdown Menu */}
-        {isDropdownOpen && (
-          <Animated.View style={[styles.dropdownMenu, { height: dropdownHeight }]}>
-            <TouchableOpacity onPress={goToCarSetupScreen} style={styles.dropdownItem}>
-              <Ionicons name="settings-outline" size={20} color="black" />
-              <Text style={styles.dropdownText}>
-                {t("carDetialScreenStrings.carSetupButton")}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={goToEditCarInfoScreen} style={styles.dropdownItem}>
-              <Ionicons name="create-outline" size={20} color="black" />
-              <Text style={styles.dropdownText}>
-                {t("carDetialScreenStrings.editInfoButton")}
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
         )}
 
         <View style={styles.buttonRow}>
@@ -249,43 +189,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#F6F6F6',
-  },
-  topLeftContainer: {
-    position: 'absolute',
-    top: 5,
-    left: 20,
-    zIndex: 1,
-  },
-  hamburgerButton: {
-    padding: 5, // Reduced padding
-    borderRadius: 5, // Removed background color
-  },
-  dropdownMenu: {
-      position: 'absolute',   // Ensure the dropdown overlays other content
-      top: 50,                // Position it below the hamburger (adjust as needed)
-      left: 20,              // Align it with the right side (adjust based on your needs)
-      backgroundColor: '#F6F6F6',
-      borderRadius: 5,
-      zIndex: 1000,           // High z-index to ensure it appears above other elements
-      width: 'auto',          // Auto width to fit content
-      minWidth: 150,          // Set a minimum width to match the largest button
-      shadowColor: '#000',    // Add shadow for better visibility
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 5,
-      elevation: 5,           // Android elevation for shadow
-  },
-  dropdownItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomColor: '#ccc',
-    // borderBottomWidth: 1,
-  },
-  dropdownText: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: '#333',
   },
   buttonRow: {
     flexDirection: 'row',

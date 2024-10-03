@@ -50,7 +50,9 @@ const NotificationScreen = () => {
       case 'Medium':
         return 'orange';
       case 'Informational':
-        return 'blue';
+        return '#1DFFA9';
+      case 'Information':
+        return '#1DFFA9';  
       case 'Custom':
         return 'gray';
       default:
@@ -65,6 +67,8 @@ const NotificationScreen = () => {
       case 'Medium':
         return 'warning';
       case 'Informational':
+        return 'information-circle';
+      case 'Information':
         return 'information-circle';
       case 'Custom':
         return 'cog-outline';

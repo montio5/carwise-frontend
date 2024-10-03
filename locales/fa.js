@@ -80,7 +80,7 @@ const fa = {
       overdue:"زمان تعویض گذشته است",
       orangeStatus:"نزدیک به زمان تعویض",
       redStatus:"زمان تعویض",
-
+deleteCar:"حذف خودرو"
 
     },
     addEditCarInfoFirstScreenStrings: {

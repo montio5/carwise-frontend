@@ -21,6 +21,8 @@ export const fetchUserCars = async () => {
     const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/`, { headers });
     const data = await response.json();
+    console.log("_____________________",data)
+
     return data;
   } catch (error) {
     console.error('Error fetching user cars:', error);
@@ -28,7 +30,7 @@ export const fetchUserCars = async () => {
   }
 };
 
-// ______________ Get User Car ____________
+// ______________ Get User Car Detail ____________
 export const getUserCar = async (carUniqueKey) => {
   try {
     const headers = await getHeaders();
@@ -73,7 +75,7 @@ export const updateUserCar = async (carUniqueKey, newData,t) => {
 };
 
 // ______________ Create User Car ____________
-export const createUserCar = async (newData,t) => {
+export const createUserCar = async (newData, t) => {
   try {
     const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/user-cars/new/`, {
@@ -87,13 +89,25 @@ export const createUserCar = async (newData,t) => {
     const responseText = await response.text();
     if (!response.ok) {
       let errorMessage = t("addEditCarInfoSecondScreenStrings.errorInSavingCar");
+      console.log("_____________", response);
+
       try {
         const errorData = JSON.parse(responseText);
-        let detail = errorData.detail;
-        if (detail) {
+        const detail = errorData.detail;
+        console.log("_____________", detail);
+
+        // Check if 'non_field_errors' exists
+        if (detail && detail["non_field_errors"] && detail["non_field_errors"][0] && detail["non_field_errors"][0].msg) {
+          errorMessage = detail["non_field_errors"][0].msg;
+        }
+        // Otherwise, check for 'mileage_info' error
+        else if (detail && detail["mileage_info"] && detail["mileage_info"][0] && detail["mileage_info"][0].msg) {
           errorMessage = detail["mileage_info"][0].msg;
         }
-      } catch (parseError) {}
+      } catch (parseError) {
+        console.error("Error parsing error response:", parseError);
+      }
+
       throw new Error(errorMessage);
     }
 

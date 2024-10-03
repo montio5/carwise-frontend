@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Alert,TouchableOpacity } from 'react-native';
+import { Alert,TouchableOpacity,View, Text } from 'react-native';
 import { deleteUserCar, deleteCustomFieldCar } from './api/UserCar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -33,6 +33,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import OnboardingScreen from './screens/OnboardingScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Menu, Divider, Provider } from 'react-native-paper';
 
 const AuthStack = createStackNavigator();
 const CarStack = createStackNavigator();
@@ -90,91 +91,193 @@ const confirmDeletion = (t,title, message, onDelete) => {
   );
 };
 
+
 const CarStackScreens = () => {
     const { t } = useTranslation();
+    const [visible, setVisible] = useState(false);
 
-  return(
-  <CarStack.Navigator screenOptions={{
-    headerTitleAlign: 'center',
-    headerTintColor: 'black',
-  }}>
-      <CarStack.Screen 
-        name="Home" 
-        component={CarsListScreen} 
-        options={({ navigation }) => ({
-          title: t("mainStack.Home"),
-          headerRight: () => (
-            <TouchableOpacity
-              style={{ padding: 10 }} // Adjust padding if needed
-              onPress={() => navigation.navigate('AddEditCarInfoFirstScreen', { car: null })}
-            >
-              <Icon name="add" size={24} color="#000" />
-            </TouchableOpacity>
-          ),
-        })} 
-      />
-    <CarStack.Screen name="CustomFieldList" component={CustomFiledListScreen} options={({ navigation, route }) => ({
-      title: t("mainStack.CustomFieldList"),
-      headerRight: () => (
-        <TouchableOpacity
-        style={{ padding: 10 }} // Adjust padding if needed
-        onPress={() => navigation.navigate('CustomField', { car: route.params.car })}
+    const openMenu = () => setVisible(true);
+    const closeMenu = () => setVisible(false);
+
+    return (
+        <Provider>
+            <CarStack.Navigator screenOptions={{
+                headerTitleAlign: 'center',
+                headerTintColor: 'black',
+            }}>
+                <CarStack.Screen
+                    name="Home"
+                    component={CarsListScreen}
+                    options={({ navigation }) => ({
+                        title: t("mainStack.Home"),
+                        headerRight: () => (
+                            <TouchableOpacity
+                                style={{ padding: 10 }} // Adjust padding if needed
+                                onPress={() => navigation.navigate('AddEditCarInfoFirstScreen', { car: null })}
+                            >
+                                <Icon name="add" size={24} color="#000" />
+                            </TouchableOpacity>
+                        ),
+                    })}
+                />
+                <CarStack.Screen
+                    name="CustomFieldList"
+                    component={CustomFiledListScreen}
+                    options={({ navigation, route }) => ({
+                        title: t("mainStack.CustomFieldList"),
+                        headerRight: () => (
+                            <TouchableOpacity
+                                style={{ padding: 10 }} // Adjust padding if needed
+                                onPress={() => navigation.navigate('CustomField', { car: route.params.car })}
+                            >
+                                <Icon name="add" size={24} color="#000" />
+                            </TouchableOpacity>
+                        ),
+                    })}
+                />
+                <CarStack.Screen
+                    name="CustomField"
+                    component={CustomFieldScreen}
+                    options={({ route, navigation }) => ({
+                        title: route.params.customField?.name || t("mainStack.CustomFieldList"),
+                        headerRight: () => route.params.customField && (
+                            <Icon.Button
+                                name="trash"
+                                size={24}
+                                color="gray"
+                                backgroundColor="transparent"
+                                onPress={() => {
+                                    confirmDeletion(t,
+                                        t("mainStack.deleteCustomFieldTitle"),
+                                        t("mainStack.deleteQuestionText"),
+                                        () => {
+                                            deleteCustomFieldCar(route.params.car.unique_key, route.params.customField.id).then(() => {
+                                                navigation.navigate('CustomFieldList', { refresh: true, car: route.params.car });
+                                            }).catch((error) => {
+                                                console.error('Error deleting customField:', error);
+                                            });
+                                        },
+                                    );
+                                }}
+                            />
+                        ),
+                    })}
+                />
+
+                  <CarStack.Screen
+  name="CarScreen"
+  component={CarScreen}
+  options={({ route, navigation }) => ({
+    title: route.params?.car?.name || 'Car',
+    headerRight: () => (
+      <Menu
+        style={{ marginTop: 80 }} // Add this line to set the margin
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <TouchableOpacity onPress={openMenu} style={{ padding: 10 }}>
+            <Icon name="menu" size={24} color="#000" />
+          </TouchableOpacity>
+        }
+          contentStyle={{ backgroundColor: 'white' }} // Set the background color
       >
-        <Icon name="add" size={24} color="#000" />
-      </TouchableOpacity>
-      ),
-    })} />
-    <CarStack.Screen name="CustomField" component={CustomFieldScreen} options={({ route, navigation }) => ({
-      title: route.params.customField?.name || t("mainStack.CustomFieldList"),
-      headerRight: () => route.params.customField && (
-        <Icon.Button name="trash" size={24} color="gray" backgroundColor="transparent" onPress={() => {
-          confirmDeletion(t,
-            t("mainStack.deleteCustomFieldTitle"),
-            t("mainStack.deleteQuestionText"),
-            () => {
-              deleteCustomFieldCar(route.params.car.unique_key, route.params.customField.id).then(() => {
-                navigation.navigate('CustomFieldList', { refresh: true, car: route.params.car });
-              }).catch((error) => {
-                console.error('Error deleting customField:', error);
-              });
-            },
-          );
-        }} />
-      ),
-    })} />
-    <CarStack.Screen name="CarScreen" component={CarScreen} options={({ route, navigation }) => ({
-      title: route.params?.car?.name || 'Car',
-      headerRight: () => route.params.car && (
-        <Icon.Button name="trash" size={24} color="gray" backgroundColor="transparent" onPress={() => {
-          confirmDeletion(
-            t,
-            t("mainStack.deleteCarTitle"),
-            t("mainStack.deleteQuestionText"),
-            () => {
-              deleteUserCar(route.params.car.unique_key).then(() => {
-                navigation.navigate('Home', { refresh: true });
-              }).catch((error) => {
-                console.error('Error deleting car:', error);
-              });
-            },
-          );
-        }} />
-      ),
-    })} />
-    <CarStack.Screen name="AddEditCarInfoFirstScreen" component={AddEditCarInfoFirstScreen} options={({ route }) => ({
-      title: route.params?.car?.name || t("mainStack.AddingCar"),
-    })} />
-    <CarStack.Screen name="AddEditCarInfoSecondScreen" component={AddEditCarInfoSecondScreen} options={({ route }) => ({
-      title: route.params?.car?.name || 'Car',
-    })} />
-    <CarStack.Screen name="CarSetupScreen" component={CarSetupScreen} options={({ route }) => ({
-      title: route.params.car.name || 'Car',
-    })} />
-    <CarStack.Screen name="UpdateCarToolScreen" component={UpdateCarToolScreen} options={({ route }) => ({
-      title: route.params.car.name || 'Car',
-    })} />
-  </CarStack.Navigator>
-);}
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+          }}
+          onPress={() => {
+            closeMenu();
+            navigation.navigate('CarSetupScreen', { car: route.params.car });
+          }}
+        >
+          <Ionicons name="settings-outline" size={24} color="#000" style={{ marginRight: 10 }} />
+          <Text>{t("carDetialScreenStrings.carSetupButton")}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+          }}
+          onPress={() => {
+            closeMenu();
+            navigation.navigate('AddEditCarInfoFirstScreen', { car: route.params.car });
+          }}
+        >
+          <Ionicons name="create-outline" size={24} color="#000" style={{ marginRight: 10 }} />
+          <Text>{t("carDetialScreenStrings.editInfoButton")}</Text>
+        </TouchableOpacity>
+
+        <Divider />
+
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+          }}
+          onPress={() => {
+            closeMenu();
+            confirmDeletion(
+              t,
+              t("mainStack.deleteCarTitle"),
+              t("mainStack.deleteQuestionText"),
+              () => {
+                deleteUserCar(route.params.car.unique_key)
+                  .then(() => {
+                    navigation.navigate('Home', { refresh: true });
+                  })
+                  .catch((error) => {
+                    console.error('Error deleting car:', error);
+                  });
+              }
+            );
+          }}
+        >
+          <Ionicons name="trash-outline" size={24} color="red" style={{ marginRight: 10 }} />
+          <Text style={{ color: 'red' }}>{t("carDetialScreenStrings.deleteCar")}</Text>
+        </TouchableOpacity>
+      </Menu>
+    ),
+  })}
+/>
+
+
+                <CarStack.Screen
+                    name="AddEditCarInfoFirstScreen"
+                    component={AddEditCarInfoFirstScreen}
+                    options={({ route }) => ({
+                        title: route.params?.car?.name || t("mainStack.AddingCar"),
+                    })}
+                />
+                <CarStack.Screen
+                    name="AddEditCarInfoSecondScreen"
+                    component={AddEditCarInfoSecondScreen}
+                    options={({ route }) => ({
+                        title: route.params?.car?.name || 'Car',
+                    })}
+                />
+                <CarStack.Screen
+                    name="CarSetupScreen"
+                    component={CarSetupScreen}
+                    options={({ route }) => ({
+                        title: route.params.car.name || 'Car',
+                    })}
+                />
+                <CarStack.Screen
+                    name="UpdateCarToolScreen"
+                    component={UpdateCarToolScreen}
+                    options={({ route }) => ({
+                        title: route.params.car.name || 'Car',
+                    })}
+                />
+            </CarStack.Navigator>
+        </Provider>
+    );
+}
 
 
 const MainStackScreens = () => {

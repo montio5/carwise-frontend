@@ -111,14 +111,13 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-            <InputComponent
-        placeholder={t("addEditCarInfoFirstScreenStrings.namePlaceholder")}
-        value={carData.name.toString()}
-        isNumeric={true}
-        onChangeText={(text) => handleInputChange('name', text)}
-        style={styles.input}
-      />
-
+    <InputComponent
+      placeholder={t("addEditCarInfoFirstScreenStrings.namePlaceholder")}
+      value={carData.name.toString()}
+      isNumeric={false}
+      onChange={(text) => handleInputChange('name', text)} // Use `onChange` instead of `onChangeText`
+      style={styles.input}
+    />
       <Picker
         selectedValue={selectedCompany}
         onValueChange={(itemValue) => handleCompanyChange(itemValue)}
@@ -144,13 +143,13 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
           <Picker.Item key={model.id} label={model.name} value={model.id} />
         ))}
       </Picker>
-      <InputComponent
-        placeholder={t("addEditCarInfoFirstScreenStrings.mileagePlaceholder")}
-        value={carData.mileage_info.mileage}
-        isNumeric={true}
-        onChange={(text) => handleInputChange('mileage', text, true)}
-        style={styles.input}
-      />
+    <InputComponent
+      placeholder={t("addEditCarInfoFirstScreenStrings.mileagePlaceholder")}
+      value={carData.mileage_info.mileage}
+      isNumeric={true}
+      onChange={(text) => handleInputChange('mileage', text, true)} // Use `onChange` instead of `onChangeText`
+      style={styles.input}
+    />
       <Button title={t("addEditCarInfoFirstScreenStrings.nextButton")} onPress={handleNext} disabled={isButtonDisabled} />
     </View>
   );
