@@ -1,6 +1,6 @@
 import React, { useState,useCallback,useRef } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { ResetPassword } from '../../api/Authentication';
+import { resetPassword } from '../../api/Authentication';
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
 import { useFocusEffect } from '@react-navigation/native';
@@ -33,7 +33,7 @@ const ResetPasswordScreen = ({ navigation,route }) => {
     }
 
     try {
-      const response = await ResetPassword({ code:code, new_password: newPassword , confirm_new_password: confirmPassword },t);
+      const response = await resetPassword({ code:code, new_password: newPassword , confirm_new_password: confirmPassword },t);
       navigation.navigate('Login' ,{toastMessage:t("resetPasswordProcess.passwordResetSuccess")});
     } catch (error) {
       toastRef.current.error(error.message);

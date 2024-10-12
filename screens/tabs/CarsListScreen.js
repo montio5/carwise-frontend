@@ -1,4 +1,3 @@
-// CarsListScreen.js
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
@@ -73,7 +72,6 @@ const CarsListScreen = ({ route }) => {
         <View style={[styles.textRow, isRTL && styles.rtlRow]}>
           <Ionicons name="person" size={18} color="#4B9CD3" style={styles.iconStyle} />
           <Text style={styles.carName}>{item.name}</Text>
-          {/* {isRTL && <Ionicons name="person" size={18} color="#666" style={styles.iconStyle} />} */}
         </View>
 
         {/* Car Mileage (with speedometer icon) */}

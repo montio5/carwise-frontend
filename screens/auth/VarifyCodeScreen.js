@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { varifyCode } from '../../api/Authentication';
+import { verifyCode } from '../../api/Authentication';
 import CustomButton from '../../general/customButtonComponent'; // Ensure this path is correct
 import Toast from '../../general/Toast';  // Ensure this path is correct
 import { useFocusEffect } from '@react-navigation/native';
@@ -37,7 +37,7 @@ const VerifyCodeScreen = ({ navigation, route }) => {
     }
 
     try {
-      const response = await varifyCode({ code },t);
+      const response = await verifyCode({ code },t);
       // Navigate to ResetPassword on successful verification
       navigation.navigate('ResetPassword', { code, toastMessage: t("resetPasswordProcess.emailSubmitSuccess") });
     } catch (error) {
