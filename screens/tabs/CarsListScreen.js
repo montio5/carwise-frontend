@@ -8,6 +8,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
 import Toast from '../../general/Toast';
 import { useTranslation } from 'react-i18next';
+import FormattedNumber from '../../general/textNumber';
+
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
@@ -77,7 +79,11 @@ const CarsListScreen = ({ route }) => {
         {/* Car Mileage (with speedometer icon) */}
         <View style={[styles.textRow, isRTL && styles.rtlRow]}>
           <Ionicons name="speedometer" size={18} color="#4CAF50" style={styles.iconStyle} />
-          <Text style={styles.carName}>{item.mileage}</Text>
+                    <FormattedNumber
+            number={item.mileage}
+            suffix={""}
+            style={styles.carName}
+          />
         </View>
 
         {/* Car Mileage Update Date (with calendar icon) */}
