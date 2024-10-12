@@ -1,20 +1,21 @@
 // CarsListScreen.js
 
-import React, { useState, useEffect, useCallback,useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { fetchUserCars } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
 import Toast from '../../general/Toast';
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const toastRef = useRef(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'fa'; // Check if the language is Farsi (RTL)
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -26,10 +27,9 @@ const CarsListScreen = ({ route }) => {
     try {
       const data = await fetchUserCars();
       setUserCars(data);
-
     } catch (error) {
       console.error('Error fetching user cars:', error);
-      toastRef.current.error(t("carsListScreenStrings.errorFetchingCars"));
+      toastRef.current.error(t('carsListScreenStrings.errorFetchingCars'));
     }
   };
 
@@ -40,9 +40,8 @@ const CarsListScreen = ({ route }) => {
       }
       if (route.params?.toastMessage) {
         toastRef.current.success(route.params.toastMessage);
-        route.params.toastMessage=null;
+        route.params.toastMessage = null;
       }
-
     }, [route.params])
   );
 
@@ -60,15 +59,32 @@ const CarsListScreen = ({ route }) => {
         <Ionicons name="car-sport" size={40} color={getCompanyColor(item.car_company)} />
       </View>
       <View style={styles.textContainer}>
+        {/* Car Company */}
         <Text style={[styles.carCompany, { color: getCompanyColor(item.car_company) }]}>
           {item.car_company}
         </Text>
-        <Text style={styles.carName}>{item.car_model}</Text>
-        <Text></Text>
-        <Text style={styles.carName}>{item.name}</Text>
-        <Text style={styles.carName}>{item.mileage}</Text>
-        <Text style={styles.carName}>{item.car_mileage_update_date}</Text>
 
+        {/* Car Model */}
+        <Text style={styles.carModel}>{item.car_model}</Text>
+
+        {/* Car Name (with person icon) */}
+        <View style={[styles.textRow, isRTL && styles.rtlRow]}>
+          <Ionicons name="person" size={18} color="#4B9CD3" style={styles.iconStyle} />
+          <Text style={styles.carName}>{item.name}</Text>
+          {/* {isRTL && <Ionicons name="person" size={18} color="#666" style={styles.iconStyle} />} */}
+        </View>
+
+        {/* Car Mileage (with speedometer icon) */}
+        <View style={[styles.textRow, isRTL && styles.rtlRow]}>
+          <Ionicons name="speedometer" size={18} color="#4CAF50" style={styles.iconStyle} />
+          <Text style={styles.carName}>{item.mileage}</Text>
+        </View>
+
+        {/* Car Mileage Update Date (with calendar icon) */}
+        <View style={[styles.textRow, isRTL && styles.rtlRow]}>
+           <Ionicons name="calendar" size={18} color="#FFA500" style={styles.iconStyle} />
+          <Text style={styles.carName}>{item.car_mileage_update_date}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -85,9 +101,7 @@ const CarsListScreen = ({ route }) => {
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         numColumns={1}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         contentContainerStyle={styles.listContent}
       />
     </View>
@@ -128,9 +142,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  carModel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 14,
+  },
   carName: {
     fontSize: 14,
     color: '#666',
+  },
+  textRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  rtlRow: {
+    flexDirection: 'row-reverse', // Full reverse for RTL 
+    marginRight:1
+  },
+  iconStyle: {
+    marginHorizontal: 8, // Space between icon and text
   },
 });
 

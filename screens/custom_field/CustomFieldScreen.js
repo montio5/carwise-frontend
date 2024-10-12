@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Modal, TouchableOpacity, I18nManager } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createCustomField, getCustomField, updateCustomField } from '../../api/UserCar';
 import CustomButton from '../../general/customButtonComponent';
@@ -19,18 +19,18 @@ const CustomFieldScreen = ({ route, navigation }) => {
   // Determine language and layout direction
   const [isRTL, setIsRTL] = useState(false);
 
-  useEffect(() => {
-    const setLayoutDirection = async () => {
-      const language = await AsyncStorage.getItem('appLanguage') || 'fa';
-      const isLanguageRTL = language === 'fa';
+  // useEffect(() => {
+  //   const setLayoutDirection = async () => {
+  //     const language = await AsyncStorage.getItem('appLanguage') || 'fa';
+  //     const isLanguageRTL = language === 'fa';
       
-      setIsRTL(isLanguageRTL);
+  //     setIsRTL(isLanguageRTL); 
       
-      I18nManager.forceRTL(isLanguageRTL); // Set the layout direction
-    };
+  //     I18nManager.forceRTL(isLanguageRTL); // Set the layout direction
+  //   };
     
-    setLayoutDirection();
-  }, []);
+  //   setLayoutDirection();
+  // }, []);
 
   // Status options with icons
 const STATUS_OPTIONS = [
@@ -179,6 +179,7 @@ const STATUS_OPTIONS = [
             placeholder={t("customFieldScreenStrings.mileagePlaceholder")}
             label={t("customFieldScreenStrings.mileagePerChange")}
             onChange={setMileagePerChange}
+
           />
           <InputComponent
             isNumeric={true}
@@ -186,6 +187,8 @@ const STATUS_OPTIONS = [
             placeholder={t("customFieldScreenStrings.lastMileagePlaceholder")}
             label={t("customFieldScreenStrings.lastMileageChanged")}
             onChange={setLastMileageChanged}
+            enableCamera ={true}
+
           />
         </View>
 
