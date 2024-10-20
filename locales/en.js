@@ -5,6 +5,8 @@ const en = {
     imageNotSelected:'No image was selected. Please try again.',
     cars: 'Cars',
     editProfile :"Edit Profile",
+    emptyCars:" please add your cars ",
+    emptyCustomField : "No custom fields available",
 // 
   loadingText: 'Loading...',
   ContentType: 'application/json',

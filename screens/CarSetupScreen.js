@@ -66,7 +66,7 @@ const CarSetupScreen = ({ route, navigation }) => {
         {carData &&
           Object.keys(carData).map((key) => {
             if (!excludedFields.includes(key)) {
-              const toolName = getToolName(key);
+              const toolName =  getToolName(key, t);
 
               return (
                 <View key={key} style={styles.inputContainer}>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { fetchUserCars } from '../../api/UserCar';
@@ -8,7 +7,6 @@ import carCompanyColors from '../../general/colors';
 import Toast from '../../general/Toast';
 import { useTranslation } from 'react-i18next';
 import FormattedNumber from '../../general/textNumber';
-
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
@@ -60,33 +58,18 @@ const CarsListScreen = ({ route }) => {
         <Ionicons name="car-sport" size={40} color={getCompanyColor(item.car_company)} />
       </View>
       <View style={styles.textContainer}>
-        {/* Car Company */}
-        <Text style={[styles.carCompany, { color: getCompanyColor(item.car_company) }]}>
-          {item.car_company}
-        </Text>
-
-        {/* Car Model */}
+        <Text style={[styles.carCompany, { color: getCompanyColor(item.car_company) }]}>{item.car_company}</Text>
         <Text style={styles.carModel}>{item.car_model}</Text>
-
-        {/* Car Name (with person icon) */}
         <View style={[styles.textRow, isRTL && styles.rtlRow]}>
           <Ionicons name="person" size={18} color="#4B9CD3" style={styles.iconStyle} />
           <Text style={styles.carName}>{item.name}</Text>
         </View>
-
-        {/* Car Mileage (with speedometer icon) */}
         <View style={[styles.textRow, isRTL && styles.rtlRow]}>
           <Ionicons name="speedometer" size={18} color="#4CAF50" style={styles.iconStyle} />
-                    <FormattedNumber
-            number={item.mileage}
-            suffix={""}
-            style={styles.carName}
-          />
+          <FormattedNumber number={item.mileage} suffix={""} style={styles.carName} />
         </View>
-
-        {/* Car Mileage Update Date (with calendar icon) */}
         <View style={[styles.textRow, isRTL && styles.rtlRow]}>
-           <Ionicons name="calendar" size={18} color="#FFA500" style={styles.iconStyle} />
+          <Ionicons name="calendar" size={18} color="#FFA500" style={styles.iconStyle} />
           <Text style={styles.carName}>{item.car_mileage_update_date}</Text>
         </View>
       </View>
@@ -100,14 +83,20 @@ const CarsListScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Toast ref={toastRef} />
-      <FlatList
-        data={userCars}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={1}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        contentContainerStyle={styles.listContent}
-      />
+      {userCars.length === 0 ? ( // Check if there are no cars
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyMessage}>{t('emptyCars')}</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={userCars}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={1}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          contentContainerStyle={styles.listContent}
+        />
+      )}
     </View>
   );
 };
@@ -162,10 +151,19 @@ const styles = StyleSheet.create({
   },
   rtlRow: {
     flexDirection: 'row-reverse', // Full reverse for RTL 
-    marginRight:1
+    marginRight: 1,
   },
   iconStyle: {
     marginHorizontal: 8, // Space between icon and text
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center', // Center the content vertically
+    alignItems: 'center', // Center the content horizontally
+  },
+  emptyMessage: {
+    fontSize: 18,
+    color: '#666',
   },
 });
 

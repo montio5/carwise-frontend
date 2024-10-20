@@ -4,6 +4,7 @@ import { getCustomFieldList } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from '../../general/Toast';
+import { useTranslation } from 'react-i18next';
 
 const CustomFiledListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
@@ -11,6 +12,7 @@ const CustomFiledListScreen = ({ route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const car = route.params.car;
   const toastRef = useRef(null);
+  const { t, i18n } = useTranslation();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -65,17 +67,21 @@ const CustomFiledListScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-                  <Toast ref={toastRef} />
+      <Toast ref={toastRef} />
 
-      <FlatList
-        data={userCars}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={styles.listContent}
-      />
+      {userCars.length === 0 ? ( // Check if there are no custom fields
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyMessage}>{t("emptyCustomField")}</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={userCars}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          contentContainerStyle={styles.listContent}
+        />
+      )}
     </View>
   );
 };
@@ -118,6 +124,15 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 10,
+  },
+    emptyContainer: {
+    flex: 1,
+    justifyContent: 'center', // Center the content vertically
+    alignItems: 'center', // Center the content horizontally
+  },
+    emptyMessage: {
+    fontSize: 18,
+    color: '#666',
   },
 });
 
