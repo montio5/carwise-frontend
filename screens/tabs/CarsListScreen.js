@@ -83,24 +83,20 @@ const CarsListScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Toast ref={toastRef} />
-      {userCars.length === 0 ? ( // Check if there are no cars
-        <View style={styles.emptyContainer}>
+      <FlatList
+        data={userCars}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={1}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        contentContainerStyle={userCars.length === 0 ? styles.emptyContainer : styles.listContent}
+        ListEmptyComponent={() => (
           <Text style={styles.emptyMessage}>{t('emptyCars')}</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={userCars}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={1}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          contentContainerStyle={styles.listContent}
-        />
-      )}
+        )}
+      />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

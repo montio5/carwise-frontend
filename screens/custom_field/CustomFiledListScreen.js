@@ -65,26 +65,22 @@ const CustomFiledListScreen = ({ route }) => {
     </TouchableOpacity>
   );
 
-  return (
-    <View style={styles.container}>
-      <Toast ref={toastRef} />
-
-      {userCars.length === 0 ? ( // Check if there are no custom fields
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyMessage}>{t("emptyCustomField")}</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={userCars}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          contentContainerStyle={styles.listContent}
-        />
+return (
+  <View style={styles.container}>
+    <Toast ref={toastRef} />
+    <FlatList
+      data={userCars}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id.toString()}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      contentContainerStyle={userCars.length === 0 ? styles.emptyContainer : styles.listContent}
+      ListEmptyComponent={() => (
+        <Text style={styles.emptyMessage}>{t("emptyCustomField")}</Text>
       )}
-    </View>
-  );
-};
+    />
+  </View>
+);
+}
 
 const styles = StyleSheet.create({
   container: {
