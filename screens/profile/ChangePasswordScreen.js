@@ -53,6 +53,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             style={styles.input}
             value={currentPassword}
             onChangeText={setCurrentPassword}
+            placeholder={t("profileString.oldPassword")}
             secureTextEntry
           />
         </View>
@@ -62,6 +63,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             style={styles.input}
             value={newPassword}
             onChangeText={setNewPassword}
+            placeholder={t("profileString.newPassword")}
             secureTextEntry
           />
         </View>
@@ -71,6 +73,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             style={styles.input}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
+            placeholder={t("profileString.repeatNewPassword")}
             secureTextEntry
           />
         </View>
