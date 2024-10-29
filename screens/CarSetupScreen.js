@@ -34,14 +34,24 @@ const CarSetupScreen = ({ route, navigation }) => {
     setCarData({ ...carData, [field]: value });
   };
 
-  const handleSubmit = async () => {
-    try {
-      await updateCarSetup(car.unique_key, carData);
-      toastRef.current.success(t("carSetupScreenStrings.successUpdateMessage"));
-    } catch (error) {
-      toastRef.current.error(t("carSetupScreenStrings.errorMessage"));
-    }
-  };
+const handleSubmit = async () => {
+  // Check if any value in carData is equal to 0
+  const invalidFields = Object.keys(carData).filter((key) => carData[key] === 0);
+
+  if (invalidFields.length > 0) {
+    // Show an error message if any field is 0
+    toastRef.current.error(t("carSetupScreenStrings.zeroErrorMessage"));
+    return; // Stop the function from proceeding
+  }
+
+  try {
+    await updateCarSetup(car.unique_key, carData);
+    toastRef.current.success(t("carSetupScreenStrings.successUpdateMessage"));
+  } catch (error) {
+    toastRef.current.error(t("carSetupScreenStrings.errorMessage"));
+  }
+};
+
 
   const handleReset = async () => {
     try {
@@ -71,9 +81,9 @@ const CarSetupScreen = ({ route, navigation }) => {
               return (
                 <View key={key} style={styles.inputContainer}>
                   <InputComponent
-                    isNumeric={true} // or determine if it should be numeric based on the key
+                    isNumeric={true} 
                     value={String(carData[key])}
-                    placeholder={`Enter ${toolName}`}
+                    placeholder={t("enterPlaceholder", { toolName })}
                     label={toolName}
                     onChange={(value) => handleChange(key, Number(value))}
                   />

@@ -58,22 +58,27 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   };
 
   const handleSubmit = async () => {
-    const updatedData = { ...data };
+  const updatedData = { ...data };
 
-    // Update fields based on checked fields and set mileage
-    Object.keys(checkedFields).forEach((field) => {
-      if (checkedFields[field]) {
-        updatedData[field] = mileage;
-      }
-    });
-
-    try {
-      await updateCarMileage(car.unique_key, updatedData,t);
-      navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: t("carSetupScreenStrings.successUpdateMessage") });
-    } catch (error) {
-      toastRef.current.error(error.message);
+  // Update fields based on checked fields and set mileage
+  Object.keys(checkedFields).forEach((field) => {
+    if (checkedFields[field]) {
+      updatedData[field] = mileage;
     }
-  };
+  });
+
+  try {
+    await updateCarMileage(car.unique_key, updatedData);
+    navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: t("carSetupScreenStrings.successUpdateMessage") });
+  } catch (error) {
+    const errorMessage = error.message === "defaultErrorMessage" 
+      ? t("carSetupScreenStrings.errorMessage") 
+      : error.message;
+      
+    toastRef.current.error(errorMessage);
+  }
+};
+
 
   const excludedFields = ['unique_key', 'id', 'created_date', 'hydraulic_fluid_updated_date', 'timing_belt_last_updated_date'];
 

@@ -290,7 +290,7 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
 
     const responseText = await response.text();
     if (!response.ok) {
-      let errorMessage = t("carSetupScreenStrings.errorMessage");
+      let errorMessage = "defaultErrorMessage";
       try {
         const errorData = JSON.parse(responseText);
         let detail = errorData.non_field_errors[0];

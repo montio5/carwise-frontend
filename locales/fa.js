@@ -4,12 +4,14 @@ const fa = {
     imageNotSelected: "هیچ تصویری انتخاب نشد. لطفاً دوباره تلاش کنید.",
     cars: 'خودرو ها',
     emptyCars: "لطفا خودرو های خود را اضافه کنید",
-    emptyCustomField :"فیلد سفارش وجود ندارد",
+    emptyCustomField :"فیلد شخصی وجود ندارد",
     editProfile : "ویرایش پروفایل",
     loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
     savedSuccessfully:"با موفقیت ثبت شد",
     notificationMessage: " به نظر میرسد {item} مورد باید در خودرو {car} به روز رسانی شوند",
+    enterPlaceholder: "مقدار {{toolName}} وارد کنید ",
+
     alert:"هشدار",
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
@@ -29,6 +31,8 @@ const fa = {
       resetErrorMessage: 'بازنشانی تنظیمات خودرو ناموفق بود',
       updateButtonTitle: 'به روزرسانی داده‌ها',
       resetButtonTitle: 'بازنشانی داده‌ها',
+      zeroErrorMessage: 'هیچ فیلدی نمیتواند صفر یا خالی باشد'
+
     },
     settingScreenStrings: {
       loadingText: 'در حال بارگذاری...',

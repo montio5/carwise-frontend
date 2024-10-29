@@ -7,6 +7,7 @@ const en = {
     editProfile :"Edit Profile",
     emptyCars:" please add your cars ",
     emptyCustomField : "No custom fields available",
+    enterPlaceholder: "Enter {{toolName}}",
 // 
   loadingText: 'Loading...',
   ContentType: 'application/json',
@@ -31,6 +32,7 @@ const en = {
     resetErrorMessage: 'Failed to reset car settings',
     updateButtonTitle: 'Update Data',
     resetButtonTitle: 'Reset Data',
+    zeroErrorMessage: 'No field can be zero or empty'
   },
   settingScreenStrings: {
     loadingText: 'Loading...',
