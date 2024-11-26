@@ -79,14 +79,6 @@ const CarDetailScreen = () => {
     navigation.navigate('CustomFieldList', { car: car });
   };
 
-  const goToCarSetupScreen = () => {
-    navigation.navigate('CarSetupScreen', { car: car });
-  };
-
-  const goToEditCarInfoScreen = () => {
-    navigation.navigate('AddEditCarInfoFirstScreen', { car: car });
-  };
-
   const goToUpdateCarToolScreen = () => {
     navigation.navigate('UpdateCarToolScreen', { car: car });
   };

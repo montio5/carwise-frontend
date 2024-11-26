@@ -24,6 +24,7 @@ import CarSetupScreen from './screens/CarSetupScreen';
 import UpdateCarToolScreen from './screens/UpdateCarToolScreen';
 import EditProfileScreen from './screens/profile/EditProfileScreen';
 import ChangePasswordScreen from './screens/profile/ChangePasswordScreen';
+import RepairVideosScreen from './screens/RepairVideoScreen';
 import { AuthProvider, useAuth } from './general/AuthContext';
 import { 
   configureNotificationHandler, 
@@ -211,6 +212,28 @@ const CarStackScreens = () => {
           <Text>{t("carDetialScreenStrings.editInfoButton")}</Text>
         </TouchableOpacity>
 
+      {route.params?.has_video && ( 
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+          }}
+          onPress={() => {
+            closeMenu();
+            navigation.navigate('RepairVideosScreen', { car_model: route.params?.car_model }); // Correctly pass car_model
+          }}
+        >
+          <Ionicons
+            name="videocam-outline"
+            size={24}
+            color="#000" // Normal icon color when visible
+            style={{ marginRight: 10 }}
+          />
+          <Text>{t("carDetialScreenStrings.videoOptionButton")}</Text>
+        </TouchableOpacity>
+      )}
+ 
         <Divider />
 
         <TouchableOpacity
@@ -245,7 +268,13 @@ const CarStackScreens = () => {
   })}
 />
 
-
+                <CarStack.Screen
+                  name="RepairVideosScreen"
+                  component={RepairVideosScreen}
+                  options={({ route }) => ({
+                    title: t("carDetialScreenStrings.videoOptionButton"), 
+                  })}
+                />
                 <CarStack.Screen
                     name="AddEditCarInfoFirstScreen"
                     component={AddEditCarInfoFirstScreen}

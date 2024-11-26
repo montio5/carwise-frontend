@@ -307,3 +307,15 @@ export const updateCarMileage = async (carUniqueKey, newData) => {
     throw error;
   }
 };
+
+// ______________ Get Car Videos ____________
+export const getCarRepairVideos = async (carModel) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/repair-videos/${carModel}`, { headers });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

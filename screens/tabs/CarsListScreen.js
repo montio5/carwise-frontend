@@ -49,7 +49,7 @@ const CarsListScreen = ({ route }) => {
   }, []);
 
   const handlePress = (item) => {
-    navigation.navigate('CarScreen', { car: item });
+    navigation.navigate('CarScreen', { car: item, has_video: item.has_video,car_model: item.car_model_id });
   };
 
   const renderItem = ({ item }) => (

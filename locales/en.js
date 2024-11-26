@@ -14,6 +14,8 @@ const en = {
   savedSuccessfully: "Saved successfully",
   notificationMessage: "It seems that {item} items need to be updated for the car {car}",
   alert: "Alert",
+  colse:"Colse",
+
   updateCarTool: {
     updateCarToolHeader: 'Update Car Tools',
     mileageLabel: 'Mileage',
@@ -88,8 +90,8 @@ const en = {
     overdue: "Overdue",
     orangeStatus: "Near due date",
     redStatus: "Due",
-    deleteCar:"Delete car"
-
+    deleteCar:"Delete car",
+    videoOptionButton: "Tutorial Videos",
   },
   addEditCarInfoFirstScreenStrings: {
     namePlaceholder: 'Name',

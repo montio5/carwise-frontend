@@ -11,7 +11,7 @@ const fa = {
     savedSuccessfully:"با موفقیت ثبت شد",
     notificationMessage: " به نظر میرسد {item} مورد باید در خودرو {car} به روز رسانی شوند",
     enterPlaceholder: "مقدار {{toolName}} وارد کنید ",
-
+    colse:"بستن",
     alert:"هشدار",
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
@@ -89,7 +89,8 @@ const fa = {
       overdue:"زمان تعویض گذشته است",
       orangeStatus:"نزدیک به زمان تعویض",
       redStatus:"زمان تعویض",
-deleteCar:"حذف خودرو"
+      deleteCar:"حذف خودرو",
+      videoOptionButton: "ویدیو های آموزشی",
 
     },
     addEditCarInfoFirstScreenStrings: {
