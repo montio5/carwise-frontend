@@ -15,7 +15,19 @@ const en = {
   notificationMessage: "It seems that {item} items need to be updated for the car {car}",
   alert: "Alert",
   colse:"Colse",
-
+  onBoardingScreen: {
+    customScreen: "Adding Custom Fields",
+    customScreenDetail: "You can add items for checkups as per your preference. These fields can be based on date, mileage, or both.",
+    customSetup: "Customizing Checkups",
+    customSetupDetail: "You can set the drivable distance for each component based on your maintenance style.",
+    updateFields: "Updating Service",
+    updateFieldsDetail: "After each car service, you can update all items in the list. The next replacement time estimate is calculated this way.",
+    welcome:"welcome",
+    welcomeDesc:"Carwise is a app for reminding car services",
+    next:"Next",
+    previous:"Previous",
+    finish:"Finish"
+  },
   updateCarTool: {
     updateCarToolHeader: 'Update Car Tools',
     mileageLabel: 'Mileage',

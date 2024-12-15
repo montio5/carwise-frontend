@@ -363,7 +363,7 @@ const App = () => {
     const checkOnboardingStatus = async () => {
       try {
         // ? for test onboarding
-        // await AsyncStorage.removeItem('hasCompletedOnboarding'); 
+        await AsyncStorage.removeItem('hasCompletedOnboarding'); 
         const hasCompletedOnboarding = await AsyncStorage.getItem('hasCompletedOnboarding');
         if (hasCompletedOnboarding === null) {
           setShowOnboarding(true); // Show onboarding if no flag is found

@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Video } from 'expo-av';
-import { getCarRepairVideos } from '../api/UserCar'; // Adjust the path to your API function
+import { getCarRepairVideos } from '../api/UserCar';
 import {useTranslation} from 'react-i18next'
 
 const RepairVideosScreen = ({ route }) => {
