@@ -4,10 +4,12 @@
     "slug": "Carwise",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo3.jpg",
     "userInterfaceStyle": "light",
+    "permissions": ["camera"],
+
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo3.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,12 +21,19 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo3.jpg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mont.Carwise"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/logo3.jpg"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "eecfab33-28dd-4c1c-bb22-607216b7912b"
+      }
+    },
+    "owner": "mont.f14"
   }
 }

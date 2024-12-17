@@ -1,9 +1,31 @@
-export const strings = {
+const fa = {
+    cameraPermissionRequired: "برای گرفتن عکس، اجازه دسترسی به دوربین لازم است.",
+    errorFindingMileage: "قادر به تشخیص مسافت پیموده شده از تصویر نیستیم. لطفاً دوباره تلاش کنید.",
+    imageNotSelected: "هیچ تصویری انتخاب نشد. لطفاً دوباره تلاش کنید.",
+    cars: 'خودرو ها',
+    emptyCars: "لطفا خودرو های خود را اضافه کنید",
+    emptyCustomField :"فیلد شخصی وجود ندارد",
+    editProfile : "ویرایش پروفایل",
     loadingText: 'در حال بارگذاری...',
     ContentType: 'application/json',
     savedSuccessfully:"با موفقیت ثبت شد",
     notificationMessage: " به نظر میرسد {item} مورد باید در خودرو {car} به روز رسانی شوند",
+    enterPlaceholder: "مقدار {{toolName}} وارد کنید ",
+    colse:"بستن",
     alert:"هشدار",
+    onBoardingScreen:{
+      customScreen:"اضافه کردن فیلد های شخصی",
+      customScreenDetail: "شما میتوانید به دلخواه خود مواردی را برای چکاپ اضافه کنید. این فیلد ها میتوانند بر اساس تاریخ ، کیلومتر و یا هر دو باشند",
+      customSetup: "شخصی سازی چکاپ ها",
+      customSetupDetail: "بر اساس نحوه نگه داری خود میتوانید مسافت قابل پیمایش برای هر قطعه را تنظیم کنید",
+      updateFields: "به روز رسانی سرویس",
+      updateFieldsDetail: "بعد از هر بار سرویس خودرو ، میتوانید تمام موارد را در لیست به روز رسانی کنید. تخمین زمان تعویض بعدی از همین طریق انجام میشود",
+      welcome:"خوش آمدید",
+      welcomeDesc:" کاروایز ، اپلیکیشن یادآور تعویض قطعات خودرو",
+      next:"بعدی",
+      previous:"قبلی",
+      finish:"اتمام"
+    },
     updateCarTool: {
       updateCarToolHeader: 'به روزرسانی ابزار خودرو',
       mileageLabel: 'مسافت پیموده شده',
@@ -22,6 +44,8 @@ export const strings = {
       resetErrorMessage: 'بازنشانی تنظیمات خودرو ناموفق بود',
       updateButtonTitle: 'به روزرسانی داده‌ها',
       resetButtonTitle: 'بازنشانی داده‌ها',
+      zeroErrorMessage: 'هیچ فیلدی نمیتواند صفر یا خالی باشد'
+
     },
     settingScreenStrings: {
       loadingText: 'در حال بارگذاری...',
@@ -62,8 +86,11 @@ export const strings = {
       lastChangedDate: " آخرین تاریخ تعویض:",
       dateBase :"بر اساس تاریخ",
       mileageBase :"بر اساس مسافت",
-
       selectDateText: 'تاریخ را انتخاب کنید',
+      status:'میزان اهمیت',
+      statusInformation:"کم اهمیت",
+      statusMedium:"معمولی",
+      statusSerious:"ضروری"
     },
     carDetialScreenStrings: {
       loadingText: 'در حال بارگذاری...',
@@ -75,7 +102,8 @@ export const strings = {
       overdue:"زمان تعویض گذشته است",
       orangeStatus:"نزدیک به زمان تعویض",
       redStatus:"زمان تعویض",
-
+      deleteCar:"حذف خودرو",
+      videoOptionButton: "ویدیو های آموزشی",
 
     },
     addEditCarInfoFirstScreenStrings: {
@@ -195,7 +223,7 @@ export const strings = {
       newPassword:"رمز جدید",
       repeatNewPassword:"تکرار رمز",
       newPasswordAndConfirmationError:"رمز جدید و تکرار آن همخوانی ندارند",
-      errorInUpdatingProfile:"خطا در بروزرسانی اطلاعات کاربری"
+      errorInUpdatingProfile:"خطا در بروزرسانی اطلاعات کاربری",
     },
     resetPasswordProcess:{
       emailPrompt: "ایمیل خود را وارد کنید تا کد بازنشانی دریافت کنید:",
@@ -207,6 +235,7 @@ export const strings = {
       passwordResetSuccess: "رمز عبور با موفقیت بازنشانی شد!",
       passwordMismatchError: "خطا: رمزهای عبور مطابقت ندارند!",
       passwordRequired: "رمز عبور اجباری است!",
+      currentPasswordRequired: "رمز فعلی اجباری است!",
       emailError: "خطا: آدرس ایمیل نامعتبر است یا مشکلی رخ داده است.",
       codeError: "خطا: کد نامعتبر است یا مشکلی رخ داده است.",
       passwordError: "خطا: رمز عبور را نمی‌توان بازنشانی کرد.",
@@ -217,3 +246,4 @@ export const strings = {
     } 
   };
   
+  export default fa;

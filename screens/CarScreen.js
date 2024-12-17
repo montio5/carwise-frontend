@@ -1,11 +1,20 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import { getCarDashboard } from '../api/CarSetup';  // Import the API function
-import FormattedNumber from '../general/textNumber';  
-import { strings } from '../utils/strings'; // Adjust the path as per your project structure
+import { getCarDashboard } from '../api/CarSetup';
+import FormattedNumber from '../general/textNumber';
 import Toast from '../general/Toast';
+import { ChartWithDate, ChartWithDateOnly, ChartWithPercentageOnly } from '../general/ChartComponents';
+import { useTranslation } from 'react-i18next';
 
 const CarDetailScreen = () => {
   const navigation = useNavigation();
@@ -17,6 +26,14 @@ const CarDetailScreen = () => {
   const [dashboardData, setDashboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDashboardData();
+    setRefreshing(false);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -37,7 +54,6 @@ const CarDetailScreen = () => {
   const fetchDashboardData = async () => {
     try {
       const data = await getCarDashboard(car.unique_key);
-      console.log('API Response:', data);  // Debugging: Log the API response
       setMileage(data.mileage);
       if (Array.isArray(data.statistic)) {
         setDashboardData(data.statistic);
@@ -46,69 +62,58 @@ const CarDetailScreen = () => {
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching user car dashboard:', error);
       setError('Error fetching user car dashboard');
       setLoading(false);
     }
   };
 
   const getColorForPct = (pct) => {
-    if (pct === 'overdue') return '#FF0000'; // Red
-    if (pct < 50) return '#00FF00'; // Green
-    if (pct < 80) return 'gray'; 
-    if (pct <= 90) return 'yellow'; // 
-    if (pct > 90) return '#FF0000'; // Red
+    if (pct === 'overdue') return { color: '#FF3737', description: t("carDetialScreenStrings.overdue") }; // Red for overdue
+    if (pct < 50) return { color: '#34C759', description: '' }; // Green for good condition
+    if (pct < 90) return { color: 'gray', description: '' }; // Gray for neutral
+    if (pct <= 95) return { color: '#FFC107', description: t("carDetialScreenStrings.orangeStatus") }; // Orange for warning
+    if (pct > 95) return { color: '#FF3737', description: t("carDetialScreenStrings.redStatus") }; // Red for critical
   };
 
   const goToCustomFieldScreen = () => {
     navigation.navigate('CustomFieldList', { car: car });
   };
 
-  const goToCarSetupScreen = () => {
-    navigation.navigate('CarSetupScreen', { car: car });
-  };
-
-  const goToEditCarInfoScreen = () => {
-    navigation.navigate('AddEditCarInfoFirstScreen', { car: car });
-  };
-
   const goToUpdateCarToolScreen = () => {
     navigation.navigate('UpdateCarToolScreen', { car: car });
   };
-
-  const isTextTooLong = (text) => text.length > 20;
 
   return (
     <View style={styles.container}>
       <Toast ref={toastRef} />
 
-      <ScrollView>
-        {!loading && <FormattedNumber number={mileage} suffix={strings.carDetialScreenStrings.mileageSuffix} style={styles.mileageText} />}
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        {!loading && (
+          <FormattedNumber
+            number={mileage}
+            suffix={""}
+            style={styles.mileageText}
+          />
+        )}
+
         <View style={styles.buttonRow}>
-          <TouchableOpacity onPress={goToCustomFieldScreen} style={styles.button}>
+          <TouchableOpacity onPress={goToCustomFieldScreen} style={[styles.button]}>
             <View style={styles.buttonContainer}>
               <Ionicons name="add-circle-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.customFieldButton}</Text>
+              <Text style={styles.buttonText}>
+                {t("carDetialScreenStrings.customFieldButton")}
+              </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={goToCarSetupScreen} style={styles.button}>
-            <View style={styles.buttonContainer}>
-              <Ionicons name="settings-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.carSetupButton}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.buttonRow}>
-          <TouchableOpacity onPress={goToEditCarInfoScreen} style={styles.button}>
-            <View style={styles.buttonContainer}>
-              <Ionicons name="create-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.editInfoButton}</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={goToUpdateCarToolScreen} style={styles.button}>
+
+          <TouchableOpacity onPress={goToUpdateCarToolScreen} style={[styles.button, styles.orangeButton]}>
             <View style={styles.buttonContainer}>
               <Ionicons name="build-outline" size={24} color="black" />
-              <Text style={styles.buttonText}>{strings.carDetialScreenStrings.updateToolButton}</Text>
+              <Text style={styles.buttonText}>
+                {t("carDetialScreenStrings.updateToolButton")}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -116,61 +121,44 @@ const CarDetailScreen = () => {
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : error ? (
-          <Text style={styles.errorText}>{strings.carDetialScreenStrings.errorText}</Text>
+          <Text style={styles.errorText}>{t("carDetialScreenStrings.errorText")}</Text>
         ) : (
           dashboardData.map((item, index) => {
-            const isLongText = isTextTooLong(item.name);
-            const hasDateAndPct = item.date && item.date_limit && item.pct !== undefined;
+            const hasDateAndPct = item.date_pct && item.pct !== undefined;
             const isDateItem = item.date && item.date_limit && item.pct === undefined;
-            const colorPct = getColorForPct(item.pct);
-            const colorDatePct = getColorForPct(item.date_pct);
+            const colorPct = getColorForPct(item.pct)?.color;
+            const colorDatePct = getColorForPct(item.date_pct)?.color;
+            const pctfieldStatus = getColorForPct(item.pct)?.description;
+            const datePctfieldStatus = getColorForPct(item.pct)?.description;
 
             return (
               <View key={index} style={styles.itemContainer}>
                 <Text style={styles.nameText}>{item.name}</Text>
                 {hasDateAndPct ? (
-                  <>
-                    <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: colorDatePct, width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
-                      </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? '100%' : `${item.date_pct}%`}</Text>
-                    </View>
-                    <Text style={styles.limitText}>
-                      <Ionicons name="calendar-outline" size={20} color={colorDatePct} style={styles.icon} /> {item.date_limit}
-                    </Text>
-
-                    <Text>{'\n'}</Text>
-                    <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: colorPct, width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
-                      </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? '100%' : `${item.pct}%`}</Text>
-                    </View>
-                    <Text style={styles.limitText}>
-                      <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} /> <FormattedNumber number={item.limit} style={styles.limitText} />
-                    </Text>
-                  </>
+                  <ChartWithDate
+                    colorDate={colorDatePct}
+                    percentageDate={item.date_pct}
+                    dateLimit={item.date_limit}
+                    colorPct={colorPct}
+                    percentage={item.pct}
+                    limit={item.limit}
+                    desc={pctfieldStatus}
+                    dateDesc={datePctfieldStatus}
+                  />
                 ) : isDateItem ? (
-                  <>
-                    <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: colorDatePct, width: `${item.date_pct === 'overdue' ? 100 : item.date_pct}%` }]}>
-                      </View>
-                      <Text style={styles.chartText}>{item.date_pct === 'overdue' ? '100%'  : `${item.date_pct}%`}</Text>
-                    </View>
-                    <Text style={styles.limitText}>
-                      <Ionicons name="calendar-outline" size={20} color={colorDatePct} style={styles.icon} /> {item.date_limit}
-                    </Text>
-                  </>
+                  <ChartWithDateOnly
+                    colorDate={colorDatePct}
+                    percentageDate={item.date_pct}
+                    dateLimit={item.date_limit}
+                    dateDesc={datePctfieldStatus}
+                  />
                 ) : (
-                  <>
-                    <View style={styles.chartContainer}>
-                      <View style={[styles.chart, { backgroundColor: colorPct, width: `${item.pct === 'overdue' ? 100 : item.pct}%` }]}>
-                      </View>
-                      <Text style={styles.chartText}>{item.pct === 'overdue' ? '100%'  : `${item.pct}%`}</Text>
-                    </View>
-                    <Text style={styles.limitText}>
-                      <Ionicons name="refresh-circle-outline" size={20} color={colorPct} style={styles.icon} /> <FormattedNumber number={item.limit} style={styles.limitText} />
-                    </Text>
-                  </>
+                  <ChartWithPercentageOnly
+                    colorPct={colorPct}
+                    percentage={item.pct}
+                    limit={item.limit}
+                    desc={pctfieldStatus}
+                  />
                 )}
               </View>
             );
@@ -181,40 +169,44 @@ const CarDetailScreen = () => {
   );
 };
 
-
-
 const styles = StyleSheet.create({
-  mileageText:{
-    margin:40,
-    fontSize: 40,
-    fontWeight:"bold",
-    textAlign: 'center',
-
-  },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#24292F',
+  },
+  mileageText: {
+    margin: 40,
+    fontSize: 40,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#F6F6F6',
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 40,
     marginBottom: 20,
   },
   button: {
-    borderWidth: 1,
-    borderColor: 'black',
     borderRadius: 5,
     width: '48%',
+    elevation: 2,
+    backgroundColor: '#1DFFA9',
+  },
+  orangeButton: {
+    backgroundColor: '#FFA500',
   },
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
+    borderRadius: 5,
   },
   buttonText: {
     marginTop: 5,
     fontSize: 12,
+    color: 'black',
     textAlign: 'center',
   },
   itemContainer: {
@@ -222,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 20,
     padding: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: 'black',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -232,45 +224,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
     fontSize: 14,
-    color: '#333',
-    marginBottom: 5,
-  },
-  chartContainer: {
-    width: '100%',
-    height: 20,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 5,
-    overflow: 'hidden',
-    marginBottom: 5,
-    position: 'relative',
-    justifyContent: 'center', // Center the text vertically
-  },
-  chart: {
-    height: '100%',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  chartText: {
-    width: '100%',
-    textAlign: 'center', // Center the text horizontally
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  limitText: {
-    textAlign: 'left',
-    fontSize: 14,
-    color: '#333',
-    marginTop: 5,
-  },
-  dateText: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 5,
-  },
-  dateLimitText: {
-    fontSize: 14,
-    color: '#333',
+    color: 'white',
     marginBottom: 5,
   },
   errorText: {
@@ -278,9 +232,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  icon:{
-    marginTop:50
-  }
 });
 
 export default CarDetailScreen;

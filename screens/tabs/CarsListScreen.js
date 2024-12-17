@@ -1,19 +1,20 @@
-// CarsListScreen.js
-
-import React, { useState, useEffect, useCallback,useRef } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { fetchUserCars } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import carCompanyColors from '../../general/colors';
-import { strings } from '../../utils/strings'; 
 import Toast from '../../general/Toast';
+import { useTranslation } from 'react-i18next';
+import FormattedNumber from '../../general/textNumber';
 
 const CarsListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const toastRef = useRef(null);
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'fa'; // Check if the language is Farsi (RTL)
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -25,10 +26,9 @@ const CarsListScreen = ({ route }) => {
     try {
       const data = await fetchUserCars();
       setUserCars(data);
-
     } catch (error) {
       console.error('Error fetching user cars:', error);
-      Alert.alert(strings.carsListScreenStrings.errorFetchingCars);
+      toastRef.current.error(t('carsListScreenStrings.errorFetchingCars'));
     }
   };
 
@@ -39,9 +39,8 @@ const CarsListScreen = ({ route }) => {
       }
       if (route.params?.toastMessage) {
         toastRef.current.success(route.params.toastMessage);
-        route.params.toastMessage=null;
+        route.params.toastMessage = null;
       }
-
     }, [route.params])
   );
 
@@ -50,7 +49,7 @@ const CarsListScreen = ({ route }) => {
   }, []);
 
   const handlePress = (item) => {
-    navigation.navigate('CarScreen', { car: item });
+    navigation.navigate('CarScreen', { car: item, has_video: item.has_video,car_model: item.car_model_id });
   };
 
   const renderItem = ({ item }) => (
@@ -59,14 +58,20 @@ const CarsListScreen = ({ route }) => {
         <Ionicons name="car-sport" size={40} color={getCompanyColor(item.car_company)} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={[styles.carCompany, { color: getCompanyColor(item.car_company) }]}>
-          {item.car_company}
-        </Text>
-        <Text style={styles.carName}>{item.car_model}</Text>
-        <Text></Text>
-        <Text style={styles.carName}>{item.name}</Text>
-        <Text style={styles.carName}>{item.mileage}</Text>
-
+        <Text style={[styles.carCompany, { color: getCompanyColor(item.car_company) }]}>{item.car_company}</Text>
+        <Text style={styles.carModel}>{item.car_model}</Text>
+        <View style={[styles.textRow, isRTL && styles.rtlRow]}>
+          <Ionicons name="person" size={18} color="#4B9CD3" style={styles.iconStyle} />
+          <Text style={styles.carName}>{item.name}</Text>
+        </View>
+        <View style={[styles.textRow, isRTL && styles.rtlRow]}>
+          <Ionicons name="speedometer" size={18} color="#4CAF50" style={styles.iconStyle} />
+          <FormattedNumber number={item.mileage} suffix={""} style={styles.carName} />
+        </View>
+        <View style={[styles.textRow, isRTL && styles.rtlRow]}>
+          <Ionicons name="calendar" size={18} color="#FFA500" style={styles.iconStyle} />
+          <Text style={styles.carName}>{item.car_mileage_update_date}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -82,21 +87,21 @@ const CarsListScreen = ({ route }) => {
         data={userCars}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        numColumns={2}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={styles.listContent}
+        numColumns={1}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        contentContainerStyle={userCars.length === 0 ? styles.emptyContainer : styles.listContent}
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyMessage}>{t('emptyCars')}</Text>
+        )}
       />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#24292F',
   },
   listContent: {
     paddingHorizontal: 16,
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F6F6F6',
     padding: 15,
     margin: 8,
     borderRadius: 8,
@@ -126,8 +131,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  carModel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 14,
+  },
   carName: {
     fontSize: 14,
+    color: '#666',
+  },
+  textRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  rtlRow: {
+    flexDirection: 'row-reverse', // Full reverse for RTL 
+    marginRight: 1,
+  },
+  iconStyle: {
+    marginHorizontal: 8, // Space between icon and text
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center', // Center the content vertically
+    alignItems: 'center', // Center the content horizontally
+  },
+  emptyMessage: {
+    fontSize: 18,
     color: '#666',
   },
 });

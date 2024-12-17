@@ -3,9 +3,8 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } fr
 import { getCustomFieldList } from '../../api/UserCar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import carCompanyColors from '../../general/colors';
-import Separator from '../../general/speratorComponent'
 import Toast from '../../general/Toast';
+import { useTranslation } from 'react-i18next';
 
 const CustomFiledListScreen = ({ route }) => {
   const [userCars, setUserCars] = useState([]);
@@ -13,6 +12,7 @@ const CustomFiledListScreen = ({ route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const car = route.params.car;
   const toastRef = useRef(null);
+  const { t, i18n } = useTranslation();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -65,28 +65,28 @@ const CustomFiledListScreen = ({ route }) => {
     </TouchableOpacity>
   );
 
-  return (
-    <View style={styles.container}>
-                  <Toast ref={toastRef} />
-
-      <FlatList
-        data={userCars}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={styles.listContent}
-      />
-    </View>
-  );
-};
+return (
+  <View style={styles.container}>
+    <Toast ref={toastRef} />
+    <FlatList
+      data={userCars}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id.toString()}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      contentContainerStyle={userCars.length === 0 ? styles.emptyContainer : styles.listContent}
+      ListEmptyComponent={() => (
+        <Text style={styles.emptyMessage}>{t("emptyCustomField")}</Text>
+      )}
+    />
+  </View>
+);
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#24292F',
   },
   listContent: {
     paddingHorizontal: 16,
@@ -120,6 +120,15 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 10,
+  },
+    emptyContainer: {
+    flex: 1,
+    justifyContent: 'center', // Center the content vertically
+    alignItems: 'center', // Center the content horizontally
+  },
+    emptyMessage: {
+    fontSize: 18,
+    color: '#666',
   },
 });
 

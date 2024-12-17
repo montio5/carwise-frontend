@@ -1,11 +1,9 @@
-// AddEditCarInfoFirstScreen.js
-
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getUserCar, getCarModels } from '../../api/UserCar';
-import { strings } from '../../utils/strings'; // Import the strings object
 import InputComponent from '../../general/customInputComponent' 
+import {useTranslation} from 'react-i18next'
 
 const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const car = route.params.car || null;
@@ -14,6 +12,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
   const [carModels, setCarModels] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
+  const { t } = useTranslation();
 
   const [carData, setCarData] = useState({
     name: '',
@@ -112,18 +111,21 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder={strings.addEditCarInfoFirstScreenStrings.namePlaceholder}
-        value={carData.name.toString()}
-        onChangeText={(text) => handleInputChange('name', text)}
-        style={styles.input}
-      />
+    <InputComponent
+      placeholder={t("addEditCarInfoFirstScreenStrings.namePlaceholder")}
+      value={carData.name.toString()}
+      isNumeric={false}
+      onChange={(text) => handleInputChange('name', text)} // Use `onChange` instead of `onChangeText`
+      style={styles.input}
+    />
       <Picker
         selectedValue={selectedCompany}
         onValueChange={(itemValue) => handleCompanyChange(itemValue)}
         style={styles.input}
+        dropdownIconColor="white"  // Set arrow color to white
+
       >
-        <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectCompanyLabel} value={null} />
+        <Picker.Item label={t("addEditCarInfoFirstScreenStrings.selectCompanyLabel")} value={null} />
         {carCompanies.map((company) => (
           <Picker.Item key={company.id} label={company.name} value={company.id} />
         ))}
@@ -133,20 +135,22 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
         onValueChange={(itemValue) => handleModelChange(itemValue)}
         style={styles.input}
         enabled={selectedCompany !== null}
+        dropdownIconColor="white"  // Set arrow color to white
+
       >
-        <Picker.Item label={strings.addEditCarInfoFirstScreenStrings.selectModelLabel} value={null} />
+        <Picker.Item label={t("addEditCarInfoFirstScreenStrings.selectModelLabel")} value={null} />
         {carModels.map((model) => (
           <Picker.Item key={model.id} label={model.name} value={model.id} />
         ))}
       </Picker>
-      <InputComponent
-        placeholder={strings.addEditCarInfoFirstScreenStrings.mileagePlaceholder}
-        value={carData.mileage_info.mileage}
-        isNumeric={true}
-        onChange={(text) => handleInputChange('mileage', text, true)}
-        style={styles.input}
-      />
-      <Button title={strings.addEditCarInfoFirstScreenStrings.nextButton} onPress={handleNext} disabled={isButtonDisabled} />
+    <InputComponent
+      placeholder={t("addEditCarInfoFirstScreenStrings.mileagePlaceholder")}
+      value={carData.mileage_info.mileage}
+      isNumeric={true}
+      onChange={(text) => handleInputChange('mileage', text, true)} // Use `onChange` instead of `onChangeText`
+      style={styles.input}
+    />
+      <Button title={t("addEditCarInfoFirstScreenStrings.nextButton")} onPress={handleNext} disabled={isButtonDisabled} />
     </View>
   );
 };
@@ -154,6 +158,7 @@ const AddEditCarInfoFirstScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#24292F',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -163,6 +168,7 @@ const styles = StyleSheet.create({
     width: '80%',
     marginBottom: 10,
     padding: 10,
+    color:'white'
   },
 });
 

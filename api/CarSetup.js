@@ -1,111 +1,91 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiUrl from '../utils/apiConfig'; 
 import { strings } from '../utils/strings';
+import { getHeaders } from './headers';
+
 
 // ______________ Get Car Setup ____________
-
 export const getCarSetup = async (carUniqueKey) => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await fetch(`${apiUrl}api/custom-setup/${carUniqueKey}`, {
-        headers: {
-          Accept: strings.ContentType,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching user car:', error);
-      throw error;
-    }
-  };
-  
-// ______________ Get Car Dashboard ____________
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/custom-setup/${carUniqueKey}`, {
+      headers,
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching car setup:', error);
+    throw error;
+  }
+};
 
+// ______________ Get Car Dashboard ____________
 export const getCarDashboard = async (carUniqueKey) => {
   try {
-
-    const token = await AsyncStorage.getItem('token');
-    if (!token) {
-      throw new Error('Token not found');
-    }    
+    const headers = await getHeaders();
     const response = await fetch(`${apiUrl}api/car-dashboard/${carUniqueKey}`, {
       headers: {
-        "Accept": "application/json",
-        'Content-Type': "application/json", // Ensure the Content-Type is set
-        "Authorization": `Bearer ${token}`,
+        ...headers,
+        'Content-Type': 'application/json', // Ensure the Content-Type is set
       },
     });
+
     if (!response.ok) {
-      throw new Error('Network response was not ok' + response.statusText);
+      throw new Error('Network response was not ok: ' + response.statusText);
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching car dashboard data:', error);
+    console.error('Error fetching car dashboard:', error);
     throw error;
   }
 };
 
-  // ______________ Update Car Setup ____________
-  
-  export const updateCarSetup = async (carUniqueKey, newData) => {
-  
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token not found');
-      }
-      const response = await fetch(`${apiUrl}api/custom-setup/${carUniqueKey}/`, {
-        method: 'PUT',
-        headers: {
-          'Accept': strings.ContentType,
-          'Content-Type': strings.ContentType, // Ensure the Content-Type is set
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(newData), // Stringify the request body
-      });
-  
-      const responseText = await response.text(); // Get raw response text
-      console.log('Raw response:', responseText);
-  
-      if (!response.ok) {
-        // Handle non-2xx HTTP responses
-        console.error('Error response from server:', responseText);
-        throw new Error(`Error updating user car: ${response.status} ${response.statusText}`);
-      }
-  
-      // Attempt to parse JSON only if response is OK
-      const data = JSON.parse(responseText);
-      console.log("--------------------",data);
-  
-      return data;
-    } catch (error) {
-      console.error('Error updating user car:', error);
-      throw error;
+// ______________ Update Car Setup ____________
+export const updateCarSetup = async (carUniqueKey, newData) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/custom-setup/${carUniqueKey}/`, {
+      method: 'PUT',
+      headers: {
+        ...headers,
+        'Content-Type': strings.ContentType, // Ensure the Content-Type is set
+      },
+      body: JSON.stringify(newData), // Stringify the request body
+    });
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      throw new Error(`Error updating user car: ${response.status} ${response.statusText}`);
     }
-  };
 
-  // ______________ Delete Car Setup ____________
+    const data = JSON.parse(responseText);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
+// ______________ Delete Car Setup ____________
 export const deleteCarSetup = async (uniqueKey) => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await fetch(`${apiUrl}api/custom-setup/${uniqueKey}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': strings.ContentType,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (response.status !== 204) { // 204 No Content is a typical response for successful delete
-        throw new Error('Network response was not ok');
-      }
-      return true; // Deletion was successful
-    } catch (error) {
-      console.error('Error deleting car:', error);
-      throw error;
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${apiUrl}api/custom-setup/${uniqueKey}/`, {
+      method: 'DELETE',
+      headers: {
+        ...headers,
+        'Content-Type': strings.ContentType,
+      },
+    });
+
+    if (response.status !== 204) { // 204 No Content is a typical response for successful delete
+      throw new Error('Network response was not ok');
     }
-  };
+
+    return true; // Deletion was successful
+  } catch (error) {
+    console.error('Error deleting car setup:', error);
+    throw error;
+  }
+};

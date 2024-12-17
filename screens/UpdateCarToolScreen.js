@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, ScrollView, Text, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import Separator from '../general/speratorComponent'; // Adjust path as per your project structure
 import { getCarMileage, updateCarMileage } from '../api/UserCar'; // Adjust path as per your project structure
-import { strings } from '../utils/strings'; // Import the strings object
-import { getToolName } from '../general/generalFunctions'; // Adjust the path based on your project structure
 import CustomButton from '../general/customButtonComponent';
 import Toast from '../general/Toast';
 import InputComponent from '../general/customInputComponent'; // Import InputComponent
+import {useTranslation} from 'react-i18next'
+import { getToolName } from '../general/generalFunctions'; 
 
 const UpdateCarToolScreen = ({ route, navigation }) => {
   const [data, setData] = useState({});
@@ -15,6 +14,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   const [checkedFields, setCheckedFields] = useState({});
   const car = route.params.car;
   const toastRef = useRef();
+  const { t } = useTranslation();
 
   useEffect(() => {
     getData();
@@ -31,7 +31,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       setCheckedFields(initialCheckedFields);
     } catch (error) {
       console.error(error);
-      Alert.alert(strings.carSetupScreenStrings.errorTitle, strings.carSetupScreenStrings.errorMessage);
+                  toastRef.current.error(t("carSetupScreenStrings.errorMessage"));
     }
   };
 
@@ -58,37 +58,40 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
   };
 
   const handleSubmit = async () => {
-    const updatedData = { ...data };
+  const updatedData = { ...data };
 
-    // Update fields based on checked fields and set mileage
-    Object.keys(checkedFields).forEach((field) => {
-      if (checkedFields[field]) {
-        updatedData[field] = mileage;
-      }
-    });
-
-    try {
-      await updateCarMileage(car.unique_key, updatedData);
-      console.log('Data updated successfully');
-      navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: strings.carSetupScreenStrings.successUpdateMessage });
-    } catch (error) {
-      console.error(error);
-      toastRef.current.error(error.message);
+  // Update fields based on checked fields and set mileage
+  Object.keys(checkedFields).forEach((field) => {
+    if (checkedFields[field]) {
+      updatedData[field] = mileage;
     }
-  };
+  });
+
+  try {
+    await updateCarMileage(car.unique_key, updatedData);
+    navigation.navigate('CarScreen', { refresh: true, car: car, toastMessage: t("carSetupScreenStrings.successUpdateMessage") });
+  } catch (error) {
+    const errorMessage = error.message === "defaultErrorMessage" 
+      ? t("carSetupScreenStrings.errorMessage") 
+      : error.message;
+      
+    toastRef.current.error(errorMessage);
+  }
+};
+
 
   const excludedFields = ['unique_key', 'id', 'created_date', 'hydraulic_fluid_updated_date', 'timing_belt_last_updated_date'];
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.header}>{strings.updateCarTool.updateCarToolHeader}</Text>
-        <Text style={styles.label}>{strings.updateCarTool.mileageLabel}</Text>
+        <Text style={styles.header}>{t("updateCarTool.updateCarToolHeader")}</Text>
+        {/* <Text style={styles.label}>{t("updateCarTool.mileageLabel")}</Text> */}
         <InputComponent
-        style={styles.input}
+        style={styles.mainInput}
           isNumeric
           value={mileage}
-          placeholder={strings.updateCarTool.enterMileagePlaceholder}
+          placeholder={t("updateCarTool.enterMileagePlaceholder")}
           onChange={(value) => {
             setMileage(value);
             if (value === '') {
@@ -100,15 +103,14 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
               setCheckedFields(resetCheckedFields);
             }
           }}
+          enableCamera ={true}
         />
 
         {Object.keys(data).map((field, index) => {
           if (excludedFields.includes(field) || field === 'custom_fields') {
             return null;
           }
-
-          const toolName = getToolName(field);
-
+          const toolName = getToolName(field, t);
           return (
             <View key={index} style={styles.fieldContainer}>
               {mileage !== '' && (
@@ -122,7 +124,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
               <InputComponent
                 isNumeric
                 value={data[field] !== null ? String(data[field]) : ''}
-                placeholder={data[field] !== null ? String(data[field]) : strings.updateCarTool.naPlaceholder}
+                placeholder={data[field] !== null ? String(data[field]) : t("updateCarTool.naPlaceholder")}
                 style={checkedFields[field] ? styles.disabledInput : styles.input}
                 onChange={(value) => handleInputChange(field, value)}
                 editable={!checkedFields[field]}
@@ -133,7 +135,7 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <CustomButton
-          text={strings.updateCarTool.saveButton}
+          text={t("updateCarTool.saveButton")}
           onPress={handleSubmit}
           style={styles.button}
         />
@@ -146,18 +148,19 @@ const UpdateCarToolScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#24292F',
   },
   scrollContainer: {
     padding: 16,
-    paddingBottom: 80, // Ensures space at the bottom for the button
+    paddingBottom: 80,
+    
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 30,
     textAlign: 'center',
-    color: '#333',
+    color: 'white',
   },
   label: {
     fontSize: 18,
@@ -165,9 +168,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#444',
   },
-  input: {
-
+  mainInput: {
     padding: 10,
+    flex: 1,
+    backgroundColor: '#24292F',
+    marginBottom: 16,
+  },
+  input: {
+    padding: 2,
     flex: 1,
     backgroundColor: '#fff',
     marginBottom: 16,
@@ -180,7 +188,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
     paddingVertical: 8,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
@@ -189,6 +197,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
+    
   },
   fieldLabel: {
     flex: 2,
@@ -203,7 +212,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     padding: 16,
     paddingBottom: 8,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#24292F',
   },
   button: {
     marginVertical: 10,
